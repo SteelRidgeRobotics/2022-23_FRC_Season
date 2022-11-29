@@ -1,0 +1,17 @@
+18917 -->> 100%
+11620 -->> 60%
+
+kF = 0.0528227194492255
+Original_Error_=_652
+
+(10%*1023)/(error)=_starting_P_value
+102.3/652=0.1569018404907975
+0.067258382642998
+
+kF = 0.05282272
+kP = 0.3 (it oscillated too much if we went higher)
+kD = 3
+I_Zone = 130
+kI = 0.002
+
+This gets fairly close to zero. Gets 1 - 2 units off.

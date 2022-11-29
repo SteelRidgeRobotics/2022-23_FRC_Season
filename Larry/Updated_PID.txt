@@ -1,0 +1,7 @@
+Talon Fx 4,5
+
+kF Same as others
+kI Zone = 150
+kP = 0.2
+kI = 0.004
+kD = 2
