@@ -32,14 +32,15 @@ class DriveByJoystick(commands2.CommandBase):
         
         # when the one of the bumpers is pressed, halve the speed
         if self.bumperRight() or self.bumperLeft():
-            self.percent = 0.5
-            self.drive.userDrive(self.left_axis(), self.right_axis(), self.percent)
+            self.percent = self.slowFactor
+            #self.drive.userDrive(self.left_axis(), self.right_axis(), self.percent) DO WE REALLY NEED THIS?
         # 
         #elif (self.bumperRight or self.bumperLeft) and self.slowFactor == 0.5:
         #    self.slowFactor = 1.0 
         else:
             self.percent = 1.0
-            self.drive.userDrive(self.left_axis(), self.right_axis(), self.percent)
+        
+        self.drive.userDrive(self.left_axis(), self.right_axis(), self.percent)
         
         #self.drive.userDrive(self.left_axis(), self.right_axis())
         wpilib.SmartDashboard.putNumber('   leftJoy - ', self.left_axis())
