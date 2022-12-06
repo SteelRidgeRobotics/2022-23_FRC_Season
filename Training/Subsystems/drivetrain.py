@@ -22,7 +22,8 @@ class DriveTrain(commands2.SubsystemBase):
         #invert motors on right side
         self.frontRight.setInverted(True)
         self.backRight.setInverted(True)
-
+        self.frontLeft.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor,0,constants.ktimeoutMs)
+        self.frontRight.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor,0,constants.ktimeoutMs)
     
     def userDrive(self, leftJoy: float, rightJoy: float, percentage: float) -> None:
         self.frontLeft.set(ctre.TalonFXControlMode.PercentOutput, leftJoy*percentage)

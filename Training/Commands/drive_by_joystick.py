@@ -20,6 +20,8 @@ class DriveByJoystick(commands2.CommandBase):
         self.slowFactor = 0.5
 
     def execute(self) -> None:
+        #self.leftJoy = 
+        '''come back to this later'''
         if self.bumperRight() or self.bumperLeft():
             self.percent = self.slowFactor
             
@@ -31,8 +33,14 @@ class DriveByJoystick(commands2.CommandBase):
 
         wpilib.SmartDashboard.putNumber('leftJoy - ', self.left_axis())
         wpilib.SmartDashboard.putNumber('rightJoy - ', self.right_axis())
-        wpilib.SmartDashboard.putNumber('Left Velocity - ')
-        
+        wpilib.SmartDashboard.putNumber('Left Velocity - ', self.drive.frontLeft.getSelectedSensorVelocity())
+        wpilib.SmartDashboard.putNumber('Right Velocity - ', self.drive.frontRight.getSelectedSensorVelocity())
         wpilib.SmartDashboard.putNumber('Left Bumper Pressed - ', self.bumperLeft())
         wpilib.SmartDashboard.putNumber('Right Bumper Pressed - ', self.bumperRight())
         wpilib.SmartDashboard.putNumber('Speed Percent - ', self.percent)
+    
+    def end(self,interrupted:bool) -> None:
+        self.drive.stopMotors()
+    
+    def isFinished(self) -> bool:
+        return False

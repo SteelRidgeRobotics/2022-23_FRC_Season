@@ -6,7 +6,7 @@ class MyRobot(commands2.TimedCommandRobot):
 
     def robotInit(self) -> None:
         self.container = RobotContainer()
-        self.autonomousCommand = self.container.getAutonomousCommand()
+        #self.autonomousCommand = self.container.getAutonomousCommand()
 
     def disabledInit(self) -> None:
         """come back to this later"""
@@ -14,7 +14,7 @@ class MyRobot(commands2.TimedCommandRobot):
     def disabledPeriodic(self) -> None:
         """a"""
     
-    def autonomousInit(self) -> None:
+    '''def autonomousInit(self) -> None:
         self.autonomousCommand = self.container.getAutonomousCommand()
 
         if self.autonomousCommand:
@@ -22,7 +22,7 @@ class MyRobot(commands2.TimedCommandRobot):
     
     def teleopInit(self) -> None:
         if self.autonomousCommand:
-            self.autonomousCommand.cancel()
+            self.autonomousCommand.cancel()'''
     
     def teleopPeriodic(self) -> None:
         """come back later"""
