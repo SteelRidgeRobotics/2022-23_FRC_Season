@@ -2,6 +2,14 @@ import typing
 import commands2
 from Subsystems.drivetrain import DriveTrain
 import wpilib
+from constants import *
+import math
+
+def deadband(value) -> float:
+    if math.fabs(value) <= kdeadband:
+        return 0
+    else:
+        return value
 
 class DriveByJoystick(commands2.CommandBase):
     #This allows us to drive via an xbox controller
@@ -28,8 +36,9 @@ class DriveByJoystick(commands2.CommandBase):
         
         else:
             self.percent = 1.0
-        
-        self.drive.userDrive(self.left_axis(), self.right_axis(), self.percent)
+        left = deadband(self.left_axis())
+        right = deadband(self.right_axis())
+        self.drive.userDrive(left, right, self.percent)
 
         wpilib.SmartDashboard.putNumber('leftJoy - ', self.left_axis())
         wpilib.SmartDashboard.putNumber('rightJoy - ', self.right_axis())

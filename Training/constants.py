@@ -8,4 +8,4 @@ kbackRight = 3
 
 #Encoders
 ktimeoutMs = 10
-kdeadband = 0.02
+kdeadband = 0.06
