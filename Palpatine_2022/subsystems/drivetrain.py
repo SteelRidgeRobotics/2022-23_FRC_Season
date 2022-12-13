@@ -47,7 +47,7 @@ class Drivetrain(commands2.SubsystemBase):
         self.backLeft.selectProfileSlot(constants.kSlotIdx, constants.kPIDLoopIdx)
         self.backRight.selectProfileSlot(constants.kSlotIdx, constants.kPIDLoopIdx)
 
-        #config Proportional, Integral, Derivative, and Filtered (PIDF)
+        #config Proportional, Integral, Derivative, and Feedforward (PIDF)
         self.frontLeft.config_kP(constants.kSlotIdx, constants.kP, constants.ktimeoutMs) #please change these values later (value)
         self.frontLeft.config_kI(constants.kSlotIdx, constants.kI, constants.ktimeoutMs)
         self.frontLeft.config_kD(constants.kSlotIdx, constants.kD, constants.ktimeoutMs)
