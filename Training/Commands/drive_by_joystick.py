@@ -17,7 +17,8 @@ class DriveByJoystick(commands2.CommandBase):
         super().__init__()
 
         self.drive = drive
-        self.left_axis = left_axis
+        self.left_axis = left
+        _axis
         self.right_axis = right_axis
         self.bumperRight = bumperRight
         self.bumperLeft = bumperLeft
