@@ -1,0 +1,11 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/Talon FX [0]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [1]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [2]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon FX [3]": "Motor Controller"
+    }
+  }
+}
