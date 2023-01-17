@@ -1,3 +1,0 @@
-kX = PITCH
-kY = ROLL
-kZ = YAW

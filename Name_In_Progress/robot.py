@@ -2,6 +2,13 @@ import wpilib
 import wpilib.drive
 import ctre
 
+"""
+Reminder for all the gyro axes:
+X = Pitch
+Y = Roll
+Z = Yaw
+"""
+
 class Palpatine(wpilib.TimedRobot):
 
     def robotInit(self):
