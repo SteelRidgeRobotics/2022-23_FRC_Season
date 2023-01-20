@@ -1,4 +1,6 @@
-# Please don't test this, we need to simulate the code more.
+# Please don't test this, we need to simulate and work on the code more.
+
+# To do: Robot needs to go back a moment when charging station starts to fall
 
 import wpilib
 import ctre
