@@ -1,94 +1,73 @@
+# Please don't test this, we need to simulate and work on the code more.
+
+# To do: Robot needs to go back a moment when charging station starts to fall
+
 import wpilib
 import ctre
+
+"""
+Reminder of all the gyro axes:
+X = Pitch
+Y = Roll
+Z = Yaw
+"""
 
 class Palpatine(wpilib.TimedRobot):
 
     def robotInit(self):
 
-        self.driverController = wpilib.XboxController(0)
-        
-        self.frontLeft = ctre.WPI_TalonFX(0)
-        self.backLeft = ctre.WPI_TalonFX(1)
-        self.frontRight = ctre.WPI_TalonFX(2)
-        self.backRight = ctre.WPI_TalonFX(3)
-
-        self.frontLeft.setNeutralMode(ctre.NeutralMode.Brake)
-        self.backLeft.setNeutralMode(ctre.NeutralMode.Brake)
-        self.frontRight.setNeutralMode(ctre.NeutralMode.Brake)
-        self.backRight.setNeutralMode(ctre.NeutralMode.Brake)
-
-        self.backLeft.follow(self.frontLeft)
-        self.backRight.follow(self.frontRight)
-
-        self.frontLeft.setInverted(True)
-        self.backLeft.setInverted(True)
-
-        self.frontLeft.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, 10)
-        self.frontRight.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, 10)
-
-        self.frontLeft.configNominalOutputForward(0, 10)
-        self.frontRight.configNominalOutputForward(0, 10)
-        self.frontLeft.configNominalOutputReverse(0, 10)
-        self.frontRight.configNominalOutputReverse(0, 10)
-        
-        self.frontLeft.configPeakOutputForward(1, 10)
-        self.frontRight.configPeakOutputForward(1, 10)
-        self.frontLeft.configPeakOutputReverse(-1, 10)
-        self.frontRight.configPeakOutputReverse(-1, 10)
-
-        self.frontLeft.selectProfileSlot(0, 0)
-        self.frontRight.selectProfileSlot(0, 0)
-        self.backLeft.selectProfileSlot(0, 0)
-        self.backRight.selectProfileSlot(0, 0)
-
-        self.frontLeft.config_kP(0, 0.375, 10)
-        self.frontLeft.config_kI(0, 0.0, 10)
-        self.frontLeft.config_kD(0, 0.0, 10)
-        self.frontLeft.config_kF(0, 0.05, 10)
-
-        self.frontRight.config_kP(0, 0.375, 10)
-        self.frontRight.config_kI(0, 0.0, 10)
-        self.frontRight.config_kD(0, 0.0, 10)
-        self.frontRight.config_kF(0, 0.05, 10)
-
-        self.frontLeft.configMotionCruiseVelocity(15000, 10)
-        self.frontRight.configMotionCruiseVelocity(15000, 10)
-        self.frontLeft.configMotionAcceleration(6000, 10)
-        self.frontRight.configMotionAcceleration(6000, 10)
-
-        self.frontLeft.setSelectedSensorPosition(0, 0, 10)
-        self.frontRight.setSelectedSensorPosition(0, 0, 10)
-
+        # Create gyro, set axis to X (pitch, up and down)
         self.gyro = wpilib.ADIS16470_IMU()
-        self.gyro.setYawAxis(self.gyro.IMUAxis.kX)
+        self.gyro.setYawAxis(wpilib.ADIS16470_IMU.IMUAxis.kX)
 
+        # Create motors (this program will use tank drive)
+        self.frontLeftMotor = ctre.WPI_TalonFX(0)
+        self.rearLeftMotor = ctre.WPI_TalonFX(1)
+        self.frontRightMotor = ctre.WPI_TalonFX(2)
+        self.rearRightMotor = ctre.WPI_TalonFX(3)
+
+        # Set rear motors to follow front motors
+        self.rearLeftMotor.follow(self.frontLeftMotor)
+        self.rearRightMotor.follow(self.frontRightMotor)
+
+        # Invert right side of the robot
+        self.frontRightMotor.setInverted(True)
+        self.rearRightMotor.setInverted(True)
+
+        # Timer
         self.timer = wpilib.Timer()
 
-    def teleopPeriodic(self):
-
-        power = self.driverController.getLeftY()
-        rotate = self.driverController.getRightX()
-
-        leftMotors = -power + rotate
-        rightMotors = -power - rotate
-
-        wpilib.SmartDashboard.putNumber("Left", leftMotors)
-        wpilib.SmartDashboard.putNumber("Right", rightMotors)
-        wpilib.SmartDashboard.putNumber("Gyro X", self.gyro.getAngle() % 360)
-
     def autonomousInit(self):
-        
+
         self.timer.start()
+        self.P = 0.25
+        self.SETPOINT = 0
+        self.SCALE_DOWN = 0.25
 
     def autonomousPeriodic(self):
 
-        feetToTravel = 4
-        setPoint = (feetToTravel/1.57) * 2048
+        if self.timer.get() <= 2:
 
-        if self.timer.get() <= 3:
+            self.frontLeftMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.5)
+            self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.5)
+        
+        elif self.timer.get() <= 5:
+            
+            error = self.gyro.getAngle() - self.SETPOINT
 
-            self.frontLeft.set(ctre.ControlMode.MotionMagic, setPoint)
-            self.frontRight.set(ctre.ControlMode.MotionMagic, setPoint)
+            if abs(error) <= 2:
+
+                power = -(self.P * error) * self.SCALE_DOWN
+
+                if abs(power) <= 0.75:
+                
+                    self.frontLeftMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
+                    self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
+        
+        else:
+            
+            self.frontLeftMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.0)
+            self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.0)
 
 if __name__ == "__main__":
 
