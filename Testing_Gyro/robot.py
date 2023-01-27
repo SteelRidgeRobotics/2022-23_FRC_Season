@@ -43,7 +43,7 @@ class Palpatine(wpilib.TimedRobot):
         self.timer.start()
         self.P = 0.125
         self.SETPOINT = 0
-        self.SCALE_DOWN = 0.0625
+        self.SCALE_DOWN = 20
 
     def autonomousPeriodic(self):
 
@@ -58,7 +58,7 @@ class Palpatine(wpilib.TimedRobot):
 
             if abs(error) >= 2:
 
-                power = (self.P * error) * self.SCALE_DOWN
+                power = (self.P * error) / self.SCALE_DOWN
 
                 if abs(power) <= 0.25:
                 
