@@ -58,7 +58,7 @@ class Palpatine(wpilib.TimedRobot):
 
             if abs(error) >= 2:
 
-                power = (self.P * error) / self.SCALE_DOWN
+                power = (self.P * (error / self.SCALE_DOWN))
 
                 if abs(power) <= 0.25:
                 
