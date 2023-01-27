@@ -1,6 +1,11 @@
+import math
 import commands2
 import ctre
 import constants
+
+def deadband(value):
+
+    return 0 if abs(value) < constants.DEADBAND else value
 
 class Drivetrain(commands2.SubsystemBase):
 
@@ -76,9 +81,20 @@ class Drivetrain(commands2.SubsystemBase):
         """
         Drive the robot using arcade drive.
         """
-        
-        self.frontLeft.set(ctre.TalonFXControlMode.PercentOutput, leftJoy + rightJoy)
-        self.frontRight.set(ctre.TalonFXControlMode.PercentOutput, leftJoy - rightJoy)
+
+        leftMotors = -leftJoy + rightJoy
+        rightMotors = -leftJoy - rightJoy
+
+        if abs(leftMotors) > 1:
+
+            leftMotors = math.copysign(1, leftMotors)
+
+        if abs(rightMotors) > 1:
+
+            rightMotors = math.copysign(1, rightMotors)
+
+        self.frontLeft.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftMotors))
+        self.frontRight.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightMotors))
 
     def magicDrive(self, pos):
         """

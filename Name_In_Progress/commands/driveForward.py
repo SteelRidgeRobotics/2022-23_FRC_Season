@@ -1,4 +1,3 @@
-import ctre
 import commands2
 import constants
 from subsystems.drivetrain import Drivetrain
@@ -19,11 +18,11 @@ class DriveForward(commands2.CommandBase):
 
         self.train.magicDrive(self.pos)
     
-    def end(self, interrupted: bool)
+    def end(self, interrupted: bool):
         
         self.train.arcadeDrive(0.0, 0.0)
     
     def isFinished(self):
 
-        return True
+        return self.train.frontLeft.getSelectedSensorPosition() != 0 and self.train.frontLeft.getSelectedSensorVelocity() == 0 and self.train.frontRight.getSelectedSensorPosition() != 0 and self.train.frontRight.getSelectedSensorVelocity() == 0
 
