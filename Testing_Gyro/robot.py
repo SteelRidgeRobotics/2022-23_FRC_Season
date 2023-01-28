@@ -16,9 +16,15 @@ class Palpatine(wpilib.TimedRobot):
 
     def robotInit(self):
 
+        # XboxController
+        self.controller = wpilib.XboxController(0)
+
         # Create gyro, set axis to X (pitch, up and down)
         self.gyro = wpilib.ADIS16470_IMU()
+        self.gyro.configCalTime(self.gyro.CalibrationTime._4s)
         self.gyro.setYawAxis(wpilib.ADIS16470_IMU.IMUAxis.kX)
+
+        self.gyro.calibrate()
 
         # Create motors (this program will use tank drive)
         self.frontLeftMotor = ctre.WPI_TalonFX(0)
@@ -34,27 +40,48 @@ class Palpatine(wpilib.TimedRobot):
         self.frontRightMotor.setInverted(True)
         self.rearRightMotor.setInverted(True)
 
+        # Brake mode (robot stops with no output)
+        self.frontLeftMotor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.rearLeftMotor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.frontRightMotor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.rearRightMotor.setNeutralMode(ctre.NeutralMode.Brake)
+
         # Timer
         self.timer = wpilib.Timer()
 
+    def disabledInit(self):
+
+        self.gyro.calibrate()
+
     def autonomousInit(self):
         
+        # Reset and start timer
         self.timer.reset()
         self.timer.start()
-        self.P = 0.125
-        self.SETPOINT = 0
+
+        # Some constants. These would normally be in constants.py
+        self.P = 0.3
         self.SCALE_DOWN = 20
+
+        # Keep track of whether robot has made it onto the charging station
+        self.onChargeStation = False
 
     def autonomousPeriodic(self):
 
-        if self.timer.get() <= 2:
+        wpilib.SmartDashboard.putNumber("Angle", self.gyro.getAngle())
 
-            self.frontLeftMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.5)
-            self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.5)
+        if self.gyro.getAngle() <= 7.5 and not self.onChargeStation:
+
+            self.frontLeftMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.2)
+            self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.2)
+            
+            wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
         
         elif self.timer.get() <= 5:
+
+            self.onChargeStation = True
             
-            error = self.gyro.getAngle() - self.SETPOINT
+            error = self.gyro.getAngle()
 
             if abs(error) >= 2:
 
@@ -64,12 +91,24 @@ class Palpatine(wpilib.TimedRobot):
                 
                     self.frontLeftMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
                     self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
+            
+            wpilib.SmartDashboard.putString("Auto Status", "PID Control")
+            wpilib.SmartDashboard.putNumber("Error", error)
+            wpilib.SmartDashboard.putNumber("Power", power)
         
         else:
             
             self.frontLeftMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.0)
             self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.0)
 
-if __name__ == "__main__":
+            wpilib.SmartDashboard.putString("Auto Status", "Stopped")
+        
+    def teleopPeriodic(self):
 
+        self.frontLeftMotor.set(-self.controller.getLeftY())
+        self.frontRightMotor.set(-self.controller.getLeftY())
+
+
+if __name__ == "__main__":
+    
     wpilib.run(Palpatine)
