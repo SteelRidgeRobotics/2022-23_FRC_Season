@@ -61,7 +61,7 @@ class Palpatine(wpilib.TimedRobot):
 
         # Some constants. These would normally be in constants.py
         self.P = 0.2
-        self.I = 0.03
+        self.I = 0.02
 
         self.SCALE_DOWN = 20
 
