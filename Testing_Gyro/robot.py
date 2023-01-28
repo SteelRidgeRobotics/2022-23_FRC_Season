@@ -60,13 +60,9 @@ class Palpatine(wpilib.TimedRobot):
         self.timer.start()
 
         # Some constants. These would normally be in constants.py
-        self.P = 0.2
-        self.I = 0.01
+        self.P = 0.25
 
         self.SCALE_DOWN = 20
-
-        # Sum of all error (integral)
-        self.integral = 0
 
         # Keep track of whether robot has made it onto the charging station
         self.onChargeStation = False
@@ -82,19 +78,17 @@ class Palpatine(wpilib.TimedRobot):
             
             wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
 
-        elif self.timer.get() <= 12:
+        elif self.timer.get() <= 10:
 
             self.onChargeStation = True
 
             error = self.gyro.getAngle()
 
-            self.integral += error / self.SCALE_DOWN
-
-            power = (self.P * (error / self.SCALE_DOWN)) + (self.I * self.integral)
+            power = (self.P * (error / self.SCALE_DOWN))
 
             wpilib.SmartDashboard.putNumber("Requested Power", power)
 
-            if abs(power) <= 0.625:
+            if abs(power) <= 0.5:
 
                 self.frontLeftMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
                 self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
