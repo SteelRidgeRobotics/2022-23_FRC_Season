@@ -21,7 +21,7 @@ class Palpatine(wpilib.TimedRobot):
 
         # Create gyro, set axis to X (pitch, up and down)
         self.gyro = wpilib.ADIS16470_IMU()
-        self.gyro.configCalTime(self.gyro.CalibrationTime._4s)
+        self.gyro.configCalTime(self.gyro.CalibrationTime._1s)
         self.gyro.setYawAxis(wpilib.ADIS16470_IMU.IMUAxis.kX)
 
         self.gyro.calibrate()
@@ -50,7 +50,7 @@ class Palpatine(wpilib.TimedRobot):
         self.timer = wpilib.Timer()
 
     def disabledInit(self):
-
+        
         self.gyro.calibrate()
 
     def autonomousInit(self):
@@ -60,8 +60,13 @@ class Palpatine(wpilib.TimedRobot):
         self.timer.start()
 
         # Some constants. These would normally be in constants.py
-        self.P = 0.3
+        self.P = 0.2
+        self.I = 0.03
+
         self.SCALE_DOWN = 20
+
+        # Sum of all error (integral)
+        self.integral = 0
 
         # Keep track of whether robot has made it onto the charging station
         self.onChargeStation = False
@@ -76,25 +81,27 @@ class Palpatine(wpilib.TimedRobot):
             self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.2)
             
             wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
-        
-        elif self.timer.get() <= 5:
+
+        elif self.timer.get() <= 12:
 
             self.onChargeStation = True
-            
+
             error = self.gyro.getAngle()
 
-            if abs(error) >= 2:
+            self.integral += error / self.SCALE_DOWN
 
-                power = (self.P * (error / self.SCALE_DOWN))
+            power = (self.P * (error / self.SCALE_DOWN)) + (self.I * self.integral)
 
-                if abs(power) <= 0.25:
+            wpilib.SmartDashboard.putNumber("Requested Power", power)
+
+            if abs(power) <= 0.625:
+
+                self.frontLeftMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
+                self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
                 
-                    self.frontLeftMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
-                    self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
-            
-            wpilib.SmartDashboard.putString("Auto Status", "PID Control")
-            wpilib.SmartDashboard.putNumber("Error", error)
-            wpilib.SmartDashboard.putNumber("Power", power)
+                wpilib.SmartDashboard.putString("Auto Status", "PID Control")
+                wpilib.SmartDashboard.putNumber("Error", error)
+                wpilib.SmartDashboard.putBoolean("Power Accepted", power <= 0.625)
         
         else:
             
@@ -107,6 +114,8 @@ class Palpatine(wpilib.TimedRobot):
 
         self.frontLeftMotor.set(-self.controller.getLeftY())
         self.frontRightMotor.set(-self.controller.getLeftY())
+
+        wpilib.SmartDashboard.putNumber("Angle", self.gyro.getAngle())
 
 
 if __name__ == "__main__":
