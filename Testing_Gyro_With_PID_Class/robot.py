@@ -1,12 +1,6 @@
 import wpilib
+from wpimath.controller import PIDController
 import ctre
-
-"""
-Reminder of all the gyro axes:
-X = Pitch
-Y = Roll
-Z = Yaw
-"""
 
 class Palpatine(wpilib.TimedRobot):
 
@@ -17,7 +11,7 @@ class Palpatine(wpilib.TimedRobot):
 
         # Create gyro, set axis to X (pitch, up and down)
         self.gyro = wpilib.ADIS16470_IMU()
-        self.gyro.configCalTime(self.gyro.CalibrationTime._1s)
+        self.gyro.configCalTime(self.gyro.CalibrationTime._512ms)
         self.gyro.setYawAxis(wpilib.ADIS16470_IMU.IMUAxis.kX)
 
         self.gyro.calibrate()
@@ -42,23 +36,25 @@ class Palpatine(wpilib.TimedRobot):
         self.frontRightMotor.setNeutralMode(ctre.NeutralMode.Brake)
         self.rearRightMotor.setNeutralMode(ctre.NeutralMode.Brake)
 
+        # PID controller that will do our calculations for us
+        self.pidController = PIDController(0.0125, 0.0, 0.0)
+
+        # Reset the PID controller
+        self.pidController.reset()
+
         # Timer
         self.timer = wpilib.Timer()
 
     def disabledInit(self):
         
         self.gyro.calibrate()
+        self.pidController.reset()
 
     def autonomousInit(self):
         
         # Reset and start timer
         self.timer.reset()
         self.timer.start()
-
-        # Some constants. These would normally be in constants.py
-        self.P = 0.25
-
-        self.SCALE_DOWN = 20
 
         # Keep track of whether robot has made it onto the charging station
         self.onChargeStation = False
@@ -78,9 +74,7 @@ class Palpatine(wpilib.TimedRobot):
 
             self.onChargeStation = True
 
-            error = self.gyro.getAngle()
-
-            power = (self.P * (error / self.SCALE_DOWN))
+            power = self.pidController.calculate(self.gyro.getAngle(), 0.0)
 
             wpilib.SmartDashboard.putNumber("Requested Power", power)
 
@@ -90,7 +84,6 @@ class Palpatine(wpilib.TimedRobot):
                 self.frontRightMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
                 
                 wpilib.SmartDashboard.putString("Auto Status", "PID Control")
-                wpilib.SmartDashboard.putNumber("Error", error)
                 wpilib.SmartDashboard.putBoolean("Power Accepted", power <= 0.625)
         
         else:
