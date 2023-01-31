@@ -44,9 +44,10 @@ class Palpatine(wpilib.TimedRobot):
 
         # Timer
         self.timer = wpilib.Timer()
-
+    
     def disabledInit(self):
         
+        # Calibrate gyro
         self.gyro.calibrate()
 
     def autonomousInit(self):

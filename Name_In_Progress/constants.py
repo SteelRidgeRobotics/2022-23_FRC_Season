@@ -10,6 +10,7 @@ TIMEOUTMS = 10
 CRUISEVELOCITY = 15000
 CRUISEACCEL = 6000
 
+# Motion Magic
 P = 0.375
 I = 0.0
 D = 0.0
@@ -20,3 +21,6 @@ WHEELCIRCUMFERENCEFEET = 1.57
 FEETTODRIVE = 3
 
 DEADBAND = 0.1
+
+# Normal P Control for Charge Station
+P = 0.0125
