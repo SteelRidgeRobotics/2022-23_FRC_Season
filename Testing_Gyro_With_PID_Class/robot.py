@@ -120,5 +120,5 @@ class Palpatine(wpilib.TimedRobot):
         wpilib.SmartDashboard.putNumber("Angle", self.gyro.getAngle())
 
 if __name__ == "__main__":
-    
+    # Runs the code
     wpilib.run(Palpatine)
