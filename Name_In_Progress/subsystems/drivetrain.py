@@ -1,4 +1,6 @@
 import math
+import wpilib
+import wpimath.controller
 import commands2
 import ctre
 import constants
@@ -8,6 +10,9 @@ def deadband(value):
     return 0 if abs(value) < constants.DEADBAND else value
 
 class Drivetrain(commands2.SubsystemBase):
+    """
+    Class to drive the robot chassis.
+    """
 
     def __init__(self):
 
@@ -77,6 +82,14 @@ class Drivetrain(commands2.SubsystemBase):
         self.frontRight.setNeutralMode(ctre.NeutralMode.Brake)
         self.backRight.setNeutralMode(ctre.NeutralMode.Brake)
 
+        # PIDController for balancing on the charge station
+        self.pidController = wpimath.controller.PIDController(constants.MMP, constants.MMI, constants.MMD)
+
+        # Gyroscope to keep track of robot pitch
+        self.gyro = wpilib.ADIS16470_IMU()
+        self.gyro.setYawAxis(self.gyro.IMUAxis.kX)
+
+
     def arcadeDrive(self, leftJoy, rightJoy):
         """
         Drive the robot using arcade drive.
@@ -95,11 +108,3 @@ class Drivetrain(commands2.SubsystemBase):
 
         self.frontLeft.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftMotors))
         self.frontRight.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightMotors))
-
-    def magicDrive(self, pos):
-        """
-        Drive the motors to a specific sensor position.
-        """
-
-        self.frontLeft.set(ctre.TalonFXControlMode.MotionMagic, pos)
-        self.frontRight.set(ctre.TalonFXControlMode.MotionMagic, pos)
