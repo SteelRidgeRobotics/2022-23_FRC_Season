@@ -208,6 +208,10 @@ def main():
     inst = ntcore.NetworkTableInstance.getDefault()
     vision_nt = inst.getTable("Vision")
 
+    img = numpy.zeros(shape=(240, 320, 3), dtype=numpy.uint8)
+
+    time.sleep(0.5) #wait for NetworkTables to boot up
+
     CameraServer.enableLogging()
 
     camera = CameraServer.startAutomaticCapture()
@@ -225,6 +229,19 @@ def main():
             continue
 
         output_img = ConePipeline.process(input_img)
+        # Find the cone with knowing the contours
+        # Find target and push information to NetworkTables
+        rect = cv2.minAreaRect(input_img)
+        center, _, _ = rect
+        center_x, center_y = center
+
+        corners = cv2.approxPolyDP(output_img, 0.1 * cv2.arcLength(output_img), True)
+        _,_, rotation = cv2.fitEllipse(output_img)
+
+        vision_nt.putNumber("center_x", center_x)
+        vision_nt.putNumber("center_y", center_y)
+
+        #vision_nt.putNumberArray("target_x", x_list)
 
         processingTime = time.time() - startTime
         fps = 1/processingTime
