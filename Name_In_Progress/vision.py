@@ -4,6 +4,7 @@ import time
 import json
 import numpy
 from enum import Enum
+import ntcore
 
 class ConePipeline:
     """
@@ -203,6 +204,9 @@ def main():
     with open("/boot/frc.json") as f:
         config = json.load(f)
     camera = config["cameras"][0]
+
+    inst = ntcore.NetworkTableInstance.getDefault()
+    vision_nt = inst.getTable("Vision")
 
     CameraServer.enableLogging()
 
