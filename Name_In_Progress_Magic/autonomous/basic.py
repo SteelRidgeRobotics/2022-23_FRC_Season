@@ -16,7 +16,7 @@ class AutoBalance(StateMachine):
 
             power = self.drivetrain.pidController.calculate(self.drivetrain.gyro.getAngle(), 0.0)
 
-            if abs(power) <= 0.5:
+            if abs(power) <= 0.5 and abs(power) >= 0.1:
 
                 self.drivetrain.move(power, power)
 
