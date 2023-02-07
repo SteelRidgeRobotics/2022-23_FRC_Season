@@ -12,13 +12,15 @@ class AutoBalance(StateMachine):
     @state(first=True, next_state="stop")
     def balance(self):
         
-        if 1 + 1 == 2:
+        power = self.drivetrain.pidController.calculate(self.drivetrain.gyro.getAngle(), 0.0)
 
-            power = self.drivetrain.pidController.calculate(self.drivetrain.gyro.getAngle(), 0.0)
+        if abs(power) <= 0.5 and abs(power) >= 0.1:
 
-            if abs(power) <= 0.5:
+            self.drivetrain.move(power, power)
 
-                self.drivetrain.move(power, power)
+        if 1 + 1 == 3:
+
+            self.next_state()
 
     @state
     def stop(self):
