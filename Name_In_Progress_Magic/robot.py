@@ -22,10 +22,18 @@ class Palpatine(magicbot.MagicRobot):
 
         self.driverController = wpilib.XboxController(constants.DRIVERCONTROLLERPORT)
 
+    def autonomousInit(self):
+
+        pass
+
+    def teleopInit(self):
+
+        pass
+    
     def teleopPeriodic(self):
 
         self.drivetrain.move(self.driverController.getLeftY(), self.driverController.getRightY())
 
-if __name__ == 'main':
+if __name__ == '__main__':
 
     wpilib.run(Palpatine)

@@ -87,7 +87,9 @@ class Drivetrain(commands2.SubsystemBase):
 
         # Gyroscope to keep track of robot pitch
         self.gyro = wpilib.ADIS16470_IMU()
-        self.gyro.setYawAxis(self.gyro.IMUAxis.kX)
+        """self.gyro.setYawAxis(self.gyro.IMUAxis.kX)"""
+
+        self.onChargeStation = False
 
 
     def arcadeDrive(self, leftJoy, rightJoy):
@@ -98,13 +100,17 @@ class Drivetrain(commands2.SubsystemBase):
         leftMotors = -leftJoy + rightJoy
         rightMotors = -leftJoy - rightJoy
 
-        if abs(leftMotors) > 1:
+        if abs(leftMotors) > 1 or abs(rightMotors) > 1:
 
-            leftMotors = math.copysign(1, leftMotors)
+            if abs(leftMotors) > abs(rightMotors):
 
-        if abs(rightMotors) > 1:
+                leftMotors /= leftMotors
+                rightMotors /= leftMotors
 
-            rightMotors = math.copysign(1, rightMotors)
+            else:
+
+                leftMotors /= rightMotors
+                rightMotors /= rightMotors
 
         self.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftMotors))
         self.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightMotors))

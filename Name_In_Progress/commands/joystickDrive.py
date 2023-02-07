@@ -1,3 +1,4 @@
+import math
 import wpilib
 import commands2
 from subsystems.drivetrain import Drivetrain
@@ -13,11 +14,6 @@ class JoystickDrive(commands2.CommandBase):
         self.right = right()
         self.leftBumper = leftBumper
         self.rightBumper = rightBumper
-        
-        if self.left > 1 or self.right > 1:
-
-            self.left /= max(self.left, self.right)
-            self.right /= max(self.left, self.right)
 
         self.addRequirements([self.train])
 
@@ -28,9 +24,15 @@ class JoystickDrive(commands2.CommandBase):
             self.left *= 0.5
             self.right *= 0.5
 
-        self.train.arcadeDrive(self.left, self.right)
+        if self.left > 1:
 
-        wpilib.SmartDashboard.putNumberArray("LR", [self.left, self.right])
+            self.left = math.copysign(1, self.left)
+
+        if self.right > 1:
+
+            self.right = math.copysign(1, self.right)
+
+        self.train.arcadeDrive(self.left, self.right)
 
     def end(self, interrupted):
 
