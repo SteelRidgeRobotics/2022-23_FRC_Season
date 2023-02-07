@@ -57,7 +57,6 @@ class ConePipeline:
 
         self.convex_hulls_output = None
 
-
     def process(self, source0):
         """
         Runs the pipeline and sets all outputs to new values.
@@ -181,7 +180,7 @@ class ConePipeline:
         else:
             mode = cv2.RETR_LIST
         method = cv2.CHAIN_APPROX_SIMPLE
-        im2, contours, hierarchy =cv2.findContours(input, mode=mode, method=method)
+        contours, hierarchy =cv2.findContours(input, mode=mode, method=method)
         return contours
 
     @staticmethod
@@ -221,14 +220,16 @@ def main():
 
     output = CameraServer.putVideo("Camera 1", 320, 240)
 
+    conePipeline = ConePipeline()
+
     while True:
         startTime = time.time()
-        frame_time, input_img = cvSink.grabFrame(input_img)
+        frame_time, input_img = cvSink.grabFrame(img)
 
         if frame_time == 0:
             continue
 
-        output_img = ConePipeline.process(input_img)
+        output_img = conePipeline.process(input_img)
         # Find the cone with knowing the contours
         # Find target and push information to NetworkTables
         rect = cv2.minAreaRect(input_img)
