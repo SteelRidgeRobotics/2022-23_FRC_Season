@@ -2,7 +2,7 @@ import wpilib
 import constants
 import commands2
 from subsystems.drivetrain import Drivetrain
-from commands.stationCorrection import DriveForward
+from commands.stationCorrection import StationCorrection
 from commands.joystickDrive import JoystickDrive
 
 class RobotContainer:
@@ -14,7 +14,7 @@ class RobotContainer:
 
         self.chooser = wpilib.SendableChooser()
 
-        driveForward = DriveForward(self.train, constants.FEETTODRIVE)
+        driveForward = StationCorrection(self.train)
 
         self.chooser.setDefaultOption("Drive Forward", driveForward)
 

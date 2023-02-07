@@ -4,14 +4,12 @@ NOT DONE BY A LONG SHOT
 
 import commands2
 import wpilib
-import wpimath.controller
 import ctre
-import constants
 from subsystems.drivetrain import Drivetrain
 
-class DriveForward(commands2.CommandBase):
+class StationCorrection(commands2.CommandBase):
 
-    def __init__(self, train: Drivetrain, distance: float):
+    def __init__(self, train: Drivetrain):
 
         super().__init__()
 
@@ -27,16 +25,37 @@ class DriveForward(commands2.CommandBase):
 
         if self.train.gyro.getAngle() <= 7.5 and not self.onChargeStation:
 
-            self.train.frontLeft.set(ctre.TalonFXControlMode.PercentOutput, 0.2)
-            self.train.frontRight.set(ctre.TalonFXControlMode.PercentOutput, 0.2)
+            self.train.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.2)
+            self.train.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.2)
 
             wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
+        
+        else:
+
+            self.onChargeStation = True
+            
+            power = self.train.pidController.calculate(self.train.gyro.getAngle(), 0.0)
+
+            wpilib.SmartDashboard.putNumber("Requested Power", power)
+
+            wpilib.SmartDashboard.putString("Auto Status", "PID Control")
+
+            if abs(power) <= 0.5:
+
+                self.train.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
+                self.train.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, power)
+
+                wpilib.SmartDashboard.putBoolean("Power Accepted", True)
+
+            else:
+
+                wpilib.SmartDashboard.putBoolean("Power Accepted", False)
 
     def end(self, interrupted: bool):
         
-        self.train.frontLeft.set(ctre.TalonFXControlMode.PercentOutput, 0.0)
-        self.train.frontRight.set(ctre.TalonFXControlMode.PercentOutput, 0.0)
+        self.train.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.0)
+        self.train.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.0)
     
     def isFinished(self):
 
-        pass
+        return False
