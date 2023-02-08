@@ -38,8 +38,8 @@ class Drivetrain:
 
     def move(self, left, right):
 
-        self.left = left if abs(left) >= 0.05 else 0
-        self.right = right if abs(right) >= 0.05 else 0
+        self.left = left
+        self.right = right
 
     def execute(self):
         

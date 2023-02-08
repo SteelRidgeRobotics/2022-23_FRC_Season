@@ -18,9 +18,13 @@ class Palpatine(magicbot.MagicRobot):
 
         self.gyro = wpilib.ADIS16470_IMU()
 
-        self.pidController = PIDController(0.0125, 0.0, 0.0)
+        self.pidController = PIDController(constants.P, constants.I, constants.D)
 
         self.driverController = wpilib.XboxController(constants.DRIVERCONTROLLERPORT)
+
+    def disabledPeriodic(self):
+
+        pass
 
     def autonomousInit(self):
 
@@ -32,7 +36,18 @@ class Palpatine(magicbot.MagicRobot):
     
     def teleopPeriodic(self):
 
-        self.drivetrain.move(self.driverController.getLeftY(), self.driverController.getRightY())
+        left = self.driverController.getLeftY()
+        right = self.driverController.getLeftY()
+        
+        if abs(left) <= constants.DEADBAND:
+            
+            left = 0.0
+        
+        if abs(right) <= constants.DEADBAND:
+            
+            right = 0.0
+
+        self.drivetrain.move(left, right)
 
 if __name__ == '__main__':
 

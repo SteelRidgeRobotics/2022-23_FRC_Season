@@ -12,8 +12,8 @@ class JoystickDrive(commands2.CommandBase):
         self.train = train
         self.left = left()
         self.right = right()
-        self.leftBumper = leftBumper
-        self.rightBumper = rightBumper
+        self.leftBumper = leftBumper()
+        self.rightBumper = rightBumper()
 
         self.addRequirements([self.train])
 
@@ -23,14 +23,6 @@ class JoystickDrive(commands2.CommandBase):
             
             self.left *= 0.5
             self.right *= 0.5
-
-        if self.left > 1:
-
-            self.left = math.copysign(1, self.left)
-
-        if self.right > 1:
-
-            self.right = math.copysign(1, self.right)
 
         self.train.arcadeDrive(self.left, self.right)
 

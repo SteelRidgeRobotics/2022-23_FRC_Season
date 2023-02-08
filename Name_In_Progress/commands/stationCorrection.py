@@ -31,7 +31,7 @@ class StationCorrection(commands2.CommandBase):
 
             self.train.onChargeStation = True
             
-            power = self.train.pidController.calculate(self.train.gyro.getAngle(), 0.0)
+            power = -(self.train.pidController.calculate(self.train.gyro.getAngle(), 0.0))
 
             wpilib.SmartDashboard.putNumber("Requested Power", power)
 

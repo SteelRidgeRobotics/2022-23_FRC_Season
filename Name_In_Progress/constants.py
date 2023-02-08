@@ -16,7 +16,7 @@ MMI = 0.0
 MMD = 0.0
 MMF = 0.0
 
-DEADBAND = 0.1
+DEADBAND = 0.15
 
 # Normal P Control for Charge Station
 P = 0.0125
