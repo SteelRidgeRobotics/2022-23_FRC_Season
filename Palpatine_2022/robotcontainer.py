@@ -43,9 +43,13 @@ class RobotContainer:
                 
         #self.configureButtonBindings()  
         
-        self.drive.setDefaultCommand(DriveByJoystick(self.drive, lambda: -self.driverController.getLeftY(), lambda: -self.driverController.getRightY(), lambda: self.driverController.getRightBumper(), lambda: self.driverController.getLeftBumper()))
+        #self.drive.setDefaultCommand(DriveByJoystick(self.drive, lambda: -self.driverController.getLeftY(), lambda: -self.driverController.getRightY(), lambda: self.driverController.getRightBumper(), lambda: self.driverController.getLeftBumper()))
+        
+        
         #self.drive.setDefaultCommand(DriveByJoystick(self.drive, lambda: -self.driverController.getLeftY(), lambda: -self.driverController.getRightY()))
         
+        #ARCADE, OBJECTIVELY WAY BETTER - Pickle_Face5 & Wyatt
+        self.drive.setDefaultCommand(DriveByJoystick(self.drive, lambda: (-self.driverController.getLeftY() + self.driverController.getRightX()), lambda: (-self.driverController.getLeftY() - self.driverController.getRightX()), lambda: self.driverController.getRightBumper(), lambda: self.driverController.getLeftBumper()))
         
     #def configureButtonBindings(self):
 
