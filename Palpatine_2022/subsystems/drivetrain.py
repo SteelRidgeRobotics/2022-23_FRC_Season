@@ -76,11 +76,10 @@ class Drivetrain(commands2.SubsystemBase):
         self.backRight.setNeutralMode(ctre.NeutralMode.Brake)
        
     def userDrive(self, leftJoy: float, rightJoy: float, percentage: float) -> None:
-        
-        if abs(leftJoy) < 0.1:
-            leftJoy = 0
-        if abs(rightJoy) < 0.1:
-            rightJoy = 0
+        if abs(leftJoy) <= 0.25:
+            leftJoy = 0.0
+        if abs(rightJoy) <= 0.25:
+            rightJoy = 0.0
 
         self.frontLeft.set(ctre.TalonFXControlMode.PercentOutput, leftJoy*percentage)
         self.frontRight.set(ctre.TalonFXControlMode.PercentOutput, rightJoy*percentage)

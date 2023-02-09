@@ -2,6 +2,7 @@ import typing
 import commands2
 from subsystems.drivetrain import Drivetrain
 import wpilib 
+#from robotcontainer import RobotContainer
 
 class DriveByJoystick(commands2.CommandBase):
     """
@@ -50,7 +51,13 @@ class DriveByJoystick(commands2.CommandBase):
         wpilib.SmartDashboard.putBoolean('  Right Bumper Pressed - ', self.bumperRight())
         wpilib.SmartDashboard.putBoolean('  Left Bumper Pressed - ', self.bumperLeft())
         wpilib.SmartDashboard.putNumber('   Speed Percentage - ', self.percent)
-
+        
+        
+        #tried to put this stuff on smartdashboard to find a movement issue with turning
+        """
+        wpilib.SmartDashboard.putNumber('   Left Axis - ', (-self.driverController.getLeftY() + self.driverController.getRightX()))
+        wpilib.SmartDashboard.putNumber(' Right Axis - ', (-self.driverController.getLeftY() - self.driverController.getRightX()))
+        """
     def end(self, interrupted: bool) -> None:
     # 
         # Called once after isFinished returns True
