@@ -82,7 +82,6 @@ class Drivetrain(commands2.SubsystemBase):
         if abs(rightJoy) <= constants.controllerDeadZone:
             rightJoy = 0.0
             
-        
         self.frontLeft.set(ctre.TalonFXControlMode.PercentOutput, leftJoy*percentage)
         self.frontRight.set(ctre.TalonFXControlMode.PercentOutput, rightJoy*percentage)
 
