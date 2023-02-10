@@ -31,13 +31,11 @@ class DriveByJoystick(commands2.CommandBase):
         # Called repeatedly when this command is scheduled to run
         #self.drive.userDrive(self.driveController.getY()*-1 + self.driveController.getX(), self.driveController.getY()*-1 - self.driveController.getX())
         
-        # when the one of the bumpers is pressed, halve the speed
-        if self.bumperRight() or self.bumperLeft():
+        # when the one of the bumpers is pressed, halve the speed. If both are pressed, lower the speed even more.
+        if self.bumperLeft() and self.bumperRight():
+            self.percent = self.slowFactor / 2
+        elif self.bumperLeft() or self.bumperRight():
             self.percent = self.slowFactor
-            #self.drive.userDrive(self.left_axis(), self.right_axis(), self.percent) DO WE REALLY NEED THIS?
-        # 
-        #elif (self.bumperRight or self.bumperLeft) and self.slowFactor == 0.5:
-        #    self.slowFactor = 1.0 
         else:
             self.percent = 1.0
         
@@ -49,8 +47,10 @@ class DriveByJoystick(commands2.CommandBase):
         wpilib.SmartDashboard.putNumber("  Left Velocity - ", self.drive.frontLeft.getSelectedSensorVelocity())
         wpilib.SmartDashboard.putNumber("  Right Velocity - ", self.drive.frontRight.getSelectedSensorVelocity())
         wpilib.SmartDashboard.putBoolean('  Right Bumper Pressed - ', self.bumperRight())
-        wpilib.SmartDashboard.putBoolean('  Left Bumper Pressed - ', self.bumperLeft())
+        wpilib.SmartDashboard.putBoolean(' " Left Bumper Pressed - ', self.bumperLeft())
         wpilib.SmartDashboard.putNumber('   Speed Percentage - ', self.percent)
+        wpilib.SmartDashboard.putNumberArray("LR", [self.left_axis() * self.percent, self.right_axis() * self.percent])
+        
         
         
         #tried to put this stuff on smartdashboard to find a movement issue with turning
