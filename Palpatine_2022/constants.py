@@ -29,6 +29,9 @@ kP = 0.375
 kD = 11.25
 kI = 0.0
 
+# Controller Dead Zone (Controller joysticks return 0 if their absolute value is less than or equal to this number)
+controllerDeadZone = 0.145
+
 
 #Physical constants
 kunitsPerRotation = 2048.0
