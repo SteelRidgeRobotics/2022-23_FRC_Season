@@ -22,5 +22,7 @@ class RobotArm:
         """ add_arm_segment(length, thetaInit=0)
                 Here we add another segment to the arm. We have to define the length
                 and we can define the initial angle of the arm as well (which will come in hand later).
-                T
         """
+        self.joints = np.append(self.joints, np.array([[0, 0, 0, 1]]).T, axis=1)
+        self.lengths.append(kwargs['length'])
+        
