@@ -5,8 +5,6 @@ import numpy as np
 import math
 
 class RobotArm:
-    # add comment
-    print()
     # like the code that this was based on we can change the place where the base arm joins to the robot
     # If no arguments, they are set to 0.
     # init class
@@ -18,4 +16,11 @@ class RobotArm:
         # the matrices of the joint coordinates
         self.joints = np.array([[self.xBase, self.yBase, 0, 1]], dtype=float).T
         # a list of all the arm lengths
-        self.lengths
+        self.lengths = []
+        
+    def add_arm_segment(self, **kwargs):
+        """ add_arm_segment(length, thetaInit=0)
+                Here we add another segment to the arm. We have to define the length
+                and we can define the initial angle of the arm as well (which will come in hand later).
+                T
+        """
