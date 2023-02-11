@@ -1,4 +1,3 @@
-from copy import deepcopy
 import wpilib
 import commands2
 import constants
@@ -7,7 +6,6 @@ from wpilib import XboxController
 from commands.drive_by_joystick import DriveByJoystick
 from commands.drive_straight import DriveStraight
 from subsystems.drivetrain import Drivetrain
-from commands2.button import JoystickButton
 
 #hi
 class RobotContainer:
@@ -57,24 +55,24 @@ class RobotContainer:
         lambda: self.driverController.getLeftBumper()))
 
     def forwardSum(self) -> float: # It took more than 2 and a half hours to get this to work, I swear if this stops working I'm going to commit a crime
-        leftY = self.driverController.getLeftY()
-        rightX = self.driverController.getRightX()
-        wpilib.SmartDashboard.putNumber('   trueLeftJoy - ', leftY)
-        wpilib.SmartDashboard.putNumber('   trueRightJoy - ', rightX)
-        if (abs(leftY) <= constants.controllerDeadZoneLeft):
-            leftY = 0
-        if (abs(rightX) <= constants.controllerDeadZoneRight):
-            rightX = 0
+        leftY, rightX = self.addDeadZoneAndSpeedLimit(self.driverController.getLeftY(), self.driverController.getRightX())
         return -leftY + rightX
 
     def reverseSum(self) -> float:
-        leftY = self.driverController.getLeftY()
-        rightX = self.driverController.getRightX()
+        leftY, rightX = self.addDeadZoneAndSpeedLimit(self.driverController.getLeftY(), self.driverController.getRightX())
+        return -leftY - rightX
+
+    def addDeadZoneAndSpeedLimit(self, leftYParam: float, rightXParam: float) -> tuple:
+        leftY = leftYParam
+        rightX = rightXParam
+        wpilib.SmartDashboard.putNumber('trueLeftJoy - ', leftY)
+        wpilib.SmartDashboard.putNumber('trueRightJoy - ', rightX)
         if (abs(leftY) <= constants.controllerDeadZoneLeft):
             leftY = 0
         if (abs(rightX) <= constants.controllerDeadZoneRight):
             rightX = 0
-        return -leftY - rightX
+        return leftY, rightX
+
         
     #def configureButtonBindings(self):
 

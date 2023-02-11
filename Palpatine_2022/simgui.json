@@ -10,6 +10,11 @@
   "NetworkTables": {
     "SmartDashboard": {
       "open": true
+    },
+    "transitory": {
+      "SmartDashboard": {
+        "open": true
+      }
     }
   }
 }
