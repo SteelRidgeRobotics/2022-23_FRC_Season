@@ -1,3 +1,4 @@
+from copy import deepcopy
 import wpilib
 import commands2
 import constants
@@ -50,10 +51,30 @@ class RobotContainer:
         
         #ARCADE, OBJECTIVELY WAY BETTER - Pickle_Face5 & Wyatt
         self.drive.setDefaultCommand(DriveByJoystick(self.drive, 
-        lambda: (-self.driverController.getLeftY() + self.driverController.getRightX()), 
-        lambda: (-self.driverController.getLeftY() - self.driverController.getRightX()), 
+        lambda: self.forwardSum(), 
+        lambda: self.reverseSum(), 
         lambda: self.driverController.getRightBumper(), 
         lambda: self.driverController.getLeftBumper()))
+
+    def forwardSum(self) -> float: # It took more than 2 and a half hours to get this to work, I swear if this stops working I'm going to commit a crime
+        leftY = self.driverController.getLeftY()
+        rightX = self.driverController.getRightX()
+        wpilib.SmartDashboard.putNumber('   trueLeftJoy - ', leftY)
+        wpilib.SmartDashboard.putNumber('   trueRightJoy - ', rightX)
+        if (abs(leftY) <= constants.controllerDeadZoneLeft):
+            leftY = 0
+        if (abs(rightX) <= constants.controllerDeadZoneRight):
+            rightX = 0
+        return -leftY + rightX
+
+    def reverseSum(self) -> float:
+        leftY = self.driverController.getLeftY()
+        rightX = self.driverController.getRightX()
+        if (abs(leftY) <= constants.controllerDeadZoneLeft):
+            leftY = 0
+        if (abs(rightX) <= constants.controllerDeadZoneRight):
+            rightX = 0
+        return -leftY - rightX
         
     #def configureButtonBindings(self):
 
