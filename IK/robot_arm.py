@@ -32,4 +32,25 @@ class RobotArm:
         """
         We learned that you can use matrixs to help do inverse kinematics
         """
+        transformationMatrix =  np.array([
+            [math.cos(theta), -math.sin(theta), 0, x],
+            [math.sin(theta), math.cos(theta), 0, y],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+            ])
         
+        return transformationMatrix
+
+    def update_joint_coords(self):
+        """
+        Recompute x & y coordinates of each joint and end effector
+        """
+        T = self.get_transformation_matrix(self.thetas[0].item(), self.xRoot, self.yRoot)
+        for i in range (len(self.lengths) - 1):
+            T_next = self.get_transformation_matrix(self.thetas[i+1], self.lenghts[i], 0)
+            T = T.dot(T_next)
+            self.joints[:, [i+1]] = T.dot(np.array([[0, 0, 0, 1]]).T)
+        
+        # 
+        endEffectorCoords = np.array([[self.lengths[-1], 0, 0, 1]]).T
+        self.joints[:, [-1]] = T.dot(endEffectorCoords)
