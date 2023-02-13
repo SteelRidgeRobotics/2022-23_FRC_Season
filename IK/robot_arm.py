@@ -25,4 +25,11 @@ class RobotArm:
         """
         self.joints = np.append(self.joints, np.array([[0, 0, 0, 1]]).T, axis=1)
         self.lengths.append(kwargs['length'])
+        # get initial angle. If nothing entered, it will be 0
+        self.thetas = np.append(self.thetas, kwargs.get('thetaInit', 0))
+        
+    def get_transformation_matrix(self, theta, x, y):
+        """
+        We learned that you can use matrixs to help do inverse kinematics
+        """
         
