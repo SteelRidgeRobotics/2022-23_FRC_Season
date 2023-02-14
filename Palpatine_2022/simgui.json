@@ -8,6 +8,9 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
     "SmartDashboard": {
       "open": true
     },

@@ -55,18 +55,30 @@ class RobotContainer:
         lambda: self.driverController.getLeftBumper()))
 
     def forwardSum(self) -> float: # It took more than 2 and a half hours to get this to work, I swear if this stops working I'm going to commit a crime
-        leftY, rightX = self.addDeadZoneAndSpeedLimit(self.driverController.getLeftY(), self.driverController.getRightX())
-        return -leftY + rightX
+        leftY, rightX = self.addDeadZone(self.driverController.getLeftY(), self.driverController.getRightX())
+        finalValue = -leftY + rightX
+        if (finalValue > 1):
+            finalValue = 1
+        elif (finalValue < -1):
+            finalValue = -1
+        return finalValue
 
     def reverseSum(self) -> float:
-        leftY, rightX = self.addDeadZoneAndSpeedLimit(self.driverController.getLeftY(), self.driverController.getRightX())
-        return -leftY - rightX
+        leftY, rightX = self.addDeadZone(self.driverController.getLeftY(), self.driverController.getRightX())
+        finalValue = -leftY - rightX
+        if (finalValue > 1):
+            finalValue = 1
+        elif (finalValue < -1):
+            finalValue = -1
+        return finalValue
 
-    def addDeadZoneAndSpeedLimit(self, leftYParam: float, rightXParam: float) -> tuple:
+    def addDeadZone(self, leftYParam: float, rightXParam: float) -> tuple:
         leftY = leftYParam
         rightX = rightXParam
         wpilib.SmartDashboard.putNumber('trueLeftJoy - ', leftY)
         wpilib.SmartDashboard.putNumber('trueRightJoy - ', rightX)
+
+        # Controller Dead Zone
         if (abs(leftY) <= constants.controllerDeadZoneLeft):
             leftY = 0
         if (abs(rightX) <= constants.controllerDeadZoneRight):
