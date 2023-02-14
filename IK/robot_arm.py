@@ -71,6 +71,12 @@ class RobotArm:
         for i in range(len(self.joints[0, :]) - 1):
             currentJointCoords = self.joints[:3,[-1]]
             print("Down: currentJointCoords \n" + str(currentJointCoords))
+            """
+            ERROR:
+            jacobian[:,i] = np.cross(kUnitVec, np.subtract(endEffectorCoords, currentJointCoords)).reshape(3,)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            ValueError: operands could not be broadcast together with shapes (4,1) (3,1)
+            """
             jacobian[:,i] = np.cross(kUnitVec, np.subtract(endEffectorCoords, currentJointCoords)).reshape(3,)
 
             return jacobian
