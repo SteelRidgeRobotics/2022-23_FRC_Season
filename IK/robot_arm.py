@@ -30,7 +30,7 @@ class RobotArm:
         
     def get_transformation_matrix(self, theta, x, y):
         """
-        We learned that you can use matrixs to help do inverse kinematics
+        We learned that you can use matrices to help do inverse kinematics
         """
         transformationMatrix =  np.array([
             [math.cos(theta), -math.sin(theta), 0, x],
@@ -45,12 +45,34 @@ class RobotArm:
         """
         Recompute x & y coordinates of each joint and end effector
         """
-        T = self.get_transformation_matrix(self.thetas[0].item(), self.xRoot, self.yRoot)
+        T = self.get_transformation_matrix(self.thetas.item(0), self.xBase, self.yBase)
         for i in range (len(self.lengths) - 1):
-            T_next = self.get_transformation_matrix(self.thetas[i+1], self.lenghts[i], 0)
+            T_next = self.get_transformation_matrix(self.thetas[i+1], self.lengths[i], 0)
             T = T.dot(T_next)
             self.joints[:, [i+1]] = T.dot(np.array([[0, 0, 0, 1]]).T)
         
         # 
         endEffectorCoords = np.array([[self.lengths[-1], 0, 0, 1]]).T
         self.joints[:, [-1]] = T.dot(endEffectorCoords)
+
+    def get_jacobian(self):
+        """
+        Return the 3 x n Jacobian for current set of joint angles.
+        """
+
+        kUnitVec = np.array([[0,0,1]], dtype=float)
+
+        jacobian = np.zeros((3, len(self.joints[0,:]) - 1), dtype=float)
+        endEffectorCoords = self.joints[:, [-1]]
+
+        # Utilize cross product to compute each row of the Jacobian matrix.
+        print(str(endEffectorCoords))
+        print("Up: endEffectorCorrds.")
+        for i in range(len(self.joints[0, :]) - 1):
+            currentJointCoords = self.joints[:3,[-1]]
+            print("Down: currentJointCoords \n" + str(currentJointCoords))
+            jacobian[:,i] = np.cross(kUnitVec, np.subtract(endEffectorCoords, currentJointCoords)).reshape(3,)
+
+            return jacobian
+    def update_theta(self, deltaTheta):
+        self.thetas += deltaTheta.flatten()
