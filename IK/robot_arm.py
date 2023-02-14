@@ -12,9 +12,9 @@ class RobotArm:
         self.xBase = kwargs.get('xBase', 0)
         self.yBase = kwargs.get('yBase', 0)
         # a list of the arm angles
-        self.thetas = np.array([[]], dtype=float)
+        self.thetas = np.array([[]], dtype=np.float_)
         # the matrices of the joint coordinates
-        self.joints = np.array([[self.xBase, self.yBase, 0, 1]], dtype=float).T
+        self.joints = np.array([[self.xBase, self.yBase, 0, 1]], dtype=np.float_).T
         # a list of all the arm lengths
         self.lengths = []
         
@@ -45,13 +45,14 @@ class RobotArm:
         """
         Recompute x & y coordinates of each joint and end effector
         """
-        T = self.get_transformation_matrix(self.thetas.item(0), self.xBase, self.yBase)
+        
+        T = self.get_transformation_matrix(self.thetas[0], self.xBase, self.yBase)
         for i in range (len(self.lengths) - 1):
             T_next = self.get_transformation_matrix(self.thetas[i+1], self.lengths[i], 0)
             T = T.dot(T_next)
             self.joints[:, [i+1]] = T.dot(np.array([[0, 0, 0, 1]]).T)
         
-        # 
+        
         endEffectorCoords = np.array([[self.lengths[-1], 0, 0, 1]]).T
         self.joints[:, [-1]] = T.dot(endEffectorCoords)
 
@@ -60,14 +61,15 @@ class RobotArm:
         Return the 3 x n Jacobian for current set of joint angles.
         """
 
-        kUnitVec = np.array([[0,0,1]], dtype=float)
+        kUnitVec = np.array([[0,0,1]], dtype=np.float_)
 
-        jacobian = np.zeros((3, len(self.joints[0,:]) - 1), dtype=float)
-        endEffectorCoords = self.joints[:, [-1]]
+
+        jacobian = np.zeros((3, len(self.joints[0,:]) - 1), dtype=np.float_)
+        endEffectorCoords = self.joints[:3, [-1]]
 
         # Utilize cross product to compute each row of the Jacobian matrix.
         print(str(endEffectorCoords))
-        print("Up: endEffectorCorrds.")
+        print("Up: endEffectorCoords\n")
         for i in range(len(self.joints[0, :]) - 1):
             currentJointCoords = self.joints[:3,[-1]]
             print("Down: currentJointCoords \n" + str(currentJointCoords))
@@ -77,7 +79,7 @@ class RobotArm:
                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             ValueError: operands could not be broadcast together with shapes (4,1) (3,1)
             """
-            jacobian[:,i] = np.cross(kUnitVec, np.subtract(endEffectorCoords, currentJointCoords)).reshape(3,)
+            jacobian[:,i] = np.dot(kUnitVec, np.subtract(endEffectorCoords, currentJointCoords))
 
             return jacobian
     def update_theta(self, deltaTheta):

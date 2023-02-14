@@ -7,7 +7,7 @@ xOffset = 150
 yOffset = 150
 Arm = RobotArm(xBase=xOffset, yBase=yOffset)
 
-Arm.add_arm_segment(length=30, thtaInit=math.radians(10))
+Arm.add_arm_segment(length=30, thetaInit=math.radians(10))
 Arm.add_arm_segment(length=30, thetaInit=math.radians(15))
 Arm.add_arm_segment(length=30, thetaInit=math.radians(20))
 Arm.update_joint_coords()
