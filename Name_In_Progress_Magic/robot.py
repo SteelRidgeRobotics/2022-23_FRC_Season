@@ -4,12 +4,16 @@ import magicbot
 import ctre
 import constants
 import components.drivetrain
+import components.arm
 
 class Palpatine(magicbot.MagicRobot):
 
     drivetrain: components.drivetrain.Drivetrain
+    arm: components.arm.Arm
 
     def createObjects(self):
+
+        # Drivetrain
 
         self.FLMotor = ctre.WPI_TalonFX(constants.FLMOTORPORT)
         self.BLMotor = ctre.WPI_TalonFX(constants.BLMOTORPORT)
@@ -19,6 +23,14 @@ class Palpatine(magicbot.MagicRobot):
         self.gyro = wpilib.ADIS16470_IMU()
 
         self.pidController = PIDController(constants.P, constants.I, constants.D)
+
+        # Arm
+
+        self.baseArm = components.arm.ArmLength(constants.BASEMOTORPORT, constants.BASECCWSWITCHPORT, constants.BASECWSWITCHPORT)
+        self.middleArm = components.arm.ArmLength(constants.MIDDLEMOTORPORT, constants.MIDDLECCWSWITCHPORT, constants.MIDDLECWSWITCHPORT)
+        self.topArm = components.arm.ArmLength(constants.TOPMOTORPORT, constants.TOPCCWSWITCHPORT, constants.TOPCWSWITCHPORT)
+        self.wristMotor = ctre.WPI_TalonFX(constants.WRISTMOTORPORT)
+        self.grabberMotor = ctre.WPI_TalonSRX(constants.GRABBERMOTORPORT)
 
         self.driverController = wpilib.XboxController(constants.DRIVERCONTROLLERPORT)
 
