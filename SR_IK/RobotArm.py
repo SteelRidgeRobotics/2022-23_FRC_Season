@@ -3,10 +3,14 @@ import math
 
 class RobotArm2D:
     '''RobotArm2D([xRoot=0, yRoot=0])
+
         INPUT ARGUMENTS:
+
         xRoot, yRoot (optional): x and y coordinates of the root joint.
             Both default to 0 if not set.
+
         INSTANCE VARIABLES:
+
         thetas: 1D array of joint angles; contains N elements, one per joint.
         joints: 4 x N array of joint coordinates; each column is a vector
             (column 0 is the root joint and column N-1 is the end effector).
@@ -17,8 +21,8 @@ class RobotArm2D:
     def __init__(self, **kwargs):
         self.xRoot = kwargs.get('xRoot', 0)
         self.yRoot = kwargs.get('yRoot', 0)
-        self.thetas = np.array([[]], dtype=float)
-        self.joints = np.array([[self.xRoot, self.yRoot, 0, 1]], dtype=float).T
+        self.thetas = np.array([[]], dtype=np.float_)
+        self.joints = np.array([[self.xRoot, self.yRoot, 0, 1]], dtype=np.float_).T
         self.lengths = []
 
     def add_revolute_link(self, **kwargs):
@@ -54,7 +58,7 @@ class RobotArm2D:
         # the multiplication of all transformation matrices up to and including
         # the ith joint of the for loop.
         T = self.get_transformation_matrix(
-            self.thetas.item(0), self.xRoot, self.yRoot)
+            self.thetas[0].item(), self.xRoot, self.yRoot)
         for i in range(len(self.lengths) - 1):
             T_next = self.get_transformation_matrix(
                 self.thetas[i+1], self.lengths[i], 0)
@@ -71,9 +75,9 @@ class RobotArm2D:
         '''
 
         # Define unit vector "k-hat" pointing along the Z axis.
-        kUnitVec = np.array([[0,0,1]], dtype=float)
+        kUnitVec = np.array([[0,0,1]], dtype=np.float_)
 
-        jacobian = np.zeros((3, len(self.joints[0,:]) - 1), dtype=float)
+        jacobian = np.zeros((3, len(self.joints[0,:]) - 1), dtype=np.float_)
         endEffectorCoords = self.joints[:3,[-1]]
 
         # Utilize cross product to compute each row of the Jacobian matrix.
@@ -83,5 +87,5 @@ class RobotArm2D:
                 kUnitVec, (endEffectorCoords - currentJointCoords).reshape(3,))
         return jacobian
 
-    def update_theta(self, deltaTheta: np.ndarray):
+    def update_theta(self, deltaTheta):
         self.thetas += deltaTheta.flatten()

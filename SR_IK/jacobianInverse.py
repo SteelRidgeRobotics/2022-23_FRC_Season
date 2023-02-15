@@ -1,18 +1,15 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import matplotlib.patches as pycircle
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg as FigureCanvas
 from RobotArm import *
-import tkinter
 
 # Instantiate robot arm class.
 Arm = RobotArm2D()
 
 # Add desired number of joints/links to robot arm object.
-Arm.add_revolute_link(length=3, thetaInit=math.radians(10))
-Arm.add_revolute_link(length=3, thetaInit=math.radians(15))
-Arm.add_revolute_link(length=3, thetaInit=math.radians(20))
+Arm.add_revolute_link(length=30, thetaInit=math.radians(10))
+Arm.add_revolute_link(length=30, thetaInit=math.radians(15))
+Arm.add_revolute_link(length=30, thetaInit=math.radians(20))
 Arm.update_joint_coords()
 
 # Initialize target coordinates to current end effector position.
@@ -24,9 +21,6 @@ fig.subplots_adjust(left=0, bottom=0, right=1, top=1)
 targetPt, = ax.plot([], [], marker='o', c='r')
 endEff, = ax.plot([], [], marker='o', markerfacecolor='w', c='g', lw=2)
 armLine, = ax.plot([], [], marker='o', c='g', lw=2)
-root = tkinter.Tk()
-root.wm_title("Embedding in Tk")
-canvas = FigureCanvas(fig, master=root)
 
 # Determine maximum reach of arm.
 reach = sum(Arm.lengths)
@@ -36,7 +30,7 @@ ax.set_xlim(Arm.xRoot - 1.2 * reach, Arm.xRoot + 1.2 * reach)
 ax.set_ylim(Arm.yRoot - 1.2 * reach, Arm.yRoot + 1.2 * reach)
 
 # Add dashed circle to plot indicating reach.
-circle = pycircle.Circle((Arm.xRoot, Arm.yRoot), reach, ls='dashed', fill=False)
+circle = plt.Circle((Arm.xRoot, Arm.yRoot), reach, ls='dashed', fill=False)
 ax.add_artist(circle)
 
 def update_plot():
@@ -84,7 +78,7 @@ def on_button_press(event):
         and isinstance(yClick, float)):
         targetPt.set_data(xClick, yClick)
         target = np.array([[xClick, yClick, 0, 1]]).T
-canvas.mpl_connect('button_press_event', on_button_press)
+fig.canvas.mpl_connect('button_press_event', on_button_press)
 
 # Use "exitFlag" to halt while loop execution and terminate script.
 exitFlag = False
@@ -98,7 +92,7 @@ def on_key_press(event):
         exitFlag = True
     elif event.key == 'shift':
         mode *= -1
-canvas.mpl_connect('key_press_event', on_key_press)
+fig.canvas.mpl_connect('key_press_event', on_key_press)
 
 # Turn on interactive plotting and show plot.
 plt.ion()
@@ -116,6 +110,4 @@ while not exitFlag:
         target = np.array([[targetX, targetY, 0, 1]]).T
         t += 0.025
     move_to_target()
-    #fig.
-    canvas.draw()
-    canvas.flush_events()
+    fig.canvas.get_tk_widget().update()
