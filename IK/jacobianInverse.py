@@ -39,6 +39,9 @@ def move_to_target():
         J = Arm.get_jacobian()
         JInv = np.linalg.pinv(J)
         deltaTheta = JInv.dot(deltaR)
+        print("\n\n\n\nJacobian:  \n" + str(Arm.get_jacobian()))
+        print("\n\nJinv \n" + str(JInv))
+        print("\n\ndeltaTheta \n" + str(deltaTheta))
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
         pygame.display.update()
@@ -49,6 +52,7 @@ def on_button_press(event):
     global target, targetPt
 
 while running:
+    window.fill((255,255,255))
     pygame.draw.circle(window, (255, 0, 0), (150, 150), reach, 5)
     pygame.draw.circle(window, (0, 255, 0), (xOffset, yOffset), 5)
     # draw arm
@@ -80,6 +84,9 @@ while running:
             print(str(click))
             targetPt = (click[0], click[1])
             target = np.array([[click[0],click[1], 0, 1]]).T
+            print(str(target))
+            print(str(Arm.joints))
+            print("THETAS! " + str(Arm.thetas))
                 
                 
-    pygame.display.update()
+    pygame.display.flip()

@@ -46,7 +46,7 @@ class RobotArm:
         Recompute x & y coordinates of each joint and end effector
         """
         
-        T = self.get_transformation_matrix(self.thetas[0], self.xBase, self.yBase)
+        T = self.get_transformation_matrix(self.thetas[0].item(), self.xBase, self.yBase)
         for i in range (len(self.lengths) - 1):
             T_next = self.get_transformation_matrix(self.thetas[i+1], self.lengths[i], 0)
             T = T.dot(T_next)
@@ -68,11 +68,8 @@ class RobotArm:
         endEffectorCoords = self.joints[:3, [-1]]
 
         # Utilize cross product to compute each row of the Jacobian matrix.
-        print(str(endEffectorCoords))
-        print("Up: endEffectorCoords\n")
         for i in range(len(self.joints[0, :]) - 1):
-            currentJointCoords = self.joints[:3,[-1]]
-            print("Down: currentJointCoords \n" + str(currentJointCoords))
+            currentJointCoords = self.joints[:3,[i]]
             """
             ERROR:
             jacobian[:,i] = np.cross(kUnitVec, np.subtract(endEffectorCoords, currentJointCoords)).reshape(3,)
