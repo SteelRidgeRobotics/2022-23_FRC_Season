@@ -76,7 +76,8 @@ class RobotArm:
                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             ValueError: operands could not be broadcast together with shapes (4,1) (3,1)
             """
-            jacobian[:,i] = np.cross(kUnitVec, (endEffectorCoords - currentJointCoords).reshape(3,))
+            jacobian[:,i] = np.cross(
+                kUnitVec, (endEffectorCoords - currentJointCoords).reshape(3,))
 
             return jacobian
     def update_theta(self, deltaTheta):

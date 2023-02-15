@@ -39,12 +39,9 @@ def move_to_target():
         J = Arm.get_jacobian()
         JInv = np.linalg.pinv(J)
         deltaTheta = JInv.dot(deltaR)
-        print("\n\n\n\nJacobian:  \n" + str(Arm.get_jacobian()))
-        print("\n\nJinv \n" + str(JInv))
-        print("\n\ndeltaTheta \n" + str(deltaTheta))
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
-        pygame.display.update()
+        pygame.display.flip()
 
 mode = 1
 targetPt = (0, 0)
