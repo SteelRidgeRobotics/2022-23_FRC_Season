@@ -27,6 +27,7 @@ print("\n [0][0]" + str(Arm.joints[0][0]))
 print("\n [0][1]" + str(Arm.joints[0][1]))
 print("\n [0][2]" + str(Arm.joints[0][2]))
 print("\n [0][3]" + str(Arm.joints[0][3]))
+
 def move_to_target():
     global Arm, target, reach
 
@@ -84,6 +85,7 @@ while running:
             print(str(target))
             print(str(Arm.joints))
             print("THETAS! " + str(Arm.thetas))
+
                 
                 
     pygame.display.flip()
