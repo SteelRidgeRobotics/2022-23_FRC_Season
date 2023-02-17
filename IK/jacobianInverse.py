@@ -17,9 +17,8 @@ target = Arm.joints[:, [-1]]
 window = pygame.display.set_mode((300,300))
 pygame.display.set_caption("Robot Arm Inverse Kinematics")
 window.fill((255,255,255))
-pygame.display.flip()
 
-running = True
+
 
 reach = sum(Arm.lengths)
 print("\n" + str(Arm.joints))
@@ -44,15 +43,14 @@ def move_to_target():
         Arm.update_joint_coords()
         pygame.display.flip()
 
-mode = 1
-targetPt = (0, 0)
-def on_button_press(event):
-    global target, targetPt
+targetPt = (150, 150)
 
+running = True
 while running:
     window.fill((255,255,255))
     pygame.draw.circle(window, (255, 0, 0), (150, 150), reach, 5)
     pygame.draw.circle(window, (0, 255, 0), (xOffset, yOffset), 5)
+
     # draw arm
     pygame.draw.circle(window, (0, 0, 255), (Arm.joints[0][0], Arm.joints[1][0]), 3)
     pygame.draw.circle(window, (0, 0, 255), (Arm.joints[0][1], Arm.joints[1][1]), 3)
@@ -85,6 +83,20 @@ while running:
             print(str(target))
             print(str(Arm.joints))
             print("THETAS! " + str(Arm.thetas))
+
+            targetVector = (target - Arm.joints[:, [-1]])[:3]
+            targetUnitVector = targetVector / np.linalg.norm(targetVector)
+            distPerUpdate = 0.02 * reach
+            deltaR = distPerUpdate * targetUnitVector
+            J = Arm.get_jacobian()
+            JInv = np.linalg.pinv(J)
+            deltaTheta = JInv.dot(deltaR)
+            print("deltaR")
+            print(str(deltaR))
+            print("deltaTheta")
+            print(str(deltaTheta))
+            print("jacobian" + str(Arm.get_jacobian()))
+            print("Jinv" + str(JInv))
 
                 
                 

@@ -42,37 +42,42 @@ class RobotArm:
         return transformationMatrix
 
     def update_joint_coords(self):
-        """
-        Recompute x & y coordinates of each joint and end effector
-        """
+        '''update_joint_coords()
+            Recompute x and y coordinates of each joint and end effector.
+        '''
         
-        T = self.get_transformation_matrix(self.thetas[0].item(), self.xBase, self.yBase)
-        for i in range (len(self.lengths) - 1):
-            T_next = self.get_transformation_matrix(self.thetas[i+1], self.lengths[i], 0)
+        # "T" is a cumulative transformation matrix that is the result of
+        # the multiplication of all transformation matrices up to and including
+        # the ith joint of the for loop.
+        T = self.get_transformation_matrix(
+            self.thetas[0].item(), self.xBase, self.yBase)
+        for i in range(len(self.lengths) - 1):
+            T_next = self.get_transformation_matrix(
+                self.thetas[i+1], self.lengths[i], 0)
             T = T.dot(T_next)
-            self.joints[:, [i+1]] = T.dot(np.array([[0, 0, 0, 1]]).T)
-        
-        
-        endEffectorCoords = np.array([[self.lengths[-1], 0, 0, 1]]).T
-        self.joints[:, [-1]] = T.dot(endEffectorCoords)
+            self.joints[:,[i+1]] = T.dot(np.array([[0,0,0,1]]).T)
+
+        # Update end effector coordinates.
+        endEffectorCoords = np.array([[self.lengths[-1],0,0,1]]).T
+        self.joints[:,[-1]] = T.dot(endEffectorCoords)
 
     def get_jacobian(self):
-        """
-        Return the 3 x n Jacobian for current set of joint angles.
-        """
+        '''get_jacobian()
+            Return the 3 x N Jacobian for the current set of joint angles.
+        '''
 
+        # Define unit vector "k-hat" pointing along the Z axis.
         kUnitVec = np.array([[0,0,1]], dtype=np.float_)
 
-
         jacobian = np.zeros((3, len(self.joints[0,:]) - 1), dtype=np.float_)
-        endEffectorCoords = self.joints[:3, [-1]]
+        endEffectorCoords = self.joints[:3,[-1]]
 
         # Utilize cross product to compute each row of the Jacobian matrix.
-        for i in range(len(self.joints[0, :]) - 1):
+        for i in range(len(self.joints[0,:]) - 1):
             currentJointCoords = self.joints[:3,[i]]
             jacobian[:,i] = np.cross(
                 kUnitVec, (endEffectorCoords - currentJointCoords).reshape(3,))
-
-            return jacobian
+        return jacobian
+    
     def update_theta(self, deltaTheta):
         self.thetas += deltaTheta.flatten()

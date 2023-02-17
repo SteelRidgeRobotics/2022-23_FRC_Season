@@ -59,6 +59,10 @@ def move_to_target():
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
         update_plot()
+        print("deltaR \n" + str(deltaR))
+        print("\n\ndeltaTheta \n" + str(deltaTheta))
+        print("jacobian" + str(Arm.get_jacobian()))
+        print("Jinv" + str(JInv))
 
 # "mode" can be toggled with the Shift key between 1 (click to set
 # target location) and -1 (target moves in predefined motion).
