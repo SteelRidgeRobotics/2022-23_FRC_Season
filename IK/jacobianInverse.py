@@ -19,11 +19,11 @@ pygame.display.set_caption("Robot Arm Inverse Kinematics")
 window.fill((255,255,255))
 
 reach = sum(Arm.lengths)
-print("\n" + str(Arm.joints))
-print("\n [0][0]" + str(Arm.joints[0][0]))
-print("\n [0][1]" + str(Arm.joints[0][1]))
-print("\n [0][2]" + str(Arm.joints[0][2]))
-print("\n [0][3]" + str(Arm.joints[0][3]))
+
+# add limits
+Arm.add_limits()
+for i in range(len(Arm.limits)):
+    Arm.def_joint_limit(i, -math.pi, math.pi)
 
 def move_to_target():
     global Arm, target, reach
@@ -39,11 +39,16 @@ def move_to_target():
         deltaTheta = JInv.dot(deltaR)
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
+    
+    angles = Arm.get_angles()
 
-# add limits
-Arm.add_limits()
-Arm.def_joint_limit(0, -math.pi, math.pi)
-
+    for i in range(len(angles)):
+        # check if it is in min
+        if angles[i] > Arm.limits[0][i]:
+            print("ERROR")
+        # check if it is in max
+        if angles[i] < Arm.limits[1][i]:
+            print("ERROR")
 
 targetPt = (250, 250)
 
@@ -84,23 +89,5 @@ while running:
 
             distPerUpdate = 0.02 * reach
 
-            if np.linalg.norm(target - Arm.joints[:, [-1]]) > 0.02 * reach:
-                targetVector = (target - Arm.joints[:, [-1]])[:3]
-                targetUnitVector = targetVector / np.linalg.norm(targetVector)
-                deltaR = distPerUpdate * targetUnitVector
-                J = Arm.get_jacobian()
-                JInv = np.linalg.pinv(J)
-                deltaTheta = JInv.dot(deltaR)
-                Arm.update_theta(deltaTheta)
-                Arm.update_joint_coords()
-            
-            print("targetVector \n" + str(targetVector))
-            print("targetUnitVector \n" + str(targetUnitVector))
-            print("deltaR \n" + str(deltaR))
-            print("deltaTheta \n" + str(deltaTheta))
-            print("THETAS! " + str(Arm.thetas))
-
-            print("Limits" + str(Arm.get_joint_limits()))
-
-            Arm.get_angles()
+            print("ANGLES: " + str(Arm.get_angles))
     pygame.display.flip()

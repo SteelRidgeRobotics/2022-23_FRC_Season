@@ -97,7 +97,7 @@ class RobotArm:
                 result = np.arccos(cosTheta)
 
             angles.append(result)
-        print("angles " + str(angles))
+        return angles
 
     def add_limits(self):
         self.limits = np.zeros(shape=(2,len(self.joints)))
@@ -105,7 +105,6 @@ class RobotArm:
     def def_joint_limit(self, joint, min, max):
         self.limits[0][joint] = min
         self.limits[1][joint] = max
-
         
     def get_joint_limits(self):
         return self.limits
