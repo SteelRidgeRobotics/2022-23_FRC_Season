@@ -4,11 +4,11 @@ import magicbot
 
 class ArmLength:
 
-    def __init__(self, motorID, CCWLimitSwitch, CWLimitSwitch):
+    def __init__(self, motorID, CCWLimitSwitchPort, CWLimitSwitchPort):
 
         self.motor = ctre.WPI_TalonFX(motorID)
-        self.CCWLimitSwitch = wpilib.DigitalInput(CCWLimitSwitch)
-        self.CWLimitSwitch = wpilib.DigitalInput(CWLimitSwitch)
+        self.CCWLimitSwitch = wpilib.DigitalInput(CCWLimitSwitchPort)
+        self.CWLimitSwitch = wpilib.DigitalInput(CWLimitSwitchPort)
 
     def set(self, angle):
 
