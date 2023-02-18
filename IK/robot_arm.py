@@ -81,3 +81,31 @@ class RobotArm:
     
     def update_theta(self, deltaTheta):
         self.thetas += deltaTheta.flatten()
+
+    def get_angles(self):
+        angles = []
+        T = 0
+        for i in range(len(self.joints[0,:]) - 1):
+            distancex = self.joints[0][i+1] - self.joints[0][i]
+            distancey = self.joints[1][i+1] - self.joints[1][i]
+            result = np.arctan(distancey/distancex)
+
+            if i > 0:
+                # we find the dotProduct of the previous segment and this segment
+                dotProduct = (self.joints[0][i] - self.joints[0][i-1]) * distancex + (self.joints[1][i] - self.joints[1][i-1]) * distancey
+                cosTheta = dotProduct/(np.abs(self.lengths[i-1])*np.abs(self.lengths[i]))
+                result = np.arccos(cosTheta)
+
+            angles.append(result)
+        print("angles " + str(angles))
+
+    def add_limits(self):
+        self.limits = np.zeros(shape=(2,len(self.joints)))
+
+    def def_joint_limit(self, joint, min, max):
+        self.limits[0][joint] = min
+        self.limits[1][joint] = max
+
+        
+    def get_joint_limits(self):
+        return self.limits
