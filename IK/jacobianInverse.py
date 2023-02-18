@@ -22,7 +22,7 @@ reach = sum(Arm.lengths)
 
 # add limits
 Arm.add_limits()
-for i in range(len(Arm.limits)):
+for i in range(len(Arm.limits)+2):
     Arm.def_joint_limit(i, -math.pi, math.pi)
 
 def move_to_target():
@@ -42,13 +42,15 @@ def move_to_target():
     
     angles = Arm.get_angles()
 
+    """
     for i in range(len(angles)):
-        # check if it is in min
-        if angles[i] > Arm.limits[0][i]:
-            print("ERROR")
-        # check if it is in max
-        if angles[i] < Arm.limits[1][i]:
-            print("ERROR")
+        # check if it is less than min
+        if angles[i] < Arm.limits[0][i]:
+            print("ERROR 1")
+        # check if it is more than max
+        if angles[i] > Arm.limits[1][i]:
+            print("ERROR 2")
+    """
 
 targetPt = (250, 250)
 
@@ -89,5 +91,18 @@ while running:
 
             distPerUpdate = 0.02 * reach
 
-            print("ANGLES: " + str(Arm.get_angles))
+            print("ANGLES: " + str(Arm.get_angles()))
+
+            angles = Arm.get_angles()
+            for i in range(len(angles)):
+                # check if it is less than min
+                if angles[i] < Arm.limits[0][i]:
+                    print("ERROR 1")
+                # check if it is more than max
+                if angles[i] > Arm.limits[1][i]:
+                    print("ERROR 2\n")
+                    print("Run: " + str(i)) 
+                    print(str(angles[i]) + " is greater than " + str(Arm.limits[1][i]))
+                    print(str(Arm.limits))
+
     pygame.display.flip()
