@@ -26,9 +26,6 @@ Arm.def_joint_limit(0, 0, math.pi)
 Arm.def_joint_limit(1, -math.pi, math.pi)
 Arm.def_joint_limit(2, -math.pi, math.pi)
 
-print(str(Arm.joints))
-test = Arm.get_jacobian_with_specs(1, 3)
-print(str(test))
 def move_to_target():
     global Arm, target, reach
 
@@ -41,6 +38,42 @@ def move_to_target():
         J = Arm.get_jacobian()
         JInv = np.linalg.pinv(J)
         deltaTheta = JInv.dot(deltaR)
+        Arm.update_theta(deltaTheta)
+        Arm.update_joint_coords()
+
+def move_to_target_with_limits():
+    global Arm, target, reach
+
+    distPerUpdate = 0.01 * reach
+    angles = Arm.get_angles()
+
+    if np.linalg.norm(target - Arm.joints[:, [-1]]) > 0.01 * reach:
+        targetVector = (target - Arm.joints[:, [-1]])[:3]
+        targetUnitVector = targetVector / np.linalg.norm(targetVector)
+        deltaR = distPerUpdate * targetUnitVector
+        J = Arm.get_jacobian()
+        JInv = np.linalg.pinv(J)
+        deltaTheta = JInv.dot(deltaR)
+
+        limitError = []
+        # check if arm is in its limits, makes a list that says errors, -1 for min error, 1 for max error, 0 for no error
+        for i in range(len(angles)):
+            # check if it is less than min
+            if angles[i] < Arm.limits[0][i]:
+                limitError.append(-1)
+                limitError = np.append(limitError, )
+                #thetaCheck = np.append(thetaCheck, Arm.limits[0][i])
+            # check if it is more than max
+            elif angles[i] > Arm.limits[1][i]:
+                limitError.append(1)
+                #thetaCheck = deltaTheta = np.append(deltaTheta, Arm.limits[1][i])
+            else:
+                limitError.append(0)
+        # apply limits and check which need to be recalculated
+        redoneTheta = []
+        for i in range(len(limitError)):
+            print()
+
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
 
