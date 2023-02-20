@@ -71,10 +71,32 @@ class RobotArm:
 
         jacobian = np.zeros((3, len(self.joints[0,:]) - 1), dtype=np.float_)
         endEffectorCoords = self.joints[:3,[-1]]
+        
 
         # Utilize cross product to compute each row of the Jacobian matrix.
         for i in range(len(self.joints[0,:]) - 1):
             currentJointCoords = self.joints[:3,[i]]
+            jacobian[:,i] = np.cross(
+                kUnitVec, (endEffectorCoords - currentJointCoords).reshape(3,))
+        return jacobian
+    
+    def get_jacobian_with_specs(self, start: int, end: int):
+        '''get_jacobian_with_specs()
+            Return the 3 x N Jacobian for a custom set of joint angles.
+
+            The variables start and end are joint numbers
+        '''
+        # start & end are joint numbers
+
+        # Define unit vector "k-hat" pointing along the Z axis.
+        kUnitVec = np.array([[0,0,1]], dtype=np.float_)
+
+        jacobian = np.zeros((3, end - start), dtype=np.float_)
+        endEffectorCoords = self.joints[:3, [end]]
+
+        # Utilize cross product to compute each row of the Jacobian matrix.
+        for i in range(end - start):
+            currentJointCoords = self.joints[:3,[start + i]]
             jacobian[:,i] = np.cross(
                 kUnitVec, (endEffectorCoords - currentJointCoords).reshape(3,))
         return jacobian
@@ -108,5 +130,4 @@ class RobotArm:
         
     def get_joint_limits(self):
         return self.limits
-    
 

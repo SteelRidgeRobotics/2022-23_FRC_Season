@@ -26,7 +26,9 @@ Arm.def_joint_limit(0, 0, math.pi)
 Arm.def_joint_limit(1, -math.pi, math.pi)
 Arm.def_joint_limit(2, -math.pi, math.pi)
 
-
+print(str(Arm.joints))
+test = Arm.get_jacobian_with_specs(1, 3)
+print(str(test))
 def move_to_target():
     global Arm, target, reach
 
@@ -41,26 +43,7 @@ def move_to_target():
         deltaTheta = JInv.dot(deltaR)
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
-        
 
-
-    angles = Arm.get_angles()
-    deltaTheta = []
-    # check if the angle of arm is above the max or below the min
-    # we do this for each arm, hence the for loop
-    for i in range(len(angles)):
-        # check if it is less than min
-        if angles[i] < Arm.limits[0][i]:
-            print("ERROR 1")
-            deltaTheta = np.append(deltaTheta, Arm.limits[0][i])
-        # check if it is more than max
-        elif angles[i] > Arm.limits[1][i]:
-            print("ERROR 2")
-            deltaTheta = Arm.limits[1][i]
-        else:
-            deltaTheta = np.append(deltaTheta, Arm.thetas[i])
-    print(deltaTheta)
-    
 
 def apply_limits_to_arm():
         global Arm
@@ -80,7 +63,8 @@ def apply_limits_to_arm():
                 deltaTheta = Arm.limits[1][i]
             else:
                 deltaTheta = np.append(deltaTheta, Arm.thetas[i])
-        print("deltaTheta: " + str(deltaTheta))
+        # we now have the old angles and our new angle(s) set to its limit
+        # do inverse kinematics for the other ones.
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
 
@@ -114,12 +98,10 @@ while running:
             print(str(click))
             targetPt = (click[0], click[1])
             target = np.array([[click[0],click[1], 0, 1]]).T
-            print(str(target))
+            print("TARGET: "+ str(target))
             print(str(Arm.joints))
 
             print("ANGLES: " + str(Arm.get_angles()))
-
-            angles = Arm.get_angles()
         
             
     pygame.display.flip()
