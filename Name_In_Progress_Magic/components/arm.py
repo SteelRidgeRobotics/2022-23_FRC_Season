@@ -1,41 +1,41 @@
-import wpilib
-import ctre
-import magicbot
+# import wpilib
+# import ctre
+# import magicbot
 
-class ArmLength:
+# class ArmLength:
 
-    def __init__(self, motorID, CCWLimitSwitchPort, CWLimitSwitchPort):
+#     def __init__(self, motorID, CCWLimitSwitchPort, CWLimitSwitchPort):
 
-        self.motor = ctre.WPI_TalonFX(motorID)
-        self.CCWLimitSwitch = wpilib.DigitalInput(CCWLimitSwitchPort)
-        self.CWLimitSwitch = wpilib.DigitalInput(CWLimitSwitchPort)
+#         self.motor = ctre.WPI_TalonFX(motorID)
+#         self.CCWLimitSwitch = wpilib.DigitalInput(CCWLimitSwitchPort)
+#         self.CWLimitSwitch = wpilib.DigitalInput(CWLimitSwitchPort)
 
-    def set(self, angle):
+#     def set(self, angle):
 
-        # self.motor.set(ctre.TalonFXControlMode.INSERTHERE, angle * 2048)
-        pass
+#         # self.motor.set(ctre.TalonFXControlMode.INSERTHERE, angle * 2048)
+#         pass
 
-    def getCCWLimitSwitch(self):
+#     def getCCWLimitSwitch(self):
 
-        return self.CCWLimitSwitch.get()
+#         return self.CCWLimitSwitch.get()
     
-    def getCWLimitSwitch(self):
+#     def getCWLimitSwitch(self):
 
-        return self.CWLimitSwitch.get()
+#         return self.CWLimitSwitch.get()
 
-class Arm:
+# class Arm:
 
-    baseArm: ArmLength
-    middleArm: ArmLength
-    topArm: ArmLength
+#     baseArm: ArmLength
+#     middleArm: ArmLength
+#     topArm: ArmLength
     
-    wristMotor: ctre.WPI_TalonFX
-    grabberMotor: ctre.WPI_TalonSRX
+#     wristMotor: ctre.WPI_TalonFX
+#     grabberMotor: ctre.WPI_TalonSRX
 
-    def setup(self):
+#     def setup(self):
 
-        pass
+#         pass
 
-    def execute(self):
+#     def execute(self):
 
-        pass
+#         pass

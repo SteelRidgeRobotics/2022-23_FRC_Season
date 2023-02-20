@@ -9,7 +9,7 @@ import components.arm
 class Palpatine(magicbot.MagicRobot):
 
     drivetrain: components.drivetrain.Drivetrain
-    arm: components.arm.Arm
+    # arm: components.arm.Arm
 
     def createObjects(self):
 
@@ -26,13 +26,17 @@ class Palpatine(magicbot.MagicRobot):
 
         # Arm
 
-        self.baseArm = components.arm.ArmLength(constants.BASEMOTORPORT, constants.BASECCWSWITCHPORT, constants.BASECWSWITCHPORT)
-        self.middleArm = components.arm.ArmLength(constants.MIDDLEMOTORPORT, constants.MIDDLECCWSWITCHPORT, constants.MIDDLECWSWITCHPORT)
-        self.topArm = components.arm.ArmLength(constants.TOPMOTORPORT, constants.TOPCCWSWITCHPORT, constants.TOPCWSWITCHPORT)
-        self.wristMotor = ctre.WPI_TalonFX(constants.WRISTMOTORPORT)
-        self.grabberMotor = ctre.WPI_TalonSRX(constants.GRABBERMOTORPORT)
+        # self.baseArm = components.arm.ArmLength(constants.BASEMOTORPORT, constants.BASECCWSWITCHPORT, constants.BASECWSWITCHPORT)
+        # self.middleArm = components.arm.ArmLength(constants.MIDDLEMOTORPORT, constants.MIDDLECCWSWITCHPORT, constants.MIDDLECWSWITCHPORT)
+        # self.topArm = components.arm.ArmLength(constants.TOPMOTORPORT, constants.TOPCCWSWITCHPORT, constants.TOPCWSWITCHPORT)
+        # self.wristMotor = ctre.WPI_TalonFX(constants.WRISTMOTORPORT)
+        # self.grabberMotor = ctre.WPI_TalonSRX(constants.GRABBERMOTORPORT)
 
         self.driverController = wpilib.XboxController(constants.DRIVERCONTROLLERPORT)
+
+    def disabledInit(self):
+
+        self.gyro.calibrate()
 
     def disabledPeriodic(self):
 
