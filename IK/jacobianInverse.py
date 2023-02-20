@@ -22,15 +22,17 @@ reach = sum(Arm.lengths)
 
 # add limits
 Arm.add_limits()
-for i in range(len(Arm.limits)+2):
-    Arm.def_joint_limit(i, -math.pi, math.pi)
+Arm.def_joint_limit(0, 0, math.pi)
+Arm.def_joint_limit(1, -math.pi, math.pi)
+Arm.def_joint_limit(2, -math.pi, math.pi)
+
 
 def move_to_target():
     global Arm, target, reach
 
-    distPerUpdate = 0.02 * reach
+    distPerUpdate = 0.01 * reach
 
-    if np.linalg.norm(target - Arm.joints[:, [-1]]) > 0.02 * reach:
+    if np.linalg.norm(target - Arm.joints[:, [-1]]) > 0.01 * reach:
         targetVector = (target - Arm.joints[:, [-1]])[:3]
         targetUnitVector = targetVector / np.linalg.norm(targetVector)
         deltaR = distPerUpdate * targetUnitVector
@@ -39,18 +41,48 @@ def move_to_target():
         deltaTheta = JInv.dot(deltaR)
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
-    
-    angles = Arm.get_angles()
+        
 
-    """
+
+    angles = Arm.get_angles()
+    deltaTheta = []
+    # check if the angle of arm is above the max or below the min
+    # we do this for each arm, hence the for loop
     for i in range(len(angles)):
         # check if it is less than min
         if angles[i] < Arm.limits[0][i]:
             print("ERROR 1")
+            deltaTheta = np.append(deltaTheta, Arm.limits[0][i])
         # check if it is more than max
-        if angles[i] > Arm.limits[1][i]:
+        elif angles[i] > Arm.limits[1][i]:
             print("ERROR 2")
-    """
+            deltaTheta = Arm.limits[1][i]
+        else:
+            deltaTheta = np.append(deltaTheta, Arm.thetas[i])
+    print(deltaTheta)
+    
+
+def apply_limits_to_arm():
+        global Arm
+        angles = Arm.get_angles()
+        J = Arm.get_jacobian()
+        deltaTheta = []
+        # check if the angle of arm is above the max or below the min
+        # we do this for each arm, hence the for loop
+        for i in range(len(angles)):
+            # check if it is less than min
+            if angles[i] < Arm.limits[0][i]:
+                print("ERROR 1")
+                deltaTheta = np.append(deltaTheta, Arm.limits[0][i])
+            # check if it is more than max
+            elif angles[i] > Arm.limits[1][i]:
+                print("ERROR 2")
+                deltaTheta = Arm.limits[1][i]
+            else:
+                deltaTheta = np.append(deltaTheta, Arm.thetas[i])
+        print("deltaTheta: " + str(deltaTheta))
+        Arm.update_theta(deltaTheta)
+        Arm.update_joint_coords()
 
 targetPt = (250, 250)
 
@@ -78,10 +110,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print("DOWN!")
-            print(str(pygame.mouse.get_pos()))
-            print("x =" + str(pygame.mouse.get_pos()[0]))
-            print("y =" + str(pygame.mouse.get_pos()[1]))
             click = pygame.mouse.get_pos()
             print(str(click))
             targetPt = (click[0], click[1])
@@ -89,20 +117,9 @@ while running:
             print(str(target))
             print(str(Arm.joints))
 
-            distPerUpdate = 0.02 * reach
-
             print("ANGLES: " + str(Arm.get_angles()))
 
             angles = Arm.get_angles()
-            for i in range(len(angles)):
-                # check if it is less than min
-                if angles[i] < Arm.limits[0][i]:
-                    print("ERROR 1")
-                # check if it is more than max
-                if angles[i] > Arm.limits[1][i]:
-                    print("ERROR 2\n")
-                    print("Run: " + str(i)) 
-                    print(str(angles[i]) + " is greater than " + str(Arm.limits[1][i]))
-                    print(str(Arm.limits))
-
+        
+            
     pygame.display.flip()
