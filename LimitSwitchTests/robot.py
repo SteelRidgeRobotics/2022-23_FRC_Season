@@ -1,26 +1,27 @@
 import wpilib
+import ctre
 
 class LimitSwitchTest(wpilib.TimedRobot):
 
     def robotInit(self):
         
-        # init limit switches
-        self.baseArmBack = wpilib.DigitalInput() # put stuff here
-        self.baseArmFront = wpilib.DigitalInput()
+        # init limit switches (this aren't limit switch thingies)
+        self.baseArmBack = ctre.LimitSwitchSource.RemoteTalon
+        self.baseArmFront = ctre.LimitSwitchSource.RemoteTalon
         
-        self.middleArmBack = wpilib.DigitalInput()
-        self.middleArmFront = wpilib.DigitalInput()
+        self.middleArmBack = ctre.LimitSwitchSource.RemoteTalon
+        self.middleArmFront = ctre.LimitSwitchSource.RemoteTalon
 
-        self.topArmBack = wpilib.DigitalInput()
-        self.topArmFront = wpilib.DigitalInput()
+        self.topArmBack = ctre.LimitSwitchSource.RemoteTalon
+        self.topArmFront = ctre.LimitSwitchSource.RemoteTalon
 
     def teleopPeriodic(self):
 
         # Shows if the switch is pressed
-        wpilib.SmartDashboard.putNumberArray('Base Arm (b/f)', [self.baseArmBack.get(), self.baseArmFront.get()]) 
-        wpilib.SmartDashboard.putNumberArray('Middle Arm (b/f)', [self.middleArmBack.get(), self.middleArmFront.get()]) 
-        wpilib.SmartDashboard.putNumberArray('Top Arm (b/f)', [self.topArmBack.get(), self.topArmFront.get()]) 
-        
-        
-        
-      
+        wpilib.SmartDashboard.putNumberArray('Base Arm (b/f)', [self.baseArmBack.get(), self.baseArmFront.get()])
+        wpilib.SmartDashboard.putNumberArray('Middle Arm (b/f)', [self.middleArmBack.get(), self.middleArmFront.get()])
+        wpilib.SmartDashboard.putNumberArray('Top Arm (b/f)', [self.topArmBack.get(), self.topArmFront.get()])
+
+if __name__ == "__main__":
+
+    wpilib.run(LimitSwitchTest)
