@@ -66,10 +66,10 @@ def get_limit_errors():
 def move_to_target_with_limits():
     global Arm, target, reach
 
-    distPerUpdate = 0.02 * reach
+    distPerUpdate = 0.002 * reach
     angles = Arm.get_angles()
 
-    if np.linalg.norm(target - Arm.joints[:, [-1]]) > 0.02 * reach:
+    if np.linalg.norm(target - Arm.joints[:, [-1]]) > 0.002 * reach:
         targetVector = (target - Arm.joints[:, [-1]])[:3]
         targetUnitVector = targetVector / np.linalg.norm(targetVector)
         deltaR = distPerUpdate * targetUnitVector
@@ -84,8 +84,12 @@ def move_to_target_with_limits():
             # set the thetas to the limit
             if limitError[i] == -1:
                 redoneTheta[i] = limits[0][i]
+                errorMin = font.render("ERROR MIN", 1, (255, 0, 0))
+                window.blit(errorMin, (0, 60))
             elif limitError[i] == 1:
                 redoneTheta[i] = limits[1][i]
+                errorMax = font.render("ERROR MIN", 1, (255, 0, 0))
+                window.blit(errorMax, (0, 60))
             else: # 0
                 # redo the jacobian matrix for the lengths that are not in error
                 #if i != (len(Arm.joints) - 1):
@@ -151,7 +155,7 @@ while running:
         pygame.draw.circle(window, (0, 255, 255), (Arm.joints[0][i], Arm.joints[1][i]), 5)
     
     # Run IK code
-    move_to_target()
+    move_to_target_with_limits()
 
     limit0 = font.render(str(Arm.get_joint_limits()[0][0]) + " -> " + str(Arm.get_joint_limits()[1][0]), 1, (0,0,0))
     limit1 = font.render(str(Arm.get_joint_limits()[0][1]) + " -> " + str(Arm.get_joint_limits()[1][1]), 1, (0,0,0))
