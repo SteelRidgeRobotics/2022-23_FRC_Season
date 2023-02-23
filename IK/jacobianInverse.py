@@ -83,12 +83,14 @@ def move_to_target_with_limits():
         for i in range(len(limitError)):
             # set the thetas to the limit
             if limitError[i] == -1:
-                redoneTheta[i] = limits[0][i]
+                redoneTheta[i] = limits[0][i] - Arm.thetas[i]
+                # This shows us an error message, which tells us if we type of error we have, if we have one
                 errorMin = font.render("ERROR MIN", 1, (255, 0, 0))
                 window.blit(errorMin, (0, 60))
             elif limitError[i] == 1:
-                redoneTheta[i] = limits[1][i]
-                errorMax = font.render("ERROR MIN", 1, (255, 0, 0))
+                redoneTheta[i] = -(Arm.thetas[i] - limits[1][i])
+                # This shows us an error message, which tells us if we type of error we have, if we have one
+                errorMax = font.render("ERROR MAX", 1, (255, 0, 0))
                 window.blit(errorMax, (0, 60))
             else: # 0
                 # redo the jacobian matrix for the lengths that are not in error
