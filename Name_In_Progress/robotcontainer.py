@@ -9,7 +9,7 @@ class RobotContainer:
 
     def __init__(self):
 
-        self.driverController = wpilib.XboxController(0)
+        self.driverController = wpilib.PS4Controller(0)
         self.train = Drivetrain()
 
         self.chooser = wpilib.SendableChooser()
@@ -18,7 +18,7 @@ class RobotContainer:
 
         self.chooser.setDefaultOption("Drive Forward", driveForward)
 
-        self.train.setDefaultCommand(JoystickDrive(self.train, lambda: self.driverController.getLeftY(), lambda: self.driverController.getRightX(), lambda: self.driverController.getLeftBumper(), lambda: self.driverController.getRightBumper))
+        self.train.setDefaultCommand(JoystickDrive(self.train, lambda: self.driverController.getLeftY(), lambda: self.driverController.getRightX(), lambda: self.driverController.getL1Button(), lambda: self.driverController.getR1Button()))
 
     def getAutonomousCommand(self) -> commands2.CommandBase:
 

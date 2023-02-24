@@ -26,6 +26,8 @@ class JoystickDrive(commands2.CommandBase):
 
         self.train.arcadeDrive(self.left, self.right)
 
+        wpilib.SmartDashboard.putNumberArray("LR", [self.train.FLMotor.getMotorOutputPercent(), self.train.FRMotor.getMotorOutputPercent()])
+
     def end(self, interrupted):
 
         self.train.arcadeDrive(0.0, 0.0)
