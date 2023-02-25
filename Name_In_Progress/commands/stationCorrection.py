@@ -1,7 +1,3 @@
-"""
-NOT DONE BY A LONG SHOT
-"""
-
 import commands2
 import wpilib
 import ctre
