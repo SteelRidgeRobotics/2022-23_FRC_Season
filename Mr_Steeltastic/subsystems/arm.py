@@ -1,6 +1,7 @@
 import commands2
 import ctre
 import constants
+import numpy
 
 class Arm(commands2.SubsystemBase):
 
@@ -82,13 +83,33 @@ class Arm(commands2.SubsystemBase):
         self.grabberMotor.setSensorPhase(False)
         self.wristMotor.setSensorPhase(False)
 
-        
-        
-    def moveArmToPose(self, base, mid, top, grabber, wrist):
+    def move_arm_segment_to_angle(self, motor: ctre.TalonFX, setpoint: float):
+        """
+        Rotate an arm to a certain angle.
+        Requires the motor it is controlling and the angle.
+        """
+        #arbFF = percentToHoldArmHorixontal*numpy.cos(currentAngleFromHorizontal)
+        if motor == self.baseMotor:
+            percentToHoldHorizontal = 0.75
+        elif motor == self.midMotor:
+            percentToHoldHorizontal = 0.50
+        elif motor == self.topMotor:
+            percentToHoldHorizontal = 0.25
+        elif motor == self.grabberMotor:
+            percentToHoldHorizontal = 0.1
+
+        arbFF = percentToHoldHorizontal*numpy.cos(setpoint)
+        motor.set(ctre.ControlMode.MotionMagic, setpoint, ctre.DemandType.ArbitraryFeedForward, arbFF)
+
+    
+    def moveArmToPose(self, base: float, mid: float, top: float, grabber: float, wrist: float):
         """
         Move the arm to a specific pose.
         Requires angles for the base, middle, top, grabber, and wrist motors.
         """
+        # convert angle to TalonFX Units
+        base *= constants.BASERATIO
+        self.move_arm_segment_to_angle(self.baseMotor, base)
         
 
     def setGrabber(self, bool):
@@ -97,4 +118,5 @@ class Arm(commands2.SubsystemBase):
         Requires a boolean to say whether to open or close the grabber.
         True closes the grabber, False opens it.
         """
+    
         
