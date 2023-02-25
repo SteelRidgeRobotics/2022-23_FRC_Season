@@ -78,35 +78,38 @@ def move_to_target_with_limits():
         deltaTheta = JInv.dot(deltaR)
 
         limitError = get_limit_errors()
-        limits = Arm.get_joint_limits()
-        redoneTheta = np.zeros((len(Arm.joints)), dtype=np.float_)
-        for i in range(len(limitError)):
-            # set the thetas to the limit
-            if limitError[i] == -1:
-                redoneTheta[i] = limits[0][i] - Arm.thetas[i]
-                # This shows us an error message, which tells us if we type of error we have, if we have one
-                errorMin = font.render("ERROR MIN", 1, (255, 0, 0))
-                window.blit(errorMin, (0, 60))
-            elif limitError[i] == 1:
-                redoneTheta[i] = -(Arm.thetas[i] - limits[1][i])
-                # This shows us an error message, which tells us if we type of error we have, if we have one
-                errorMax = font.render("ERROR MAX", 1, (255, 0, 0))
-                window.blit(errorMax, (0, 60))
-            else: # 0
-                # redo the jacobian matrix for the lengths that are not in error
-                #if i != (len(Arm.joints) - 1):
-                CJ = Arm.get_jacobian_with_specs(i, len(Arm.joints) - 1)
-                CJInv = np.linalg.pinv(CJ)
-                tempTheta = CJInv.dot(deltaR)
-                tempTheta = tempTheta.flatten()
-                redoneTheta[i] = tempTheta[0]
-                #else:
-            # go through deltaTheta and apply the new change we made.
-            for n in range(i):
-                deltaTheta[n][0] = redoneTheta[i]
-            # After each change we update it
-            Arm.update_theta(deltaTheta)
-            Arm.update_joint_coords()
+        while not -1 in limitError and not 1 in limitError:
+            limitError = get_limit_errors()
+            limits = Arm.get_joint_limits()
+            redoneTheta = np.zeros((len(Arm.joints)), dtype=np.float_)
+            for i in range(len(limitError)):
+                # set the thetas to the limit
+                if limitError[i] == -1:
+                    # the limit will be greater than Arm.theta[i], so we subtract to get a positive number
+                    redoneTheta[i] = limits[0][i] - Arm.thetas[i]
+                    # This shows us an error message, which tells us if we type of error we have, if we have one
+                    errorMin = font.render("ERROR MIN", 1, (255, 0, 0))
+                    window.blit(errorMin, (0, 60))
+                elif limitError[i] == 1:
+                    redoneTheta[i] = -(Arm.thetas[i] - limits[1][i])
+                    # This shows us an error message, which tells us if we type of error we have, if we have one
+                    errorMax = font.render("ERROR MAX", 1, (255, 0, 0))
+                    window.blit(errorMax, (0, 60))
+                else: # 0
+                    # redo the jacobian matrix for the lengths that are not in error
+                    #if i != (len(Arm.joints) - 1):
+                    CJ = Arm.get_jacobian_with_specs(i, len(Arm.joints) - 1)
+                    CJInv = np.linalg.pinv(CJ)
+                    tempTheta = CJInv.dot(deltaR)
+                    tempTheta = tempTheta.flatten()
+                    redoneTheta[i] = tempTheta[0]
+                    #else:
+                # go through deltaTheta and apply the new change we made.
+                for n in range(i):
+                    deltaTheta[n][0] = redoneTheta[i]
+                # After each change we update it
+                Arm.update_theta(deltaTheta)
+                Arm.update_joint_coords()
 
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
@@ -173,12 +176,8 @@ while running:
     window.blit(angleDisplay, (0, 0))
 
     click = pygame.mouse.get_pos()
-    print(str(click))
     targetPt = (click[0], click[1])
     target = np.array([[click[0],click[1], 0, 1]]).T
-    print("TARGET: "+ str(target))
-    print(str(Arm.joints))
-    print("ANGLES: " + str(Arm.get_angles()))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
