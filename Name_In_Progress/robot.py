@@ -3,7 +3,7 @@ import wpilib
 import commands2
 from robotcontainer import RobotContainer
 
-class Palpatine(commands2.TimedCommandRobot):
+class Steeltastic(commands2.TimedCommandRobot):
 
     def robotInit(self):
 
@@ -42,4 +42,4 @@ class Palpatine(commands2.TimedCommandRobot):
 
 if __name__ == "__main__":
 
-    wpilib.run(Palpatine)
+    wpilib.run(Steeltastic)
