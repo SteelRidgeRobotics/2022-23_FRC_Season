@@ -7,3 +7,5 @@ class Arm(commands2.SubsystemBase):
     def __init__(self):
 
         super().__init__()
+        baseMotor = ctre.TalonFX(constants.ARMBASE)
+        midMotor = ctre.TalonFX()
