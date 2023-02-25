@@ -10,15 +10,23 @@ class JoystickDrive(commands2.CommandBase):
         super().__init__()
 
         self.train = train
-        self.left = left()
-        self.right = right()
-        self.leftBumper = leftBumper()
-        self.rightBumper = rightBumper()
+
+        self.leftFunc = left
+        self.rightFunc = right
+        self.leftBumperFunc = leftBumper
+        self.rightBumperFunc = rightBumper
 
         self.addRequirements([self.train])
 
     def execute(self):
         
+        self.left = self.leftFunc()
+        self.right = self.rightFunc()
+        self.leftBumper = self.leftBumperFunc()
+        self.rightBumper = self.rightBumperFunc()
+        
+        wpilib.SmartDashboard.putNumberArray("LRJoy", [self.left, self.leftBumper, self.right, self.rightBumper])
+
         if self.leftBumper or self.rightBumper:
             
             self.left *= 0.5

@@ -13,7 +13,7 @@ class TestTrigger(commands2.CommandBase):
 
     def end(self, interrupted):
 
-        pass
+        wpilib.SmartDashboard.putBoolean("Command Runs", False)
 
     def isFinished(self):
 

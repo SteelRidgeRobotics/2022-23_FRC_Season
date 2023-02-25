@@ -17,13 +17,13 @@ class RobotContainer:
 
         self.chooser = wpilib.SendableChooser()
 
-        driveForward = StationCorrection(self.train)
+        stationCorrection = StationCorrection(self.train)
 
-        self.chooser.setDefaultOption("Drive Forward", driveForward)
+        self.chooser.setDefaultOption("Drive Forward", stationCorrection)
 
         self.train.setDefaultCommand(JoystickDrive(self.train, lambda: self.driverController.getLeftY(), lambda: self.driverController.getRightX(), lambda: self.driverController.getLeftBumper(), lambda: self.driverController.getRightBumper()))
 
-        commands2.button.JoystickButton(self.driverController, self.driverController.Button.kA).and_(commands2.button.JoystickButton(self.driverController, self.driverController.Button.kY)).whenActive(TestTrigger())
+        commands2.button.JoystickButton(self.driverController, self.driverController.Button.kA).and_(commands2.button.JoystickButton(self.driverController, self.driverController.Button.kY)).whileActiveContinous(TestTrigger())
 
 
     def getAutonomousCommand(self) -> commands2.CommandBase:
