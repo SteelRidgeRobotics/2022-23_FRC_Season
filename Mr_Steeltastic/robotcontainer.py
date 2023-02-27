@@ -10,7 +10,7 @@ class RobotContainer:
 
     def __init__(self):
 
-        self.driverController = wpilib.XboxController(0)
+        self.driverController = wpilib.XboxController(constants.DRIVERCONTROLLERPORT)
 
         self.train = Drivetrain()
 
