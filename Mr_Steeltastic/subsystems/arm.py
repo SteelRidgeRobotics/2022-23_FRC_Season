@@ -1,122 +1,82 @@
+import wpilib
 import commands2
 import ctre
 import constants
 import numpy
+
+class ArmMotor:
+
+    def __init__(self, motorID: int, holdPercentage: float, feedForward: float, armP: float, armD: float, cruiseVel: float, accel: float, gearRatio: float):
+
+        self.motor = ctre.TalonFX(motorID)
+        self.holdPercentage = holdPercentage
+        self.gearRatio = gearRatio
+        
+        self.motor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.motor.configForwardLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, motorID, 10)
+        self.motor.configReverseLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, motorID, 10)
+        self.motor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor)
+        
+        self.motor.config_kF(feedForward)
+        self.motor.config_kP(armP) 
+        self.motor.config_kD(armD)
+        self.motor.configMotionCruiseVelocity(cruiseVel)
+        self.motor.configMotionAcceleration(accel)
+        
+        self.motor.setSensorPhase(False)
+        
+    def moveToAngle(self, angle):
+        
+        feedForward = self.holdPercentage * numpy.cos(self.getCurrentAngle())
+        self.motor.set(ctre.TalonFXControlMode.MotionMagic, (angle * 2048/360) * self.gearRatio, ctre.DemandType.ArbitraryFeedForward, feedForward)
+
+    def getCurrentAngle(self):
+        
+        return self.motor.getSelectedSensorPosition() * 360/2048
+
+
 
 class Arm(commands2.SubsystemBase):
 
     def __init__(self):
 
         super().__init__()
-        self.baseMotor = ctre.TalonFX(constants.ARMBASEPORT)
-        self.midMotor = ctre.TalonFX(constants.ARMMIDPORT)
-        self.topMotor = ctre.TalonFX(constants.ARMTOPPORT)
-        self.grabberMotor = ctre.TalonFX(constants.ARMGRABBERPORT)
+        self.baseMotor = ArmMotor(constants.ARMBASEPORT, 0.75, constants.ARMBASEF, constants.ARMBASEP, constants.ARMBASED, constants.ARMBASECRUISEVEL, constants.ARMBASEACCEL, constants.BASERATIO)
+        self.midMotor = ArmMotor(constants.ARMMIDPORT, 0.5, constants.ARMMIDF, constants.ARMMIDP, constants.ARMMIDD, constants.ARMMIDCRUISEVEL, constants.ARMMIDACCEL, constants.MIDDLERATIO)
+        self.topMotor = ArmMotor(constants.ARMTOPPORT, 0.25, constants.ARMTOPF, constants.ARMTOPP, constants.ARMTOPD, constants.ARMTOPCRUISEVEL, constants.ARMTOPACCEL, constants.TOPRATIO)
+        self.grabberMotor = ArmMotor(constants.ARMGRABBERPORT, 0.1, constants.ARMGRABBERF, constants.ARMGRABBERP, constants.ARMGRABBERD, constants.ARMGRABBERCRUISEVEL, constants.ARMGRABBERACCEL, constants.GRABBERRATIO)
         self.wristMotor = ctre.TalonSRX(constants.ARMGRABBERWRISTPORT)
 
-        # neutral modes
-        self.baseMotor.setNeutralMode(ctre.NeutralMode.Brake)
-        self.midMotor.setNeutralMode(ctre.NeutralMode.Brake)
-        self.topMotor.setNeutralMode(ctre.NeutralMode.Brake)
-        self.grabberMotor.setNeutralMode(ctre.NeutralMode.Brake)
-        self.wristMotor.setNeutralMode(ctre.NeutralMode.Brake)
-
-        # set up limit switches
-        self.baseMotor.configForwardLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, 4, 10)
-        self.midMotor.configForwardLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, 5, 10)
-        self.topMotor.configForwardLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, 6, 10)
-        self.grabberMotor.configForwardLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, 7, 10)
-        
-        self.baseMotor.configReverseLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, 4, 10)
-        self.midMotor.configReverseLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, 5, 10)
-        self.topMotor.configReverseLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, 6, 10)
-        self.grabberMotor.configReverseLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, 7, 10)
-
-        # choose sensors
-        self.baseMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor)
-        self.midMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor)
-        self.topMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor)
-        self.grabberMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor)
         self.wristMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.QuadEncoder)
-        
-        # set up motion magic
 
-        # config PID values
-        self.baseMotor.config_kF(constants.ARMBASEF) 
-        self.baseMotor.config_kP(constants.ARMBASEP)
-        self.baseMotor.config_kD(constants.ARMBASED)
-
-        self.midMotor.config_kF(constants.ARMMIDF)
-        self.midMotor.config_kP(constants.ARMMIDP)
-        self.midMotor.config_kD(constants.ARMMIDD)
-
-        self.topMotor.config_kF(constants.ARMTOPF)
-        self.topMotor.config_kP(constants.ARMTOPP)
-        self.topMotor.config_kD(constants.ARMTOPD)
-
-        self.grabberMotor.config_kF(constants.ARMGRABBERF)
-        self.grabberMotor.config_kP(constants.ARMGRABBERP)
-        self.grabberMotor.config_kD(constants.ARMGRABBERD)
-
-        self.wristMotor.config_kF(constants.ARMWRISTF)
-        self.wristMotor.config_kP(constants.ARMWRISTP)
-        self.wristMotor.config_kD(constants.ARMWRISTD)
-
-        # config cruising velocity
-        self.baseMotor.configMotionCruiseVelocity(constants.ARMBASECRUISEVEL)
-        self.midMotor.configMotionCruiseVelocity(constants.ARMMIDCRUISEVEL)
-        self.topMotor.configMotionCruiseVelocity(constants.ARMTOPCRUISEVEL)
-        self.grabberMotor.configMotionCruiseVelocity(constants.ARMGRABBERCRUISEVEL)
         self.wristMotor.configMotionCruiseVelocity(constants.ARMWRISTCRUISEVEL)
+        self.wristMotor.configMotionAcceleration(constants.ARMWRISTACCEL)
 
-        # config acceleration
-        self.baseMotor.configMotionAcceleration(constants.ARMBASEMOTIONACCEL)
-        self.midMotor.configMotionAcceleration(constants.ARMMIDMOTIONACCEL)
-        self.topMotor.configMotionAcceleration(constants.ARMTOPMOTIONACCEL)
-        self.grabberMotor.configMotionAcceleration(constants.ARMGRABBERMOTIONACCEL)
-        self.wristMotor.configMotionAcceleration(constants.ARMWRISTMOTIONACCEL)
-        
-        # invert sensors
-        self.baseMotor.setSensorPhase(False)
-        self.midMotor.setSensorPhase(False)
-        self.topMotor.setSensorPhase(False)
-        self.grabberMotor.setSensorPhase(False)
         self.wristMotor.setSensorPhase(False)
-
-    def move_arm_segment_to_angle(self, motor: ctre.TalonFX, setpoint: float):
-        """
-        Rotate an arm to a certain angle.
-        Requires the motor it is controlling and the angle.
-        """
-        #arbFF = percentToHoldArmHorixontal*numpy.cos(currentAngleFromHorizontal)
-        if motor == self.baseMotor:
-            percentToHoldHorizontal = 0.75
-        elif motor == self.midMotor:
-            percentToHoldHorizontal = 0.50
-        elif motor == self.topMotor:
-            percentToHoldHorizontal = 0.25
-        elif motor == self.grabberMotor:
-            percentToHoldHorizontal = 0.1
-
-        arbFF = percentToHoldHorizontal*numpy.cos(setpoint)
-        motor.set(ctre.ControlMode.MotionMagic, setpoint, ctre.DemandType.ArbitraryFeedForward, arbFF)
-
+        # self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
+        
     
     def moveArmToPose(self, base: float, mid: float, top: float, grabber: float, wrist: float):
         """
         Move the arm to a specific pose.
         Requires angles for the base, middle, top, grabber, and wrist motors.
         """
-        # convert angle to TalonFX Units
-        base *= constants.BASERATIO
-        self.move_arm_segment_to_angle(self.baseMotor, base)
-        
+        self.baseMotor.moveToAngle(base)
+        self.midMotor.moveToAngle(mid)
+        self.topMotor.moveToAngle(top)
+        self.grabberMotor.moveToAngle(grabber)
+        self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, (wrist * 2048/360), ctre.DemandType.ArbitraryFeedForward, constants.ARMWRISTF)
 
-    def setGrabber(self, bool):
-        """
-        Tell the grabber to open or close
-        Requires a boolean to say whether to open or close the grabber.
-        True closes the grabber, False opens it.
-        """
+    # def closeGrabber(self, bool: bool):
+    #     """
+    #     Tell the grabber to open or close
+    #     Requires a boolean to say whether to open or close the grabber.
+    #     True closes the grabber, False opens it.
+    #     """
+    #     if bool:
+    #         self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
+    #     else:
+    #         self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
     
-        
+    # def getGrabberState(self):
+    #     self.grabberSolenoid.get()
