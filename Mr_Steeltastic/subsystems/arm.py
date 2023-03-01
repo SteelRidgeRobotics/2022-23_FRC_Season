@@ -64,6 +64,12 @@ class Arm(commands2.SubsystemBase):
         self.topMotor.moveToAngle(top)
         self.grabberMotor.moveToAngle(grabber)
         self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, (wrist * 2048/360), ctre.DemandType.ArbitraryFeedForward, constants.ARMWRISTF)
+    
+    def HoldAtPercentage(self, base: float, mid: float, top: float, grabber: float):
+        self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentageOutput, base)
+        self.midMotor.motor.set(ctre.TalonFXControlMode.PercentageOutput, mid)
+        self.topMotor.motor.set(ctre.TalonFXControlMode.PercentageOutput, top)
+        self.grabbereMotor.motor.set(ctre.TalonFXControlMode.PercentageOutput, grabber)
 
     # def closeGrabber(self, bool: bool):
     #     """
