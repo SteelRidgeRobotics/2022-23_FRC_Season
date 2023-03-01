@@ -3,6 +3,7 @@ import constants
 import commands2
 import commands2.button
 from subsystems.drivetrain import Drivetrain
+from subsystems.arm import Arm
 from commands.stationCorrection import StationCorrection
 from commands.joystickDrive import JoystickDrive
 
@@ -13,6 +14,8 @@ class RobotContainer:
         self.driverController = wpilib.XboxController(constants.DRIVERCONTROLLERPORT)
 
         self.train = Drivetrain()
+
+        self.arm = Arm()
 
         self.chooser = wpilib.SendableChooser()
 
