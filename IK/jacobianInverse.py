@@ -25,6 +25,7 @@ reach = sum(Arm.lengths)
 
 # add limits
 Arm.add_limits()
+epsilon = 0.1
 Arm.def_joint_limit(0, 0, math.pi)
 Arm.def_joint_limit(1, -math.pi, math.pi)
 Arm.def_joint_limit(2, -math.pi, math.pi)
@@ -45,24 +46,6 @@ def move_to_target():
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
 
-def get_limit_errors():
-    global Arm
-    angles = Arm.get_angles()
-    limitError = []
-    # check if arm is in its limits, makes a list that says errors, -1 for min error, 1 for max error, 0 for no error
-    for i in range(len(angles)):
-        # check if it is less than min
-        if angles[i] < Arm.limits[0][i]:
-            limitError.append(-1)
-            #thetaCheck = np.append(thetaCheck, Arm.limits[0][i])
-        # check if it is more than max
-        elif angles[i] > Arm.limits[1][i]:
-            limitError.append(1)
-            #thetaCheck = deltaTheta = np.append(deltaTheta, Arm.limits[1][i])
-        else:
-            limitError.append(0)
-    return limitError
-
 def move_to_target_with_limits():
     global Arm, target, reach
 
@@ -70,6 +53,7 @@ def move_to_target_with_limits():
     angles = Arm.get_angles()
 
     if np.linalg.norm(target - Arm.joints[:, [-1]]) > 0.002 * reach:
+        ## move a little bit in the direction we want to
         targetVector = (target - Arm.joints[:, [-1]])[:3]
         targetUnitVector = targetVector / np.linalg.norm(targetVector)
         deltaR = distPerUpdate * targetUnitVector
@@ -77,40 +61,19 @@ def move_to_target_with_limits():
         JInv = np.linalg.pinv(J)
         deltaTheta = JInv.dot(deltaR)
 
-        limitError = get_limit_errors()
-        while not -1 in limitError and not 1 in limitError:
-            limitError = get_limit_errors()
-            limits = Arm.get_joint_limits()
-            redoneTheta = np.zeros((len(Arm.joints)), dtype=np.float_)
-            for i in range(len(limitError)):
-                # set the thetas to the limit
-                if limitError[i] == -1:
-                    # the limit will be greater than Arm.theta[i], so we subtract to get a positive number
-                    redoneTheta[i] = limits[0][i] - Arm.thetas[i]
-                    # This shows us an error message, which tells us if we type of error we have, if we have one
-                    errorMin = font.render("ERROR MIN", 1, (255, 0, 0))
-                    window.blit(errorMin, (0, 60))
-                elif limitError[i] == 1:
-                    redoneTheta[i] = -(Arm.thetas[i] - limits[1][i])
-                    # This shows us an error message, which tells us if we type of error we have, if we have one
-                    errorMax = font.render("ERROR MAX", 1, (255, 0, 0))
-                    window.blit(errorMax, (0, 60))
-                else: # 0
-                    # redo the jacobian matrix for the lengths that are not in error
-                    #if i != (len(Arm.joints) - 1):
-                    CJ = Arm.get_jacobian_with_specs(i, len(Arm.joints) - 1)
-                    CJInv = np.linalg.pinv(CJ)
-                    tempTheta = CJInv.dot(deltaR)
-                    tempTheta = tempTheta.flatten()
-                    redoneTheta[i] = tempTheta[0]
-                    #else:
-                # go through deltaTheta and apply the new change we made.
-                for n in range(i):
-                    deltaTheta[n][0] = redoneTheta[i]
-                # After each change we update it
-                Arm.update_theta(deltaTheta)
-                Arm.update_joint_coords()
-
+        ## check if this movement will violate our constraints
+        limits = Arm.get_joint_limits()
+        for ii, (_joint,_motion) in enumerate(zip(Arm.thetas, deltaTheta.flatten())):
+            ## test lower joint limit
+            if _joint + _motion < limits[0][ii]:
+                ## if the motion would cause violation, set joint to lower limit
+                deltaTheta[ii] = limits[0][ii] - _joint
+            
+            ## test upper limit
+            elif _joint + _motion > limits[1][ii]:
+                ## if the motion would cause violation, set joint to upper limit
+                deltaTheta[ii] = limits[1][ii] - _joint
+        
         Arm.update_theta(deltaTheta)
         Arm.update_joint_coords()
 
