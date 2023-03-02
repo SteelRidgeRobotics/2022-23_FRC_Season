@@ -20,10 +20,10 @@ class Drivetrain(commands2.SubsystemBase):
         super().__init__()
 
         # create motors
-        self.FLMotor = ctre.WPI_TalonFX(0)
-        self.BLMotor = ctre.WPI_TalonFX(1)
-        self.FRMotor = ctre.WPI_TalonFX(2)
-        self.BRMotor = ctre.WPI_TalonFX(3)
+        self.FLMotor = ctre.TalonFX(0)
+        self.BLMotor = ctre.TalonFX(1)
+        self.FRMotor = ctre.TalonFX(2)
+        self.BRMotor = ctre.TalonFX(3)
 
         # set followers
         self.BLMotor.follow(self.FLMotor)
