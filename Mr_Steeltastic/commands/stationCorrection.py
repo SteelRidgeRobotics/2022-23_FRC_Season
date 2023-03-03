@@ -48,5 +48,5 @@ class StationCorrection(commands2.CommandBase):
         self.train.arcadeDrive(0.0, 0.0)
     
     def isFinished(self):
-
+        # Need a way to end this command, saying we are done
         return False

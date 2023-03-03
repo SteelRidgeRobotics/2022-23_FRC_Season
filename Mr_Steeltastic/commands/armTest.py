@@ -30,11 +30,5 @@ class ArmTest(commands2.CommandBase):
         """
         Return whether or not the command is finished.
         """
-
-        if wpilib.Timer.getFPGATimestamp() - self.start >= 30:
             
-            return True
-
-
-
-
+        return wpilib.Timer.getFPGATimestamp() - self.start >= 30
