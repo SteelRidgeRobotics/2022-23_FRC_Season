@@ -6,23 +6,21 @@ from subsystems.arm import Arm
 #  the Arm object.
 class ArmTest(commands2.CommandBase):
 
-    def __init__(self, arm: Arm, base, mid, top, grabber) -> None:
+    def __init__(self, arm: Arm, grabber) -> None:
         
         super().__init__()
         
         self.arm = arm
         self.addRequirements([self.arm])
 
-        self.base = base
-        self.mid = mid
-        self.top = top
+    
         self.grabber = grabber
         
-        self.start = wpilib.Timer.getFPGATimestamp()
+        self.start = 0.0
 
     def execute(self):
 
-        self.arm.holdAtPercentage(self.base, self.mid, self.top, self.grabber)
+        self.arm.grabberMotor.moveToAngle(self.grabber)
     
     def end(self, interrupted):
         

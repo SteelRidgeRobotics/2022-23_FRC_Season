@@ -26,7 +26,7 @@ class RobotContainer:
 
         self.train.setDefaultCommand(JoystickDrive(self.train, lambda: self.driverController.getLeftY(), lambda: self.driverController.getRightX(), lambda: self.driverController.getLeftBumper(), lambda: self.driverController.getRightBumper()))
 
-        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm, -0.205, -0.19, 0.21, -0.125))
+        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm, 60))
         
     def getAutonomousCommand(self) -> commands2.CommandBase:
 
