@@ -20,6 +20,7 @@ class ArmMotor:
         self.motor.config_kF(0, feedForward, 10)
         self.motor.config_kP(0, armP, 10) 
         self.motor.config_kD(0, armD, 10)
+
         self.motor.configMotionCruiseVelocity(cruiseVel, 10)
         self.motor.configMotionAcceleration(accel, 10)
         
@@ -39,6 +40,7 @@ class Arm(commands2.SubsystemBase):
     def __init__(self):
 
         super().__init__()
+
         self.baseMotor = ArmMotor(constants.ARMBASEPORT, 0, constants.ARMBASEF, constants.ARMBASEP, constants.ARMBASED, constants.ARMBASECRUISEVEL, constants.ARMBASEACCEL, constants.BASERATIO)
         self.midMotor = ArmMotor(constants.ARMMIDPORT, 0, constants.ARMMIDF, constants.ARMMIDP, constants.ARMMIDD, constants.ARMMIDCRUISEVEL, constants.ARMMIDACCEL, constants.MIDDLERATIO)
         self.topMotor = ArmMotor(constants.ARMTOPPORT, 0, constants.ARMTOPF, constants.ARMTOPP, constants.ARMTOPD, constants.ARMTOPCRUISEVEL, constants.ARMTOPACCEL, constants.TOPRATIO)
@@ -59,17 +61,19 @@ class Arm(commands2.SubsystemBase):
         Move the arm to a specific pose.
         Requires angles for the base, middle, top, grabber, and wrist motors.
         """
+
         self.baseMotor.moveToAngle(base)
         self.midMotor.moveToAngle(mid)
         self.topMotor.moveToAngle(top)
         self.grabberMotor.moveToAngle(grabber)
         self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, (wrist * 2048/360), ctre.DemandType.ArbitraryFeedForward, constants.ARMWRISTF)
     
-    def HoldAtPercentage(self, base: float, mid: float, top: float, grabber: float):
-        self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentageOutput, base)
-        self.midMotor.motor.set(ctre.TalonFXControlMode.PercentageOutput, mid)
-        self.topMotor.motor.set(ctre.TalonFXControlMode.PercentageOutput, top)
-        self.grabbereMotor.motor.set(ctre.TalonFXControlMode.PercentageOutput, grabber)
+    def holdAtPercentage(self, base: float, mid: float, top: float, grabber: float):
+
+        self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, base)
+        self.midMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, mid)
+        self.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, top)
+        self.grabberMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, grabber)
 
     # def closeGrabber(self, bool: bool):
     #     """
