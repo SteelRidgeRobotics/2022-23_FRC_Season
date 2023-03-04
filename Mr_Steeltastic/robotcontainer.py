@@ -7,6 +7,7 @@ from subsystems.arm import Arm
 from commands.stationCorrection import StationCorrection
 from commands.joystickDrive import JoystickDrive
 from commands.armTest import ArmTest
+from commands.keepAtZero import KeepAtZero
 
 class RobotContainer:
 
@@ -26,7 +27,10 @@ class RobotContainer:
 
         self.train.setDefaultCommand(JoystickDrive(self.train, lambda: self.driverController.getLeftY(), lambda: self.driverController.getRightX(), lambda: self.driverController.getLeftBumper(), lambda: self.driverController.getRightBumper()))
 
-        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm, -15))
+        self.arm.setDefaultCommand(KeepAtZero(self.arm))
+
+        # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm, -15))
+
         
     def getAutonomousCommand(self) -> commands2.CommandBase:
 

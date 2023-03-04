@@ -29,9 +29,9 @@ class Drivetrain(commands2.SubsystemBase):
         self.BLMotor.follow(self.FLMotor)
         self.BRMotor.follow(self.FRMotor)
 
-        # invert the left side of the robot
-        self.FLMotor.setInverted(True)
-        self.BLMotor.setInverted(True)
+        # invert the right side of the robot
+        self.FRMotor.setInverted(True)
+        self.BRMotor.setInverted(True)
 
         # configure feedback sensors (basically give it a timeout ms of 10 rather than 0). the timeoutms will wait to see if the config is successful, and then throw an error if something goes wrong
         self.FLMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, constants.TIMEOUTMS)

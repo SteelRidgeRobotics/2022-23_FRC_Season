@@ -35,9 +35,13 @@ class ArmMotor:
         
         self.motor.setSensorPhase(False)
         self.motor.configIntegratedSensorOffset(offset)
-        
 
+        self.motor.setSelectedSensorPosition(0)
+
+    def keepAtZero(self):
         
+        self.motor.set(ctre.TalonFXControlMode.MotionMagic, 0)
+  
     def moveToAngle(self, angle):
         
         feedForward = self.holdPercentage * numpy.cos(math.radians(self.getCurrentAngle()))
@@ -46,6 +50,7 @@ class ArmMotor:
                        ctre.DemandType.ArbitraryFeedForward, feedForward)
 
     def moveToPos(self, pos):
+        
         feedForward = self.holdPercentage * numpy.cos(math.radians(self.getCurrentAngle()))
         self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos, 
                        ctre.DemandType.ArbitraryFeedForward, feedForward)
@@ -90,6 +95,14 @@ class Arm(commands2.SubsystemBase):
         self.wristMotor.setSensorPhase(False)
 
         self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
+
+    def keepArmsAtZero(self):
+
+        self.baseMotor.keepAtZero()
+        self.midMotor.keepAtZero()
+        self.topMotor.keepAtZero()
+        self.grabberMotor.keepAtZero()
+        
         
     def moveArmToPose(self, base: float, mid: float, top: float, grabber: float, wrist: float):
         """
