@@ -20,7 +20,7 @@ class ArmTest(commands2.CommandBase):
 
     def execute(self):
 
-        self.arm.grabberMotor.moveToAngle(self.grabber)
+        self.arm.midMotor.moveToAngle(self.grabber)
     
     def end(self, interrupted):
         
