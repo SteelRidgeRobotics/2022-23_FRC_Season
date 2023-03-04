@@ -13,6 +13,8 @@ class StationCorrection(commands2.CommandBase):
         
         self.addRequirements([self.train])
 
+        self.startTime = wpilib.Timer.getFPGATimestamp()
+
     def execute(self):
 
         wpilib.SmartDashboard.putNumber("Angle", self.train.gyro.getAngle())
@@ -48,5 +50,5 @@ class StationCorrection(commands2.CommandBase):
         self.train.arcadeDrive(0.0, 0.0)
     
     def isFinished(self):
-        # Need a way to end this command, saying we are done
-        return False
+
+        return wpilib.Timer.getFPGATimestamp() - self.startTime
