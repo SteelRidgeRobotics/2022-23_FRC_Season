@@ -1,6 +1,7 @@
 import commands2
 from subsystems.arm import Arm
 from setGrabber import SetGrabber
+from poseArm import PoseArm
 
 class PickUpObject(commands2.SequentialCommandGroup):
     """
@@ -11,10 +12,15 @@ class PickUpObject(commands2.SequentialCommandGroup):
 
         super().__init__()
 
-        # self.addCommands(
-        #     ## move to arm to position command
-        #     commands2.ParallelCommandGroup(MoveArm, SetGrabber(arm, False)),
-        #     SetGrabber(arm, True)
-        #     # MoveArmToAvoid
-        #     # MoveArmToRestingPosition
-        #     )
+        self.addCommands(
+            ## moveArmToAvoid
+            PoseArm([0, 0, 0, 0, 0]),
+            ## move to position
+            commands2.ParallelCommandGroup(PoseArm([0, 0, 0, 0, 0]), SetGrabber(arm, False)),
+            ## grab object
+            SetGrabber(arm, True),
+            ## MoveArmToAvoid,
+            PoseArm([0, 0, 0, 0, 0]),
+            ## MoveArmToRestingPosition
+            PoseArm([0, 0, 0, 0, 0])
+            )

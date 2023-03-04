@@ -11,7 +11,9 @@ class ArmMotor:
     Motor for arm ;)
     """
 
-    def __init__(self, motorID: int, holdPercentage: float, feedForward: float, armP: float, armD: float, cruiseVel: float, accel: float, gearRatio: float):
+    def __init__(self, motorID: int, holdPercentage: float, feedForward: float, 
+                 armP: float, armD: float, cruiseVel: float, accel: float, 
+                 gearRatio: float, offset: float):
 
         self.motor = ctre.TalonFX(motorID)
         self.holdPercentage = holdPercentage
@@ -32,11 +34,21 @@ class ArmMotor:
         self.motor.configMotionAcceleration(accel, 10)
         
         self.motor.setSensorPhase(False)
+        self.motor.configIntegratedSensorOffset(offset)
+        
+
         
     def moveToAngle(self, angle):
         
         feedForward = self.holdPercentage * numpy.cos(math.radians(self.getCurrentAngle()))
-        self.motor.set(ctre.TalonFXControlMode.MotionMagic, (angle * 2048/360) * self.gearRatio, ctre.DemandType.ArbitraryFeedForward, feedForward)
+        self.motor.set(ctre.TalonFXControlMode.MotionMagic, 
+                       (angle * 2048/360) * self.gearRatio, 
+                       ctre.DemandType.ArbitraryFeedForward, feedForward)
+
+    def moveToPos(self, pos):
+        feedForward = self.holdPercentage * numpy.cos(math.radians(self.getCurrentAngle()))
+        self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos, 
+                       ctre.DemandType.ArbitraryFeedForward, feedForward)
 
     def getCurrentAngle(self):
         
@@ -48,10 +60,26 @@ class Arm(commands2.SubsystemBase):
         
         super().__init__()
 
-        self.baseMotor = ArmMotor(constants.ARMBASEPORT, 0, constants.ARMBASEF, constants.ARMBASEP, constants.ARMBASED, constants.ARMBASECRUISEVEL, constants.ARMBASEACCEL, constants.BASERATIO)
-        self.midMotor = ArmMotor(constants.ARMMIDPORT, 0, constants.ARMMIDF, constants.ARMMIDP, constants.ARMMIDD, constants.ARMMIDCRUISEVEL, constants.ARMMIDACCEL, constants.MIDDLERATIO)
-        self.topMotor = ArmMotor(constants.ARMTOPPORT, 0, constants.ARMTOPF, constants.ARMTOPP, constants.ARMTOPD, constants.ARMTOPCRUISEVEL, constants.ARMTOPACCEL, constants.TOPRATIO)
-        self.grabberMotor = ArmMotor(constants.ARMGRABBERPORT, 0, constants.ARMGRABBERF, constants.ARMGRABBERP, constants.ARMGRABBERD, constants.ARMGRABBERCRUISEVEL, constants.ARMGRABBERACCEL, constants.GRABBERRATIO)
+        self.baseMotor = ArmMotor(constants.ARMBASEPORT, 0, constants.ARMBASEF, 
+                                  constants.ARMBASEP, constants.ARMBASED, 
+                                  constants.ARMBASECRUISEVEL, constants.ARMBASEACCEL, 
+                                  constants.BASERATIO, 0)
+        
+        self.midMotor = ArmMotor(constants.ARMMIDPORT, 0, constants.ARMMIDF, 
+                                 constants.ARMMIDP, constants.ARMMIDD, 
+                                 constants.ARMMIDCRUISEVEL, constants.ARMMIDACCEL, 
+                                 constants.MIDDLERATIO, 0)
+        
+        self.topMotor = ArmMotor(constants.ARMTOPPORT, 0, constants.ARMTOPF, 
+                                 constants.ARMTOPP, constants.ARMTOPD, 
+                                 constants.ARMTOPCRUISEVEL, constants.ARMTOPACCEL, 
+                                 constants.TOPRATIO, 0)
+        
+        self.grabberMotor = ArmMotor(constants.ARMGRABBERPORT, 0, constants.ARMGRABBERF, 
+                                     constants.ARMGRABBERP, constants.ARMGRABBERD, 
+                                     constants.ARMGRABBERCRUISEVEL, constants.ARMGRABBERACCEL, 
+                                     constants.GRABBERRATIO, 0)
+        
         self.wristMotor = ctre.TalonSRX(constants.ARMGRABBERWRISTPORT)
 
         self.wristMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.QuadEncoder, 0, 10)
@@ -60,7 +88,7 @@ class Arm(commands2.SubsystemBase):
         self.wristMotor.configMotionAcceleration(constants.ARMWRISTACCEL, 10)
 
         self.wristMotor.setSensorPhase(False)
-        
+
         self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
         
     def moveArmToPose(self, base: float, mid: float, top: float, grabber: float, wrist: float):
@@ -73,7 +101,15 @@ class Arm(commands2.SubsystemBase):
         self.midMotor.moveToAngle(mid)
         self.topMotor.moveToAngle(top)
         self.grabberMotor.moveToAngle(grabber)
-        self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, (wrist * 2048/360), ctre.DemandType.ArbitraryFeedForward, constants.ARMWRISTF)
+        self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, (wrist * 2048/360), 
+                            ctre.DemandType.ArbitraryFeedForward, constants.ARMWRISTF)
+
+    def ArmToPos(self, base: int, mid: int, top: int, grabber: int, wrist: int):
+        self.baseMotor.moveToPos(base)
+        self.midMotor.moveToPos(mid)
+        self.topMotor.moveToPos(top)
+        self.grabberMotor.moveToPos(grabber)
+        self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, wrist)
 
     def holdAtPercentage(self, base: float, mid: float, top: float, grabber: float):
         
