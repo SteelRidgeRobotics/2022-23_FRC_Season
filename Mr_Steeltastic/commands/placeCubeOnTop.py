@@ -3,9 +3,9 @@ from subsystems.arm import Arm
 from setGrabber import SetGrabber
 from poseArm import PoseArm
 
-class PlaceConeOnTop(commands2.SequentialCommandGroup):
+class PlaceCubeOnTop(commands2.SequentialCommandGroup):
     """
-    Arm will place and score object on the top of the grid
+    Arm will place and score cube on the top of the grid
     """
     
     def __init__(self, arm: Arm):
@@ -17,7 +17,7 @@ class PlaceConeOnTop(commands2.SequentialCommandGroup):
             PoseArm([0, 0, 0, 0, 0]),
             ## move to place
             PoseArm([0, 0, 0, 0, 0]),
-            ## move down slightly to get cone on peg
+            ## move down slightly to prevent bounce from cube
             PoseArm([0, 0, 0, 0, 0]),
             ## let go
             SetGrabber(arm, False),

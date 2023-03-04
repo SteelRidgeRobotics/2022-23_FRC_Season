@@ -12,7 +12,7 @@ class PickUpObject(commands2.SequentialCommandGroup):
 
         super().__init__()
 
-        self.addCommands(
+        self.addCommands( # TODO: GET ARM POSES
             ## moveArmToAvoid
             PoseArm([0, 0, 0, 0, 0]),
             ## move to position
