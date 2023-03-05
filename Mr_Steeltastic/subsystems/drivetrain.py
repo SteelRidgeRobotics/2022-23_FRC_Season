@@ -83,7 +83,7 @@ class Drivetrain(commands2.SubsystemBase):
         self.BRMotor.setNeutralMode(ctre.NeutralMode.Brake)
 
         # PIDController for balancing on the charge station
-        self.pidController = wpimath.controller.PIDController(constants.MMP, constants.MMI, constants.MMD)
+        self.pidController = wpimath.controller.PIDController(constants.P, constants.I, constants.D)
 
         # Gyroscope to keep track of robot pitch
         self.gyro = wpilib.ADIS16470_IMU()

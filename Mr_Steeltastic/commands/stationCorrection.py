@@ -15,16 +15,20 @@ class StationCorrection(commands2.CommandBase):
         
         self.addRequirements([self.train, self.arm])
 
-        self.startTime = wpilib.Timer.getFPGATimestamp()
+        # self.startTime = wpilib.Timer.getFPGATimestamp()
         
-        self.commandFinished = False
+        # self.commandFinished = False
+
+    def initialize(self):
+
+        self.train.onChargeStation = False
 
     def execute(self):
 
-        if self.commandFinished:
+        # if self.commandFinished:
 
-            self.startTime = wpilib.Timer.getFPGATimestamp()
-            self.commandFinished = False
+        #     self.startTime = wpilib.Timer.getFPGATimestamp()
+        #     self.commandFinished = False
 
         wpilib.SmartDashboard.putNumber("Angle", self.train.gyro.getAngle())
 
@@ -55,7 +59,7 @@ class StationCorrection(commands2.CommandBase):
         
         self.arm.keepArmsAtZero()
 
-        wpilib.SmartDashboard.putNumberArray("Time", [wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp() - self.startTime])
+        # wpilib.SmartDashboard.putNumberArray("Time", [wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp() - self.startTime])
         wpilib.SmartDashboard.putBoolean("Running", True)
 
         # wpilib.SmartDashboard.putNumberArray("Time", [self.startTime, wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp - self.startTime])
@@ -64,7 +68,6 @@ class StationCorrection(commands2.CommandBase):
         
         self.train.arcadeDrive(0.0, 0.0)
         wpilib.SmartDashboard.putBoolean("Running", False)
-        self.commandFinished = True
     
     def isFinished(self):
         
