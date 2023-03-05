@@ -21,7 +21,7 @@ class RobotContainer:
 
         self.chooser = wpilib.SendableChooser()
 
-        stationCorrection = StationCorrection(self.train)
+        stationCorrection = StationCorrection(self.train, self.arm)
 
         self.chooser.setDefaultOption("Drive Forward", stationCorrection)
 

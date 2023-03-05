@@ -94,6 +94,8 @@ class Arm(commands2.SubsystemBase):
 
         self.wristMotor.setSensorPhase(False)
 
+        self.wristMotor.setNeutralMode(ctre.NeutralMode.Brake)
+
         self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
 
     def keepArmsAtZero(self):
@@ -102,7 +104,6 @@ class Arm(commands2.SubsystemBase):
         self.midMotor.keepAtZero()
         self.topMotor.keepAtZero()
         self.grabberMotor.keepAtZero()
-        
         
     def moveArmToPose(self, base: float, mid: float, top: float, grabber: float, wrist: float):
         """
