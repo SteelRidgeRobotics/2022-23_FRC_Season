@@ -8,9 +8,9 @@ xOffset = 250
 yOffset = 250
 Arm = RobotArm(xBase=xOffset, yBase=yOffset)
 
-Arm.add_arm_segment(length=75, thetaInit=math.radians(20))
-Arm.add_arm_segment(length=75, thetaInit=math.radians(45))
-Arm.add_arm_segment(length=75, thetaInit=math.radians(45))
+Arm.add_arm_segment(length=21.578000, thetaInit=math.radians(20))
+Arm.add_arm_segment(length=22.000000, thetaInit=math.radians(45))
+Arm.add_arm_segment(length=22, thetaInit=math.radians(45))
 Arm.update_joint_coords()
 
 target = Arm.joints[:, [-1]]
