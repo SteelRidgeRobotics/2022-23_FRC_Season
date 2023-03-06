@@ -16,6 +16,8 @@ class StationCorrection(commands2.CommandBase):
         
         self.addRequirements([self.train, self.arm])
 
+        wpilib.SmartDashboard.putNumber("Time", self.timer.get())
+
         # self.startTime = wpilib.Timer.getFPGATimestamp()
         
         # self.commandFinished = False
@@ -25,6 +27,9 @@ class StationCorrection(commands2.CommandBase):
         self.train.onChargeStation = False
         self.timer.stop()
         self.timer.reset()
+        
+        wpilib.SmartDashboard.putNumber("Time", self.timer.get())
+
 
     def execute(self):
 
@@ -38,11 +43,11 @@ class StationCorrection(commands2.CommandBase):
 
         if self.train.gyro.getAngle() <= 7.5 and not self.train.onChargeStation:
 
-            self.train.arcadeDrive(-0.5, 0.0)
+            self.train.arcadeDrive(-0.3, 0.0)
 
             wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
 
-        elif self.timer.get() <= 0.5:
+        elif self.timer.get() <= 1:
 
             self.train.onChargeStation = True
             self.timer.start()
