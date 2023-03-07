@@ -122,7 +122,7 @@ class Arm(commands2.SubsystemBase):
 
         self.wristMotor.setNeutralMode(ctre.NeutralMode.Brake)
 
-        self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
+        #self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
 
     def keepArmsAtZero(self):
 
