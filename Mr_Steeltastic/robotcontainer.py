@@ -8,12 +8,14 @@ from commands.stationCorrection import StationCorrection
 from commands.joystickDrive import JoystickDrive
 from commands.armTest import ArmTest
 from commands.keepAtZero import KeepAtZero
+from commands.poseArm import PoseArm
 
 class RobotContainer:
 
     def __init__(self):
 
         self.driverController = wpilib.XboxController(constants.DRIVERCONTROLLERPORT)
+        self.functionsController = wpilib.XboxController(constants.FUNCTIONSCONTROLLERPORT)
 
         self.train = Drivetrain()
 
@@ -29,8 +31,8 @@ class RobotContainer:
 
         self.arm.setDefaultCommand(KeepAtZero(self.arm))
 
+        JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(PoseArm(self.arm, [0, 0, 0, 0, 0]))
         # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm, -15))
-
         
     def getAutonomousCommand(self) -> commands2.CommandBase:
 

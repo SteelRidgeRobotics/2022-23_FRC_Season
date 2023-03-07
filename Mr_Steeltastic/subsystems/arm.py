@@ -11,11 +11,16 @@ class ArmMotor:
     Motor for arm ;)
     """
 
+    # def __init__(self, motorID: int, encoderID: int, holdPercentage: float, feedForward: float, 
+    #              armP: float, armD: float, cruiseVel: float, accel: float, 
+    #              gearRatio: float, offset: float):
+        
     def __init__(self, motorID: int, holdPercentage: float, feedForward: float, 
                  armP: float, armD: float, cruiseVel: float, accel: float, 
                  gearRatio: float, offset: float):
 
         self.motor = ctre.TalonFX(motorID)
+        # self.encoder = ctre.CANCoder(encoderID)
         self.holdPercentage = holdPercentage
         self.gearRatio = gearRatio
         
@@ -65,27 +70,48 @@ class Arm(commands2.SubsystemBase):
         
         super().__init__()
 
-        self.baseMotor = ArmMotor(constants.ARMBASEPORT, 0, constants.ARMBASEF, 
+        # self.baseMotor = ArmMotor(constants.ARMBASEPORT, constants.BASEENCODERPORT, constants.ARMBASEHOLDPERCENT, constants.ARMBASEF, 
+        #                           constants.ARMBASEP, constants.ARMBASED, 
+        #                           constants.ARMBASECRUISEVEL, constants.ARMBASEACCEL, 
+        #                           constants.BASERATIO, 0)
+        
+        # self.midMotor = ArmMotor(constants.ARMMIDPORT, constants.MIDENCODERPORT, constants.ARMMIDHOLDPERCENT, constants.ARMMIDF, 
+        #                          constants.ARMMIDP, constants.ARMMIDD, 
+        #                          constants.ARMMIDCRUISEVEL, constants.ARMMIDACCEL, 
+        #                          constants.MIDDLERATIO, 0)
+        
+        # self.topMotor = ArmMotor(constants.ARMTOPPORT, constants.TOPENCODERPORT, constants.ARMTOPHOLDPERCENT, constants.ARMTOPF, 
+        #                          constants.ARMTOPP, constants.ARMTOPD, 
+        #                          constants.ARMTOPCRUISEVEL, constants.ARMTOPACCEL, 
+        #                          constants.TOPRATIO, 0)
+        
+        # self.grabberMotor = ArmMotor(constants.ARMGRABBERPORT, constants.GRABBERENCODERPORT, constants.ARMGRABBERHOLDPERCENT, constants.ARMGRABBERF, 
+        #                              constants.ARMGRABBERP, constants.ARMGRABBERD, 
+        #                              constants.ARMGRABBERCRUISEVEL, constants.ARMGRABBERACCEL, 
+        #                              constants.GRABBERRATIO, 0)
+
+        self.baseMotor = ArmMotor(constants.ARMBASEPORT, constants.ARMBASEHOLDPERCENT, constants.ARMBASEF, 
                                   constants.ARMBASEP, constants.ARMBASED, 
                                   constants.ARMBASECRUISEVEL, constants.ARMBASEACCEL, 
                                   constants.BASERATIO, 0)
         
-        self.midMotor = ArmMotor(constants.ARMMIDPORT, 0, constants.ARMMIDF, 
+        self.midMotor = ArmMotor(constants.ARMMIDPORT, constants.ARMMIDHOLDPERCENT, constants.ARMMIDF, 
                                  constants.ARMMIDP, constants.ARMMIDD, 
                                  constants.ARMMIDCRUISEVEL, constants.ARMMIDACCEL, 
                                  constants.MIDDLERATIO, 0)
         
-        self.topMotor = ArmMotor(constants.ARMTOPPORT, 0, constants.ARMTOPF, 
+        self.topMotor = ArmMotor(constants.ARMTOPPORT, constants.ARMTOPHOLDPERCENT, constants.ARMTOPF, 
                                  constants.ARMTOPP, constants.ARMTOPD, 
                                  constants.ARMTOPCRUISEVEL, constants.ARMTOPACCEL, 
                                  constants.TOPRATIO, 0)
         
-        self.grabberMotor = ArmMotor(constants.ARMGRABBERPORT, 0, constants.ARMGRABBERF, 
+        self.grabberMotor = ArmMotor(constants.ARMGRABBERPORT, constants.ARMGRABBERHOLDPERCENT, constants.ARMGRABBERF, 
                                      constants.ARMGRABBERP, constants.ARMGRABBERD, 
                                      constants.ARMGRABBERCRUISEVEL, constants.ARMGRABBERACCEL, 
                                      constants.GRABBERRATIO, 0)
         
         self.wristMotor = ctre.TalonSRX(constants.ARMGRABBERWRISTPORT)
+        # self.wristEncoder = ctre.CANCoder(constants.WRISTENCODERPORT)
 
         self.wristMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.QuadEncoder, 0, 10)
 
