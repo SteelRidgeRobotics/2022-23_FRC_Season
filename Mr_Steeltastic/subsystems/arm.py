@@ -50,9 +50,7 @@ class ArmMotor:
     def moveToAngle(self, angle):
         
         feedForward = self.holdPercentage * numpy.cos(math.radians(self.getCurrentAngle()))
-        self.motor.set(ctre.TalonFXControlMode.MotionMagic, 
-                       (angle * 2048/360) * self.gearRatio, 
-                       ctre.DemandType.ArbitraryFeedForward, feedForward)
+        self.motor.set(ctre.TalonFXControlMode.MotionMagic, (angle * 2048/360) * self.gearRatio, ctre.DemandType.ArbitraryFeedForward, feedForward)
 
     def moveToPos(self, pos):
         
@@ -151,7 +149,7 @@ class Arm(commands2.SubsystemBase):
         self.midMotor.moveToPos(mid)
         self.topMotor.moveToPos(top)
         self.grabberMotor.moveToPos(grabber)
-        self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, wrist)
+        #self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, wrist)
 
     def holdAtPercentage(self, base: float, mid: float, top: float, grabber: float):
         

@@ -65,3 +65,9 @@ Top: 40178u, 270 abs
 Grabber: -146u, 684 abs
 
 
+MOVE UP
+
+Base: -103u, 92 abs
+Mid: -48 u, 1129 abs
+Top: 0 u, 1138 abs
+Grabber: 22 u, 271 abs

@@ -41,5 +41,4 @@ class Steeltastic(commands2.TimedCommandRobot):
         commands2.CommandScheduler.getInstance().cancelAll()
 
 if __name__ == "__main__":
-
     wpilib.run(Steeltastic)

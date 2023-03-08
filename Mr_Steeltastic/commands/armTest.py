@@ -6,25 +6,29 @@ import ctre
 #  the Arm object.
 class ArmTest(commands2.CommandBase):
 
-    def __init__(self, arm: Arm, grabber) -> None:
+    def __init__(self, arm: Arm) -> None:
         
         super().__init__()
         
         self.arm = arm
         self.addRequirements([self.arm])
     
-        self.grabber = grabber
+        # self.grabber = grabber
         
         self.start = 0.0
 
     def execute(self):
-
-        self.arm.wristMotor.set(ctre.TalonSRXControlMode.MotionMagic, self.grabber)
+        self.arm.baseMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.arm.midMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.arm.topMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.arm.grabberMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.arm.wristMotor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.arm.holdAtPercentage(-0.205, -0.19, 0.21, -0.125)
     
     def end(self, interrupted):
         
         self.arm.holdAtPercentage(0.0, 0.0, 0.0, 0.0)
-    
+        
     def isFinished(self):
         """
         Return whether or not the command is finished.
