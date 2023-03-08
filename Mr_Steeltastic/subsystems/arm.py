@@ -24,7 +24,7 @@ class ArmMotor:
         self.holdPercentage = holdPercentage
         self.gearRatio = gearRatio
         
-        self.motor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.motor.setNeutralMode(ctre.NeutralMode.Coast)
         
         #self.motor.configForwardLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, motorID, 10)
         #self.motor.configReverseLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, motorID, 10)
@@ -115,12 +115,14 @@ class Arm(commands2.SubsystemBase):
 
         self.wristMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.QuadEncoder, 0, 10)
 
+        self.wristMotor.setSelectedSensorPosition(0)
+
         self.wristMotor.configMotionCruiseVelocity(constants.ARMWRISTCRUISEVEL, 10)
         self.wristMotor.configMotionAcceleration(constants.ARMWRISTACCEL, 10)
 
         self.wristMotor.setSensorPhase(False)
 
-        self.wristMotor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.wristMotor.setNeutralMode(ctre.NeutralMode.Coast)
 
         #self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
 

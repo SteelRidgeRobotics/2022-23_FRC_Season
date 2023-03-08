@@ -1,20 +1,25 @@
+import numpy as np
+import math
 # create arm object
 
 class InverseKinematics:
     # init class
     def __init__(self, **kwargs):
         # offsets of base
-
+        self.xBase = kwargs.get('xBase', 0)
+        self.yBase = kwargs.get('yBase', 0)
         # create theta array
-
+        self.thetas = np.array([[]], dtype=np.float_)
         # create joint array
-
+        self.joints = np.array([[self.xBase, self.yBase, 0, 1]], dtype=np.float_)
         # create lengths array
-
+        self.lengths = []
         # create limits array
-    
+        self.limits = [[],[]]
     # add segments
+    def add_segment(self, length, **kwargs):
         # add to joints
+        self.joints
         # add to lengths
         # add to thetas
         # limits

@@ -1,7 +1,7 @@
 import commands2
 import wpilib
 from subsystems.arm import Arm
-
+import ctre
 ## create command class that enters numbers into the HoldAtPercentage method of
 #  the Arm object.
 class ArmTest(commands2.CommandBase):
@@ -12,7 +12,6 @@ class ArmTest(commands2.CommandBase):
         
         self.arm = arm
         self.addRequirements([self.arm])
-
     
         self.grabber = grabber
         
@@ -20,7 +19,7 @@ class ArmTest(commands2.CommandBase):
 
     def execute(self):
 
-        self.arm.midMotor.moveToAngle(self.grabber)
+        self.arm.wristMotor.set(ctre.TalonSRXControlMode.MotionMagic, self.grabber)
     
     def end(self, interrupted):
         

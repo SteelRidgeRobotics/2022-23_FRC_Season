@@ -31,8 +31,8 @@ class RobotContainer:
 
         self.arm.setDefaultCommand(KeepAtZero(self.arm))
 
-        JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(PoseArm(self.arm, [0, 0, 0, 0, 0]))
-        # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm, -15))
+        # JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(PoseArm(self.arm, [0, 0, 0, 0, 0]))
+        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm, 100))
         
     def getAutonomousCommand(self) -> commands2.CommandBase:
 

@@ -11,7 +11,6 @@ class KeepAtZero(commands2.CommandBase):
         
         self.addRequirements([self.arm])
 
-        
     def execute(self):
         
         self.arm.keepArmsAtZero()
