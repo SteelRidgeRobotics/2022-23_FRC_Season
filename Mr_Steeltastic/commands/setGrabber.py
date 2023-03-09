@@ -17,7 +17,7 @@ class SetGrabber(commands2.CommandBase):
     
     def execute(self) -> None:
         
-        self.arm.setGrabber(self.close)
+        self.arm.setGrabber(self.close())
         self.isDone = True
         
     def end(self) -> None:

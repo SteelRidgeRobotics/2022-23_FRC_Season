@@ -1,0 +1,15 @@
+-----------------
+HOLD PERCENTAGES FOR MR.STEELTASTIC (written by Caden, so blame me for the amazing format of this file)
+-----------------
+
+NO CONE:
+
+GWABBA: -0.1075 (had issues when testing top motor, so like, be careful ig. we have it set to -0.1 rn in the code but it also had slight issues BUT it worked slightly better woo)
+
+TOGHP: 0.193
+
+MIDDE: -0.18 (side note: do not set the hold percentage to -0.95 by accident. this causes issues with the robot.)
+
+BASS: -0.19 (yippee)
+
+

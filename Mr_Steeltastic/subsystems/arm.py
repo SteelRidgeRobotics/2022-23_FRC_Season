@@ -5,6 +5,10 @@ import constants
 import math
 import numpy
 
+def deadband(value):
+
+    return 0 if abs(value) < constants.DEADBAND else value
+
 class ArmMotor:
 
     """
@@ -176,3 +180,24 @@ class Arm(commands2.SubsystemBase):
     def getGrabberState(self):
 
         self.grabberSolenoid.get()
+
+    def manualbaseMotor(self, leftJoy):
+        
+        self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftJoy))
+
+    def manualmidMotor(self, rightJoy):
+        
+        self.midMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightJoy))
+
+    def manualtopMotor(self, rightTrigger):
+        
+        self.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightTrigger))
+    
+    def manualgrabberMotor(self, leftTrigger):
+
+        self.grabberMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftTrigger))
+
+    def manualwristMotor(self, percent):
+        self.wristMotor.set(ctre.ControlMode.PercentOutput, percent)
+
+    
