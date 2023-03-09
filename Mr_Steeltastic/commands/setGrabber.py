@@ -20,7 +20,7 @@ class SetGrabber(commands2.CommandBase):
         self.arm.setGrabber(self.close())
         self.isDone = True
 
-    def end(self) -> None:
+    def end(self, interrupted: bool) -> None:
         
         pass
         

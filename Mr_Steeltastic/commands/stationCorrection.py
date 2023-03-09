@@ -29,8 +29,6 @@ class StationCorrection(commands2.CommandBase):
         self.timer.reset()
         
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
-        self.train.gyro.calibrate()
-
 
     def execute(self):
 
