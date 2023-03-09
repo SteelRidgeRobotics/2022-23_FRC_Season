@@ -54,7 +54,9 @@ class ArmMotor:
     def moveToAngle(self, angle):
         
         feedForward = self.holdPercentage * numpy.cos(math.radians(self.getCurrentAngle()))
-        self.motor.set(ctre.TalonFXControlMode.MotionMagic, (angle * 2048/360) * self.gearRatio, ctre.DemandType.ArbitraryFeedForward, feedForward)
+        self.motor.set(ctre.TalonFXControlMode.MotionMagic, 
+                       (angle * 2048/360) * self.gearRatio, 
+                       ctre.DemandType.ArbitraryFeedForward, feedForward)
 
     def moveToPos(self, pos):
         
@@ -126,8 +128,7 @@ class Arm(commands2.SubsystemBase):
 
         self.wristMotor.setNeutralMode(ctre.NeutralMode.Coast)
 
-        #self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
-
+        self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
     def keepArmsAtZero(self):
 
         self.baseMotor.keepAtZero()
@@ -135,7 +136,8 @@ class Arm(commands2.SubsystemBase):
         self.topMotor.keepAtZero()
         self.grabberMotor.keepAtZero()
         
-    def moveArmToPose(self, base: float, mid: float, top: float, grabber: float, wrist: float):
+    def moveArmToPose(self, base: float, mid: float, top: float, grabber: float, 
+                      wrist: float):
         """
         Move the arm to a specific pose.
         Requires angles for the base, middle, top, grabber, and wrist motors.
@@ -183,19 +185,23 @@ class Arm(commands2.SubsystemBase):
 
     def manualbaseMotor(self, leftJoy):
         
-        self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftJoy))
+        self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, 
+                                 deadband(leftJoy))
 
     def manualmidMotor(self, rightJoy):
         
-        self.midMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightJoy))
+        self.midMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, 
+                                deadband(rightJoy))
 
     def manualtopMotor(self, rightTrigger):
         
-        self.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightTrigger))
+        self.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, 
+                                deadband(rightTrigger))
     
     def manualgrabberMotor(self, leftTrigger):
 
-        self.grabberMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftTrigger))
+        self.grabberMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, 
+                                    deadband(leftTrigger))
 
     def manualwristMotor(self, percent):
         self.wristMotor.set(ctre.ControlMode.PercentOutput, percent)

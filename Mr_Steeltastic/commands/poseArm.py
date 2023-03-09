@@ -6,7 +6,7 @@ class PoseArm(commands2.CommandBase):
     def __init__(self, arm: Arm, wantedPose) -> None:
         
         super().__init__()
-        self.arm = Arm()
+        self.arm = arm
         self.wantedPose = wantedPose
         
     def execute(self) -> None:

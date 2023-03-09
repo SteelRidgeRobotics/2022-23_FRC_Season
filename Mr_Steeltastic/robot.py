@@ -34,6 +34,7 @@ class Steeltastic(commands2.TimedCommandRobot):
 
     def teleopPeriodic(self):
 
+        # wpilib.SmartDashboard.putValue("Solenoid", self.container.arm.grabberSolenoid.get())
         pass
 
     def testInit(self):
