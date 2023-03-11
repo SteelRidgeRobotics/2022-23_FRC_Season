@@ -15,7 +15,6 @@ class Steeltastic(commands2.TimedCommandRobot):
         commands2.CommandScheduler.getInstance().run()
     
     def autonomousInit(self):
-
         self.autoCommand = self.container.getAutonomousCommand()
 
         if self.autoCommand:

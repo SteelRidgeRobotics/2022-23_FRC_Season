@@ -42,7 +42,8 @@ MMF = 0.0
 DEADBAND = 0.15
 
 # Normal P Control for Charge Station
-P = 0.0118
+# P og 0.0118
+P = 0.0115
 I = 0.0
 D = 0.001
 
