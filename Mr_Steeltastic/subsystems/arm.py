@@ -132,6 +132,7 @@ class Arm(commands2.SubsystemBase):
 
         self.grabberOpen = False
         self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
+        
     def keepArmsAtZero(self):
 
         self.baseMotor.keepAtZero()

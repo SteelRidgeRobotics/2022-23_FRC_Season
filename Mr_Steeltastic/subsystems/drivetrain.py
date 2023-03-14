@@ -90,6 +90,8 @@ class Drivetrain(commands2.SubsystemBase):
         self.gyro.setYawAxis(self.gyro.IMUAxis.kX)
 
         self.onChargeStation = False
+        self.offChargeStation = False
+        self.onChargeStation2 = False
 
 
     def arcadeDrive(self, leftJoy, rightJoy):
