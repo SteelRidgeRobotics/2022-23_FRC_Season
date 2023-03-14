@@ -41,8 +41,13 @@ class RobotContainer:
         
     
         # JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(PoseArm(self.arm, [0, 0, 0, 0, 0]))
+<<<<<<< Updated upstream
         #JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
         #JoystickButton(self.driverController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm, lambda: self.driverController.getAButton()))
+=======
+        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
+        JoystickButton(self.driverController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm))
+>>>>>>> Stashed changes
         
     def getAutonomousCommand(self) -> commands2.CommandBase:
 

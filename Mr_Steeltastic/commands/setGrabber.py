@@ -4,12 +4,12 @@ from subsystems.arm import Arm
 
 class SetGrabber(commands2.CommandBase): 
     
-    def __init__(self, arm: Arm, close: bool) -> None: 
+    def __init__(self, arm: Arm) -> None: 
         
         super().__init__()
         
         self.arm = arm
-        self.close = close
+        # self.close = close
         
         self.isDone = False
         
@@ -17,12 +17,12 @@ class SetGrabber(commands2.CommandBase):
     
     def execute(self) -> None:
         
-        self.arm.setGrabber(self.close())
+        self.arm.toggleGrabber()
         self.isDone = True
-
-    def end(self, interrupted: bool) -> None:
-        
-        pass
+        wpilib.SmartDashboard.putBoolean("Grabber", self.arm.grabberOpen)
+        #wpilib.SmartDashboard.putValue("getSolenoid", self.arm.grabberSolenoid.get())
+    #def end(self, interrupted: bool) -> None:
+    #    pass
         
     def isFinished(self) -> None:
         

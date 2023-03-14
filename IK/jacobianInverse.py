@@ -8,6 +8,13 @@ xOffset = 250
 yOffset = 250
 Arm = RobotArm(xBase=xOffset, yBase=yOffset)
 
+xTargetMax = xOffset + 50
+yTargetMax = yOffset - 30
+
+xTargetMin = xOffset - 50
+yTargetMin = yOffset + 5
+
+
 Arm.add_arm_segment(length=21.578000, thetaInit=math.radians(20))
 Arm.add_arm_segment(length=22.000000, thetaInit=math.radians(45))
 Arm.add_arm_segment(length=22, thetaInit=math.radians(45))
@@ -139,6 +146,20 @@ while running:
     window.blit(angleDisplay, (0, 0))
 
     click = pygame.mouse.get_pos()
+    if click[0] > xTargetMax:
+        new_clickX = xTargetMax
+        click = (new_clickX, click[1])
+    elif click[0] < xTargetMin:
+        new_clickX = xTargetMin
+        click = (new_clickX, click[1])
+    if click[1] < yTargetMax:
+        new_clickY = yTargetMax
+        click = (click[0], new_clickY)
+    elif click[1] > yTargetMin:
+        new_clickY = yTargetMin
+        click = (click[0], new_clickY)
+    
+    
     targetPt = (click[0], click[1])
     target = np.array([[click[0],click[1], 0, 1]]).T
     for event in pygame.event.get():

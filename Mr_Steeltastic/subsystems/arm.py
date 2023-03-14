@@ -129,6 +129,9 @@ class Arm(commands2.SubsystemBase):
         self.wristMotor.setNeutralMode(ctre.NeutralMode.Brake)
 
         self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
+
+        self.grabberOpen = False
+        self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
     def keepArmsAtZero(self):
 
         self.baseMotor.keepAtZero()
@@ -180,6 +183,12 @@ class Arm(commands2.SubsystemBase):
         
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
         
+    def toggleGrabber(self) -> None:
+        if self.grabberSolenoid.get():
+            self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
+        else:
+            self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
+        self.grabberOpen = not self.grabberOpen
     def getGrabberState(self):
 
         self.grabberSolenoid.get()
