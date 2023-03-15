@@ -41,7 +41,8 @@
       "/LiveWindow/Ungrouped/Talon FX [1]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [2]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [3]": "Motor Controller",
-      "/LiveWindow/Ungrouped/class frc2::SubsystemBase": "Subsystem"
+      "/LiveWindow/Ungrouped/class frc2::SubsystemBase": "Subsystem",
+      "/SmartDashboard/Autonomoues": "String Chooser"
     }
   },
   "NetworkTables": {

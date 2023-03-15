@@ -19,6 +19,9 @@ class Drivetrain(commands2.SubsystemBase):
         # call __init__() method of the commands2.SubsystemBase class
         super().__init__()
 
+        # test if we're in auto (we don't use deadband in auto)
+        self.is_auto = False
+
         # create motors
         self.FLMotor = ctre.TalonFX(0)
         self.BLMotor = ctre.TalonFX(1)
@@ -114,5 +117,10 @@ class Drivetrain(commands2.SubsystemBase):
                 leftMotors /= rightMotors
                 rightMotors /= rightMotors
 
-        self.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftMotors))
-        self.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightMotors))
+        if self.is_auto:
+            self.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, leftMotors)
+            self.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, rightMotors)
+        else:
+            self.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftMotors))
+            self.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightMotors))
+        wpilib.SmartDashboard.putBoolean("Deadband?", not self.is_auto)

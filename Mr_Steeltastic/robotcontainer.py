@@ -4,7 +4,7 @@ import commands2
 from commands2.button import JoystickButton
 from subsystems.drivetrain import Drivetrain
 from subsystems.arm import Arm
-from commands.stationCorrection import StationCorrection
+from commands.stationCorrectionMobility import StationCorrection
 from commands.joystickDrive import JoystickDrive
 from commands.armTest import ArmTest
 from commands.keepAtZero import KeepAtZero
