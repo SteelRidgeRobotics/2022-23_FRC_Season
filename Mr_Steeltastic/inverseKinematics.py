@@ -80,7 +80,7 @@ class InverseKinematics:
         # loop for each joint
         for i in range(len(self.joints[0,:])-1):
             # find current joint
-            currentJointCoords = self.joints[:3, i]
+            currentJointCoords = self.joints[:3, [i]]
             # the item in jacobian joint (i) = the cross product of k-hat, and the difference 
             ## between end effector coords and current joint coords. reshape that into 3, n
             jacobian[:,i] = np.cross(
@@ -153,8 +153,8 @@ font = pygame.font.SysFont('lucidacalligraphy', 10)
 
 Arm = InverseKinematics(xOffset=250, yOffset=250)
 
-Arm.add_segment(length=50, maxLimit=math.pi, minLimit=-math.pi)
-Arm.add_segment(length=25, maxLimit=math.pi, minLimit=-math.pi)
+Arm.add_segment(length=50.0, maxLimit=math.pi, minLimit=-math.pi)
+Arm.add_segment(length=25.0, maxLimit=math.pi, minLimit=-math.pi)
 
 running = True
 while running:
