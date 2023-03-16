@@ -56,12 +56,17 @@ class ArmSolver:
         
     def update_joint_coords(self):
         """
-        Work on this
+        A method to take the current angles and move the points to those angles
         """
 
         for i in range(self.joints)-1:
-            joint[i+1] = [joint[i][0] + lengths[i] * np.,joint[i][1]] 
+            joint[i+1] = [joint[i][0] + self.lengths[i] * np.cos(self.thetas[i]), 
+                          joint[i][1] + self.lengths[i] * np.sin(self.thetas[i])]
+            
     def moveToTarget(self, target):
+        """
+        A method to move arm to go to a certain point, if it can
+        """
         # d = np.sqrt(np.power((x2 - x1),2) + np.power((y2-y1),2))
         if target[0] > self.reachLimits[0][0]:
             target[0] = self.reachLimits[0][0]
