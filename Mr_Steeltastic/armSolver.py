@@ -59,6 +59,8 @@ class ArmSolver:
         Work on this
         """
 
+        for i in range(self.joints)-1:
+            joint[i+1] = [joint[i][0] + lengths[i] * np.,joint[i][1]] 
     def moveToTarget(self, target):
         # d = np.sqrt(np.power((x2 - x1),2) + np.power((y2-y1),2))
         if target[0] > self.reachLimits[0][0]:
