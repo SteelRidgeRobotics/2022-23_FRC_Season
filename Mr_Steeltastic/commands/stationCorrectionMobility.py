@@ -17,7 +17,7 @@ class StationCorrection(commands2.CommandBase):
         self.addRequirements([self.train, self.arm])
 
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
-
+        
         # self.startTime = wpilib.Timer.getFPGATimestamp()
         
         # self.commandFinished = False
