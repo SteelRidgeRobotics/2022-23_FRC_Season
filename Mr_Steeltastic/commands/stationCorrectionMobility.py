@@ -47,12 +47,14 @@ class StationCorrection(commands2.CommandBase):
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
         if self.train.gyro.getAngle() <= 20 and not self.train.onChargeStation and not self.train.offChargeStation:
+
             
             self.train.arcadeDrive(-0.35, 0.0)
 
             wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
 
         elif self.timer.get() <= 3.5:
+       
             
             self.train.onChargeStation = True
             self.train.arcadeDrive(-0.25, 0.0)

@@ -96,6 +96,8 @@ class Drivetrain(commands2.SubsystemBase):
         self.offChargeStation = False
         self.onChargeStation2 = False
 
+        self.autoStationCorrectionState = 0
+
 
     def arcadeDrive(self, leftJoy, rightJoy):
         """
