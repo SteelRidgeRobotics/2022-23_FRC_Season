@@ -17,7 +17,7 @@ yTargetMin = yOffset + 5
 
 Arm.add_arm_segment(length=21.578000, thetaInit=math.radians(20))
 Arm.add_arm_segment(length=22.000000, thetaInit=math.radians(45))
-Arm.add_arm_segment(length=22, thetaInit=math.radians(45))
+#Arm.add_arm_segment(length=22, thetaInit=math.radians(45))
 Arm.update_joint_coords()
 
 target = Arm.joints[:, [-1]]
@@ -36,7 +36,7 @@ epsilon = 0.1
 Arm.def_joint_limit(0, 0, math.pi)
 Arm.def_joint_limit(1, -math.pi, math.pi)
 Arm.def_joint_limit(2, -math.pi, math.pi)
-Arm.def_joint_limit(3, -math.pi, math.pi)
+#Arm.def_joint_limit(3, -math.pi, math.pi)
 
 def move_to_target():
     global Arm, target, reach
@@ -126,7 +126,7 @@ while running:
     pygame.draw.circle(window, (0, 0, 0), targetPt, 7)
 
     # draw joints
-    for i in range(len(Arm.joints)):
+    for i in range(len(Arm.joints)-1):
         pygame.draw.circle(window, (0, 255, 255), (Arm.joints[0][i], Arm.joints[1][i]), 5)
     
     # Run IK code

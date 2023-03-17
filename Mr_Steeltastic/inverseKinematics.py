@@ -53,19 +53,19 @@ class InverseKinematics:
         t = self.get_transformation_matrix(
             self.thetas[0].item(), self.xBase, self.yBase)
         # loop
-        for i in len(self.lengths) - 1:
+        for i in range(len(self.lengths)-1) :
             # get next transformation matrix
             t_next = self.get_transformation_matrix(self.thetas[i+1], 
-                                                    self.lengths(i+1), 0)
+                                                    self.lengths[i+1], 0)
             # multiply (use numpy.multpily)
             t = np.multiply(t, t_next)
             # append new value to joints 
-            self.joints = np.multiply(self.joints, t).T #MAY NEED TO DO THE NEXT JOINT
-        
+            #self.joints = np.multiply(self.joints, t).T #MAY NEED TO DO THE NEXT JOINT
+            self.joints[:,[i+1]] = t.dot(np.array([[0,0,0,1]]).T)
         # update the end effector coordiniates (last joint)
         endEffectorCoords = np.array([[self.lengths[-1], 0, 0, 1]]).T
         # multiply endeffector coordinates with coords and set it to the last item
-        new_joints = np.multiply(t, endEffectorCoords)
+        new_joints = t.dot(endEffectorCoords)
         self.joints[:, [-1]] = new_joints
 
     # get jacobian
@@ -140,7 +140,7 @@ class InverseKinematics:
         for i in range(len(self.lengths)):
             pygame.draw.line(window, (0, 0, 255), (self.joints[0][i], self.joints[1][i]), (self.joints[0][i+1], self.joints[1][i+1]), 5)
 
-        for i in range(len(self.joints)):
+        for i in range(len(self.joints)-1):
             pygame.draw.circle(window, (0, 255, 255), (self.joints[0][i], self.joints[1][i]), 5)
         pygame.display.flip()
 
