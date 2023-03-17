@@ -57,7 +57,6 @@ class ArmSolver:
                        [point1x, point1y],
                        [point1x + self.lengths[1] * np.cos(self.thetas[1]), point1y + self.lengths[1] * np.sin(self.thetas[1])]]
 
-        self.d = 0
 
     def update_joint_coords(self):
         """
@@ -77,7 +76,7 @@ class ArmSolver:
         # d = np.sqrt(np.power((x2 - x1),2) + np.power((y2-y1),2))
         print("Target")
         print(target[0], target[1])
-        """
+        """"""
         if target[0] > self.reachLimits[0][0]:
             
             target[0] = self.reachLimits[0][0]
@@ -93,7 +92,7 @@ class ArmSolver:
         elif target[1] < self.reachLimits[1][1]:
 
             target[1] = self.reachLimits[1][1]
-        """
+        """"""
 
         #print("New target")
         #print(target[0], target[1])
@@ -101,9 +100,9 @@ class ArmSolver:
         
         ## check how far away arm is
         
-        self.d = np.sqrt(np.power((target[0] - self.joints[2][0]),2) + np.power((target[1] - self.joints[2][1]),2))
+        d = np.sqrt(np.power((target[0] - self.joints[2][0]),2) + np.power((target[1] - self.joints[2][1]),2))
         
-        if self.d >= 0.0625:
+        if d >= 0.0625:
             baseToTarget = np.sqrt(np.power((abs(target[0] - self.joints[0][0])),2) + np.power((abs(target[1] - self.joints[0][1])),2))
             print("Lays: " + str(baseToTarget))
             newThetas = [0, 0]
@@ -115,6 +114,7 @@ class ArmSolver:
             
             angleToTarget = np.arctan((newTarget[1] - self.joints[0][1])/(newTarget[0]- self.joints[0][0]))
 
+            self.baseToTarget = np.sqrt(np.power((target[0] - self.joints[0][0]),2) + np.power((target[1] - self.joints[0][1]),2))
             baseToTarget = np.sqrt(np.power((abs(target[0] - self.joints[0][0])),2) + np.power((abs(target[1] - self.joints[0][1])),2))
             #lawOfCosines = np.arccos((a^2 + b^2 - c^2)/(2*a*b)) ## angle is between a & b
 
@@ -189,7 +189,7 @@ while running:
             print("ANGLES: " + str(Arm.get_angles()))
             """
     
-    limit0 = font.render(str() + " -> " + str(arm.d), 1, (0,0,0))
+    limit0 = font.render(str() + " -> " + str(arm.baseToTarget), 1, (0,0,0))
 
     window.blit(limit0, (0, 10))
             
