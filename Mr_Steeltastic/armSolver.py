@@ -66,7 +66,7 @@ class ArmSolver:
 
         for i in range(len(self.joints)-1):
             
-            newJoints[i+1] = [self.joints[i][0] + self.lengths[i] * np.cos(self.thetas[i]), 
+            self.joints[i+1] = [self.joints[i][0] + self.lengths[i] * np.cos(self.thetas[i]), 
                               self.joints[i][1] + self.lengths[i] * np.sin(self.thetas[i])]
     
     def moveToTarget(self, target):
@@ -76,7 +76,7 @@ class ArmSolver:
         # d = np.sqrt(np.power((x2 - x1),2) + np.power((y2-y1),2))
         print("Target")
         print(target[0], target[1])
-        """"""
+        """
         if target[0] > self.reachLimits[0][0]:
             
             target[0] = self.reachLimits[0][0]
@@ -92,7 +92,8 @@ class ArmSolver:
         elif target[1] < self.reachLimits[1][1]:
 
             target[1] = self.reachLimits[1][1]
-        """"""
+        """
+
 
         #print("New target")
         #print(target[0], target[1])
@@ -114,8 +115,10 @@ class ArmSolver:
             
             angleToTarget = np.arctan((newTarget[1] - self.joints[0][1])/(newTarget[0]- self.joints[0][0]))
 
-            self.baseToTarget = np.sqrt(np.power((target[0] - self.joints[0][0]),2) + np.power((target[1] - self.joints[0][1]),2))
-            baseToTarget = np.sqrt(np.power((abs(target[0] - self.joints[0][0])),2) + np.power((abs(target[1] - self.joints[0][1])),2))
+            self.baseToTarget = np.sqrt(np.power((target[0] - 250),2) + np.power((target[1] - 250),2))
+            baseToTarget = np.sqrt(np.power((target[0] - 250),2) + np.power((target[1] - 250),2))
+            print(baseToTarget)
+            
             #lawOfCosines = np.arccos((a^2 + b^2 - c^2)/(2*a*b)) ## angle is between a & b
 
             ## get base angle
@@ -158,8 +161,8 @@ while running:
 
     # draw arm
     for i in range(len(arm.lengths)):
-        pygame.draw.line(window, (0, 0, 255), (invertCoord(arm.joints[i][0],arm.joints[i][1])), 
-                         (invertCoord(arm.joints[i+1][0], arm.joints[i+1][1])), 5)
+        pygame.draw.line(window, (0, 0, 255), (arm.joints[i][0],arm.joints[i][1]), 
+                         (arm.joints[i+1][0], arm.joints[i+1][1]), 5)
 
     click = pygame.mouse.get_pos()
     
@@ -171,7 +174,7 @@ while running:
 
     # draw joints
     for i in range(len(arm.joints)):
-        pygame.draw.circle(window, (0, 255, 255), (invertCoord(arm.joints[i][0],arm.joints[i][1])), 5)
+        pygame.draw.circle(window, (0, 255, 255), ((arm.joints[i][0],arm.joints[i][1])), 5)
 
     arm.moveToTarget(targetPt)
     for event in pygame.event.get():
