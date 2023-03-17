@@ -9,6 +9,10 @@ def invertCoord(x,y):
     y = windowSize - y
     return (x,y)
 
+def debugPrint(title, value):
+
+    print(f"{title}: {value}")
+
 class ArmSolver:
     """
     A solver to a two segment arm. Measurements are made in inches
@@ -74,9 +78,7 @@ class ArmSolver:
         A method to move arm to go to a certain point, if it can
         """
         # d = np.sqrt(np.power((x2 - x1),2) + np.power((y2-y1),2))
-        print("Target")
-        print(target[0], target[1])
-        """
+
         if target[0] > self.reachLimits[0][0]:
             
             target[0] = self.reachLimits[0][0]
@@ -92,7 +94,7 @@ class ArmSolver:
         elif target[1] < self.reachLimits[1][1]:
 
             target[1] = self.reachLimits[1][1]
-        """
+
 
 
         #print("New target")
@@ -105,7 +107,6 @@ class ArmSolver:
         
         if d >= 0.0625:
             baseToTarget = np.sqrt(np.power((abs(target[0] - self.joints[0][0])),2) + np.power((abs(target[1] - self.joints[0][1])),2))
-            print("Lays: " + str(baseToTarget))
             newThetas = [0, 0]
             
             ## move arm slightly towards target
@@ -117,13 +118,12 @@ class ArmSolver:
 
             self.baseToTarget = np.sqrt(np.power((target[0] - 250),2) + np.power((target[1] - 250),2))
             baseToTarget = np.sqrt(np.power((target[0] - 250),2) + np.power((target[1] - 250),2))
-            print(baseToTarget)
             
             #lawOfCosines = np.arccos((a^2 + b^2 - c^2)/(2*a*b)) ## angle is between a & b
 
             ## get base angle
+            debugPrint("ARCCOS", (np.power(baseToTarget, 2) + np.power(self.lengths[0], 2) - np.power(self.lengths[1],2))/(2*baseToTarget*self.lengths[0]))            
             newThetas[0] = np.arccos((np.power(baseToTarget, 2) + np.power(self.lengths[0], 2) - np.power(self.lengths[1],2))/(2*baseToTarget*self.lengths[0]))
-            
             #print(str(np.arccos((np.power(baseToTarget, 2) + np.power(self.lengths[0], 2) - np.power(self.lengths[1],2))/(2*baseToTarget*self.lengths[0]))))
             #print(str(np.arccos((np.power(500, 2) + np.power(37, 2) - np.power(100,2))/(2*500*37))))
             #print(str((np.power(500, 2) + np.power(37, 2) - np.power(100,2))/(2*500*37)))
@@ -131,8 +131,16 @@ class ArmSolver:
             #print(str((2*500*37)))
 
             ## get angle of elbow/middle joint
+            debugPrint("a, b, c", [self.lengths[0], self.lengths[1], baseToTarget])
+            debugPrint("ARCCOS", (np.power(self.lengths[0],2) + np.power(self.lengths[1],2) - np.power(baseToTarget,2))/(2*self.lengths[0]*self.lengths[1]))            
+            print("\n")            
+
             newThetas[1] = np.arccos((np.power(self.lengths[0],2) + np.power(self.lengths[1],2) - np.power(baseToTarget,2))/(2*self.lengths[0]*self.lengths[1]))
             
+            """
+            (a ^ 2 + b ^ 2 - c^2)/2ab
+            """
+
             #print(str(newThetas))
             for i in range(len(newThetas)):
                 
