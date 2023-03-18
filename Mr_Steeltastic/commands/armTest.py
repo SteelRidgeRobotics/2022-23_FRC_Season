@@ -22,7 +22,8 @@ class ArmTest(commands2.CommandBase):
         self.arm.midMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
         self.arm.topMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
         self.arm.grabberMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
-        self.arm.holdAtPercentage(-0.135, -0.105, 0.125)
+        self.arm.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, 0.15)
+        #self.arm.holdAtPercentage(-0.135, -0.105, 0.125)
 
         # For cone for future reference: self.arm.holdAtPercentage(0.0, 0.0, 0.145)
     
