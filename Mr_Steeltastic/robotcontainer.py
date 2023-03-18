@@ -33,7 +33,7 @@ class RobotContainer:
         
         wpilib.SmartDashboard.putData("Autonomoues", self.chooser)
         
-        self.train.setDefaultCommand(JoystickDrive(self.train, lambda: self.driverController.getLeftY(), lambda: self.driverController.getRightX(), lambda: self.driverController.getLeftBumper(), lambda: self.driverController.getRightBumper()))
+        self.train.setDefaultCommand(JoystickDrive(self.train, lambda: self.driverController.getLeftY(), lambda: self.driverController.getRightX(), lambda: self.driverController.getLeftBumper(), lambda: self.driverController.getRightBumper(), lambda: self.driverController.getAButtonReleased()))
 
         self.arm.setDefaultCommand(KeepAtZero(self.arm))
 
