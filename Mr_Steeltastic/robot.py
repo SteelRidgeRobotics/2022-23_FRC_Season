@@ -30,7 +30,7 @@ class Steeltastic(commands2.TimedCommandRobot):
         if self.autoCommand:
 
             self.autoCommand.cancel()
-
+        wpilib.SmartDashboard.putBoolean("A Pressed? ", self.container.driverController.getAButton())
     def teleopPeriodic(self):
 
         # wpilib.SmartDashboard.putValue("Solenoid", self.container.arm.grabberSolenoid.get())

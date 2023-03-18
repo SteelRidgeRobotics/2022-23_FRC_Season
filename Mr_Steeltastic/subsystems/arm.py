@@ -131,7 +131,7 @@ class Arm(commands2.SubsystemBase):
         self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
 
         self.grabberOpen = False
-        self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
+        self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
         
     def keepArmsAtZero(self):
 
@@ -185,11 +185,12 @@ class Arm(commands2.SubsystemBase):
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
         
     def toggleGrabber(self) -> None:
-        if self.grabberSolenoid.get():
+        if self.grabberOpen:
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
         else:
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
         self.grabberOpen = not self.grabberOpen
+
     def getGrabberState(self):
 
         self.grabberSolenoid.get()
