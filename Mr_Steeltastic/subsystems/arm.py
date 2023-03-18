@@ -114,20 +114,6 @@ class Arm(commands2.SubsystemBase):
                                      constants.ARMGRABBERCRUISEVEL, constants.ARMGRABBERACCEL, 
                                      constants.GRABBERRATIO, 0)
         
-        self.wristMotor = ctre.TalonSRX(constants.ARMGRABBERWRISTPORT)
-        # self.wristEncoder = ctre.CANCoder(constants.WRISTENCODERPORT)
-
-        self.wristMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.QuadEncoder, 0, 10)
-
-        self.wristMotor.setSelectedSensorPosition(0)
-
-        self.wristMotor.configMotionCruiseVelocity(constants.ARMWRISTCRUISEVEL, 10)
-        self.wristMotor.configMotionAcceleration(constants.ARMWRISTACCEL, 10)
-
-        self.wristMotor.setSensorPhase(False)
-
-        self.wristMotor.setNeutralMode(ctre.NeutralMode.Brake)
-
         self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
 
         self.grabberOpen = False
@@ -139,10 +125,8 @@ class Arm(commands2.SubsystemBase):
         self.midMotor.keepAtZero()
         self.topMotor.keepAtZero()
         self.grabberMotor.keepAtZero()
-        #self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, 0)
         
-    def moveArmToPose(self, base: float, mid: float, top: float, grabber: float, 
-                      wrist: float):
+    def moveArmToPose(self, base: float, mid: float, top: float, grabber: float):
         """
         Move the arm to a specific pose.
         Requires angles for the base, middle, top, grabber, and wrist motors.
@@ -152,22 +136,18 @@ class Arm(commands2.SubsystemBase):
         self.midMotor.moveToAngle(mid)
         self.topMotor.moveToAngle(top)
         self.grabberMotor.moveToAngle(grabber)
-        self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, (wrist * 2048/360), 
-                            ctre.DemandType.ArbitraryFeedForward, constants.ARMWRISTF)
 
-    def ArmToPos(self, base: int, mid: int, top: int, grabber: int, wrist: int):
+    def ArmToPos(self, base: int, mid: int, top: int, grabber: int):
         self.baseMotor.moveToPos(base)
         self.midMotor.moveToPos(mid)
         self.topMotor.moveToPos(top)
         self.grabberMotor.moveToPos(grabber)
-        #self.wristMotor.set(ctre.TalonFXControlMode.MotionMagic, wrist)
 
-    def holdAtPercentage(self, base: float, mid: float, top: float, grabber: float):
+    def holdAtPercentage(self, base: float, mid: float, top: float):
         
         self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, base)
         self.midMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, mid)
         self.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, top)
-        self.grabberMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, grabber)
 
     def setGrabber(self, bool: bool): # Soon (TM)
         """
@@ -214,8 +194,5 @@ class Arm(commands2.SubsystemBase):
 
         self.grabberMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, 
                                     deadband(leftTrigger))
-
-    def manualwristMotor(self, percent):
-        self.wristMotor.set(ctre.ControlMode.PercentOutput, percent)
 
     

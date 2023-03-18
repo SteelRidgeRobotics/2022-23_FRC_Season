@@ -22,8 +22,7 @@ class ArmTest(commands2.CommandBase):
         self.arm.midMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
         self.arm.topMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
         self.arm.grabberMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
-        self.arm.wristMotor.setNeutralMode(ctre.NeutralMode.Brake)
-        self.arm.holdAtPercentage(-0.19, -0.18, 0.193, -0.1)
+        self.arm.holdAtPercentage(0, 0, 0, 0)
     
     def end(self, interrupted):
         

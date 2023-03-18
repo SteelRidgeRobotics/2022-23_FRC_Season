@@ -25,7 +25,6 @@ class JoystickControlArm(commands2.CommandBase):
         self.arm.midMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
         self.arm.topMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
         self.arm.grabberMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
-        self.arm.wristMotor.setNeutralMode(ctre.NeutralMode.Brake)
 
         lvalue = 1
         if self.leftBumper():
@@ -39,13 +38,6 @@ class JoystickControlArm(commands2.CommandBase):
         self.arm.manualmidMotor(0.5 * self.mid())
         self.arm.manualtopMotor(lvalue* 0.5 * self.top())
         self.arm.manualgrabberMotor(rvalue * 0.2 * self.grabber())
-
-        if self.Y():
-            self.arm.manualwristMotor(0.25)
-        elif self.X():
-            self.arm.manualwristMotor(-0.25)
-        else:
-            self.arm.manualwristMotor(0)
     
     def end(self, interrupted: bool):
         self.arm.holdAtPercentage(0, 0, 0, 0)

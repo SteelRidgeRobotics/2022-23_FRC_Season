@@ -13,7 +13,7 @@ class PoseArm(commands2.CommandBase):
         
         self.wantedPose = self.wantedPose()
 
-        self.arm.ArmToPos(self.wantedPose[0], self.wantedPose[1], self.wantedPose[2], self.wantedPose[3], self.wantedPose[4])
+        self.arm.ArmToPos(self.wantedPose[0], self.wantedPose[1], self.wantedPose[2], self.wantedPose[3])
         
     def end(self) -> None:
         
