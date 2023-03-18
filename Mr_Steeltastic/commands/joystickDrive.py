@@ -5,7 +5,7 @@ from subsystems.drivetrain import Drivetrain
 
 class JoystickDrive(commands2.CommandBase):
 
-    def __init__(self, train: Drivetrain, left, right, leftBumper, rightBumper):
+    def __init__(self, train: Drivetrain, left, right, leftBumper, rightBumper, buttonA):
         
         super().__init__()
 
@@ -15,6 +15,9 @@ class JoystickDrive(commands2.CommandBase):
         self.rightFunc = right
         self.leftBumperFunc = leftBumper
         self.rightBumperFunc = rightBumper
+        self.buttonAFunc = buttonA
+
+        self.placeMode = False
 
         self.addRequirements([self.train])
 
@@ -27,6 +30,13 @@ class JoystickDrive(commands2.CommandBase):
         
         wpilib.SmartDashboard.putNumberArray("LRJoy", [self.left, self.leftBumper, self.right, self.rightBumper])
 
+        if self.buttonAFunc():
+            self.placeMode = not self.placeMode
+        
+        if self.placeMode:
+            self.left *= 0.1
+            self.right *= 0.1
+
         if self.leftBumper or self.rightBumper:
             
             self.left *= 0.5
@@ -34,8 +44,9 @@ class JoystickDrive(commands2.CommandBase):
 
         self.train.arcadeDrive(self.left, self.right, False)
 
-        wpilib.SmartDashboard.putNumber("Gyro Angle", self.train.gyro.getAngle())
+        #wpilib.SmartDashboard.putNumber("Gyro Angle", self.train.gyro.getAngle())
 
+        wpilib.SmartDashboard.putBoolean("PlaceMode?", self.placeMode)
     def end(self, interrupted):
 
         self.train.arcadeDrive(0.0, 0.0, False)
