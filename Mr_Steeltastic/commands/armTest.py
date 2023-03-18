@@ -22,15 +22,18 @@ class ArmTest(commands2.CommandBase):
         self.arm.midMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
         self.arm.topMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
         self.arm.grabberMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
-        self.arm.holdAtPercentage(0, 0, 0, 0)
+        self.arm.holdAtPercentage(-0.135, -0.105, 0.125)
+
+        # For cone for future reference: self.arm.holdAtPercentage(0.0, 0.0, 0.145)
     
     def end(self, interrupted):
         
-        self.arm.holdAtPercentage(0.0, 0.0, 0.0, 0.0)
+        self.arm.holdAtPercentage(0.0, 0.0, 0.0)
         
     def isFinished(self):
         """
         Return whether or not the command is finished.
         """
             
-        return wpilib.Timer.getFPGATimestamp() - self.start >= 30
+        #return wpilib.Timer.getFPGATimestamp() - self.start >= 30
+        return False
