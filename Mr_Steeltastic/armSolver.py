@@ -45,8 +45,8 @@ class ArmSolver:
         self.lengths = [kwargs.get("length1", 100), kwargs.get("length2", 100)]
         self.reach = sum(self.lengths)
 
-        self.reachLimits = [[kwargs.get("xReachLimitMax", self.reach), kwargs.get("yReachLimitMax", self.reach)],
-                            [kwargs.get("xReachLimitMin", - self.reach), kwargs.get("yReachLimitMin", - self.reach)]
+        self.reachLimits = [[kwargs.get("xReachLimitMax", (windowSize/2) + self.reach), kwargs.get("yReachLimitMax", (windowSize/2) + self.reach)],
+                            [kwargs.get("xReachLimitMin", (windowSize/2) - self.reach), kwargs.get("yReachLimitMin", (windowSize/2) - self.reach)]
                             ]
         
         self.thetas = [kwargs.get("thetaInit1", 0), kwargs.get("thetaInit2", 0)]
@@ -66,12 +66,16 @@ class ArmSolver:
         """
         A method to take the current angles and move the points to those angles
         """
-        newJoints = [[250,250],[0,0],[0,0]]
+
+        """
+        
+        """
+
 
         for i in range(len(self.joints)-1):
             
             self.joints[i+1] = [self.joints[i][0] + self.lengths[i] * np.cos(self.thetas[i]), 
-                              self.joints[i][1] + self.lengths[i] * np.sin(self.thetas[i])]
+                                self.joints[i][1] + self.lengths[i] * np.sin(self.thetas[i])]
     
     def moveToTarget(self, target):
         """
@@ -102,28 +106,27 @@ class ArmSolver:
         #print(self.reachLimits[0][0], self.reachLimits[0][1])
         
         ## check how far away arm is
-        
         d = np.sqrt(np.power((target[0] - self.joints[2][0]),2) + np.power((target[1] - self.joints[2][1]),2))
         
         if d >= 0.0625:
-            baseToTarget = np.sqrt(np.power((abs(target[0] - self.joints[0][0])),2) + np.power((abs(target[1] - self.joints[0][1])),2))
+            
+            baseToTarget = np.sqrt(np.power((target[0] - self.joints[0][0]), 2) + np.power((target[1] - self.joints[0][1]), 2))
+            joint2ToTarget = np.sqrt(np.power((target[0] - self.joints[1][0]), 2) + np.power((target[1] - self.joints[1][1]), 2))
+
             newThetas = [0, 0]
             
             ## move arm slightly towards target
             pointToTargetAngle = np.arctan((target[1] - self.joints[2][1])/(target[0] - self.joints[2][0]))
-            newTarget = (self.joints[2][0] + 0.0625 * np.cos(pointToTargetAngle), 
-                         self.joints[2][1] + 0.0625 * np.sin(pointToTargetAngle))
+            newTarget = (self.joints[2][0] + (0.0625 * np.cos(pointToTargetAngle)), 
+                         self.joints[2][1] + (0.0625 * np.sin(pointToTargetAngle)))
             
             angleToTarget = np.arctan((newTarget[1] - self.joints[0][1])/(newTarget[0]- self.joints[0][0]))
-
-            self.baseToTarget = np.sqrt(np.power((target[0] - 250),2) + np.power((target[1] - 250),2))
-            baseToTarget = np.sqrt(np.power((target[0] - 250),2) + np.power((target[1] - 250),2))
             
             #lawOfCosines = np.arccos((a^2 + b^2 - c^2)/(2*a*b)) ## angle is between a & b
 
             ## get base angle
-            debugPrint("ARCCOS", (np.power(baseToTarget, 2) + np.power(self.lengths[0], 2) - np.power(self.lengths[1],2))/(2*baseToTarget*self.lengths[0]))            
-            newThetas[0] = np.arccos((np.power(baseToTarget, 2) + np.power(self.lengths[0], 2) - np.power(self.lengths[1],2))/(2*baseToTarget*self.lengths[0]))
+            
+            newThetas[0] = np.arccos(((np.power(baseToTarget, 2) + np.power(self.lengths[0], 2)) - np.power(joint2ToTarget,2))/(2*baseToTarget*self.lengths[0]))
             #print(str(np.arccos((np.power(baseToTarget, 2) + np.power(self.lengths[0], 2) - np.power(self.lengths[1],2))/(2*baseToTarget*self.lengths[0]))))
             #print(str(np.arccos((np.power(500, 2) + np.power(37, 2) - np.power(100,2))/(2*500*37))))
             #print(str((np.power(500, 2) + np.power(37, 2) - np.power(100,2))/(2*500*37)))
@@ -131,12 +134,10 @@ class ArmSolver:
             #print(str((2*500*37)))
 
             ## get angle of elbow/middle joint
-            debugPrint("a, b, c", [self.lengths[0], self.lengths[1], baseToTarget])
-            debugPrint("ARCCOS", (np.power(self.lengths[0],2) + np.power(self.lengths[1],2) - np.power(baseToTarget,2))/(2*self.lengths[0]*self.lengths[1]))            
-            print("\n")            
 
-            newThetas[1] = np.arccos((np.power(self.lengths[0],2) + np.power(self.lengths[1],2) - np.power(baseToTarget,2))/(2*self.lengths[0]*self.lengths[1]))
-            
+            newThetas[1] = np.arccos(((np.power(self.lengths[0], 2) + np.power(joint2ToTarget, 2)) - np.power(baseToTarget,2))/(2*self.lengths[0]*joint2ToTarget))
+            #arccos((l1^2 + l2^2 - bt^2)/2*l1*l2)
+
             """
             (a ^ 2 + b ^ 2 - c^2)/2ab
             """
@@ -199,9 +200,5 @@ while running:
 
             print("ANGLES: " + str(Arm.get_angles()))
             """
-    
-    limit0 = font.render(str() + " -> " + str(arm.baseToTarget), 1, (0,0,0))
-
-    window.blit(limit0, (0, 10))
             
     pygame.display.flip()
