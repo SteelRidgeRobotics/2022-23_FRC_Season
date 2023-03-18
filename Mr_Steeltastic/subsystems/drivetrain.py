@@ -86,8 +86,8 @@ class Drivetrain(commands2.SubsystemBase):
         self.pidController = wpimath.controller.PIDController(constants.P, constants.I, constants.D)
 
         # Gyroscope to keep track of robot pitch
-        #self.gyro = wpilib.ADIS16470_IMU()
-        #self.gyro.setYawAxis(self.gyro.IMUAxis.kX)
+        self.gyro = wpilib.ADIS16470_IMU()
+        self.gyro.setYawAxis(self.gyro.IMUAxis.kX)
 
         self.onChargeStation = False
         self.offChargeStation = False
