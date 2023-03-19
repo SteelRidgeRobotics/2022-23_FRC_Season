@@ -1,21 +1,14 @@
-import math
-
-
-
-#Controller ports
+# Controller ports
 kdriverControllerPort = 0
-#kfunctionsControllerPort = 1
+# kfunctionsControllerPort = 1
 
-#Motors
+# Motors
 kfrontLeft = 0
 kbackLeft = 1
 kfrontRight = 2
 kbackRight = 3
 
-
-#Encoders
+# Encoders
 ktimeoutMs = 10
 
-
-#Physical constants
-
+# Physical constants

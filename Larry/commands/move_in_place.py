@@ -1,15 +1,17 @@
 import typing
+
 import commands2
-from subsystems.swerve_drive import SwerveDrive
-import wpilib
-import conversions
 import constants
+import conversions
+import wpilib
+from subsystems.swerve_drive import SwerveDrive
+
 
 class MoveInPlace(commands2.CommandBase):
-    def __init__(self,  swerveDrive: SwerveDrive, rightx: typing.Callable[[], float]) -> None:
+    def __init__(self, swerveDrive: SwerveDrive, rightx: typing.Callable[[], float]) -> None:
         super().__init__()
         self.drive = swerveDrive
-        #self.units = conversions.convertDegreesToTalonFXUnits(conversions.convertJoystickInputToDegrees(x(), y()))
+        # self.units = conversions.convertDegreesToTalonFXUnits(conversions.convertJoystickInputToDegrees(x(), y()))
         self.x = rightx
         self.addRequirements([self.drive])
 

@@ -1,7 +1,8 @@
-import math
-import wpilib
 import commands2
+import wpilib
+
 from robotcontainer import RobotContainer
+
 
 class Steeltastic(commands2.TimedCommandRobot):
 
@@ -13,12 +14,11 @@ class Steeltastic(commands2.TimedCommandRobot):
     def robotPeriodic(self):
 
         commands2.CommandScheduler.getInstance().run()
-    
+
     def autonomousInit(self):
         self.autoCommand = self.container.getAutonomousCommand()
 
         if self.autoCommand:
-
             self.autoCommand.schedule()
 
     def autonomousPeriodic(self):
@@ -28,9 +28,9 @@ class Steeltastic(commands2.TimedCommandRobot):
     def teleopInit(self):
 
         if self.autoCommand:
-
             self.autoCommand.cancel()
         wpilib.SmartDashboard.putBoolean("A Pressed? ", self.container.driverController.getAButton())
+
     def teleopPeriodic(self):
 
         # wpilib.SmartDashboard.putValue("Solenoid", self.container.arm.grabberSolenoid.get())
@@ -39,6 +39,7 @@ class Steeltastic(commands2.TimedCommandRobot):
     def testInit(self):
 
         commands2.CommandScheduler.getInstance().cancelAll()
+
 
 if __name__ == "__main__":
     wpilib.run(Steeltastic)

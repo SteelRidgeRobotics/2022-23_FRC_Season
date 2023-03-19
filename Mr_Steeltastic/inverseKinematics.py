@@ -1,6 +1,9 @@
-import numpy as np
 import math
+
+import numpy as np
 import pygame
+
+
 # create arm object
 
 class InverseKinematics:
@@ -17,6 +20,7 @@ class InverseKinematics:
         self.lengths = []
         # create limits array
         self.limits = np.array([[kwargs.get("maxLimit", math.pi), kwargs.get("minLimit", -math.pi)]], dtype=np.float_).T
+
     # add segments
     def add_segment(self, **kwargs):
         # add to joints
@@ -30,6 +34,7 @@ class InverseKinematics:
         minLimit = kwargs.get("minLimit", -math.pi)
 
         self.limits = np.append(self.limits, np.array([[maxLimit, minLimit]]).T, axis=1)
+
     # transform matrix
     def get_transformation_matrix(self, theta, x, y):
         # return transformation matrix 
@@ -53,15 +58,15 @@ class InverseKinematics:
         t = self.get_transformation_matrix(
             self.thetas[0].item(), self.xBase, self.yBase)
         # loop
-        for i in range(len(self.lengths)-1) :
+        for i in range(len(self.lengths) - 1):
             # get next transformation matrix
-            t_next = self.get_transformation_matrix(self.thetas[i+1], 
-                                                    self.lengths[i+1], 0)
+            t_next = self.get_transformation_matrix(self.thetas[i + 1],
+                                                    self.lengths[i + 1], 0)
             # multiply (use numpy.multpily)
             t = np.multiply(t, t_next)
             # append new value to joints 
-            #self.joints = np.multiply(self.joints, t).T #MAY NEED TO DO THE NEXT JOINT
-            self.joints[:,[i+1]] = t.dot(np.array([[0,0,0,1]]).T)
+            # self.joints = np.multiply(self.joints, t).T #MAY NEED TO DO THE NEXT JOINT
+            self.joints[:, [i + 1]] = t.dot(np.array([[0, 0, 0, 1]]).T)
         # update the end effector coordiniates (last joint)
         endEffectorCoords = np.array([[self.lengths[-1], 0, 0, 1]]).T
         # multiply endeffector coordinates with coords and set it to the last item
@@ -71,41 +76,41 @@ class InverseKinematics:
     # get jacobian
     def get_jacobian(self):
         # define unit vector "k-hat" pointing along Z axis
-        unitVector = np.array([[0,0,1]], dtype=np.float_)
+        unitVector = np.array([[0, 0, 1]], dtype=np.float_)
         # make jacobian, an empty  array, length 3 and # of joints - 1
-        jacobian = np.zeros((3, len(self.joints[0, :])-1), dtype=np.float_)
+        jacobian = np.zeros((3, len(self.joints[0, :]) - 1), dtype=np.float_)
 
         endEffectorCoords = self.joints[:3, [-1]]
         # Utilize cross product to compute each row of the Jacobian matrix
         # loop for each joint
-        for i in range(len(self.joints[0,:])-1):
+        for i in range(len(self.joints[0, :]) - 1):
             # find current joint
             currentJointCoords = self.joints[:3, [i]]
             # the item in jacobian joint (i) = the cross product of k-hat, and the difference 
             ## between end effector coords and current joint coords. reshape that into 3, n
-            jacobian[:,i] = np.cross(
-                unitVector, (endEffectorCoords - currentJointCoords).reshape(3,))
-            
+            jacobian[:, i] = np.cross(
+                unitVector, (endEffectorCoords - currentJointCoords).reshape(3, ))
+
         # return the jacobian
         return jacobian
-    
+
     # update thetas
     def update_thetas(self, deltaTheta):
         self.thetas += deltaTheta.flatten()
 
     # get angles
-    
+
     # get limits
     def get_limits(self):
         return self.limits
-    
+
     def move_to_target(self, target):
         # global values
         # set distance per update
-        distPerUpdate = 0.0625 #* sum(self.lengths)
+        distPerUpdate = 0.0625  # * sum(self.lengths)
 
         # if the distance to move to target is greater than our distance per update
-        if np.linalg.norm(target - self.joints[:,-1]):
+        if np.linalg.norm(target - self.joints[:, -1]):
             # target vector = target - last joint, and reshape to 3
             targetVector = (target - self.joints[:, [-1]])[:3]
             # target unit vector = target vector / the norm of target vector
@@ -138,16 +143,18 @@ class InverseKinematics:
 
     def plot(self, window):
         for i in range(len(self.lengths)):
-            pygame.draw.line(window, (0, 0, 255), (self.joints[0][i], self.joints[1][i]), (self.joints[0][i+1], self.joints[1][i+1]), 5)
+            pygame.draw.line(window, (0, 0, 255), (self.joints[0][i], self.joints[1][i]),
+                             (self.joints[0][i + 1], self.joints[1][i + 1]), 5)
 
-        for i in range(len(self.joints)-1):
+        for i in range(len(self.joints) - 1):
             pygame.draw.circle(window, (0, 255, 255), (self.joints[0][i], self.joints[1][i]), 5)
         pygame.display.flip()
 
+
 pygame.init()
-window = pygame.display.set_mode((500,500))
+window = pygame.display.set_mode((500, 500))
 pygame.display.set_caption("Robot Arm Inverse Kinematics")
-window.fill((255,255,255))
+window.fill((255, 255, 255))
 
 font = pygame.font.SysFont('lucidacalligraphy', 10)
 
@@ -158,14 +165,14 @@ Arm.add_segment(length=25.0, maxLimit=math.pi, minLimit=-math.pi)
 
 running = True
 while running:
-    window.fill((255,255,255))
+    window.fill((255, 255, 255))
     pygame.draw.circle(window, (255, 0, 0), (250, 250), sum(Arm.lengths), 5)
     pygame.draw.circle(window, (0, 255, 0), (250, 250), 5)
 
     # Run IK code
     click = pygame.mouse.get_pos()
     targetPt = (click[0], click[1])
-    target = np.array([[click[0],click[1], 0, 1]]).T
+    target = np.array([[click[0], click[1], 0, 1]]).T
     pygame.draw.circle(window, (0, 0, 0), targetPt, 7)
 
     Arm.move_to_target(target)
@@ -184,6 +191,5 @@ while running:
 
             print("ANGLES: " + str(Arm.get_angles()))
             """
-        
-            
+
     pygame.display.flip()

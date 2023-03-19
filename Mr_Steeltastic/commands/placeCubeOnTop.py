@@ -1,18 +1,19 @@
 import commands2
 from subsystems.arm import Arm
-from setGrabber import SetGrabber
+
 from poseArm import PoseArm
+from setGrabber import SetGrabber
+
 
 class PlaceCubeOnTop(commands2.SequentialCommandGroup):
     """
     Arm will place and score cube on the top of the grid
     """
-    
-    def __init__(self, arm: Arm):
 
+    def __init__(self, arm: Arm):
         super().__init__()
 
-        self.addCommands( # TODO: GET ARM POSES
+        self.addCommands(  # TODO: GET ARM POSES
             ## moveArmToAvoid
             PoseArm([0, 0, 0, 0, 0]),
             ## move to place
@@ -27,4 +28,4 @@ class PlaceCubeOnTop(commands2.SequentialCommandGroup):
             commands2.ParallelCommandGroup(PoseArm([0, 0, 0, 0, 0]), SetGrabber(arm, True)),
             ## move arm to resting position
             PoseArm([0, 0, 0, 0, 0])
-            )
+        )

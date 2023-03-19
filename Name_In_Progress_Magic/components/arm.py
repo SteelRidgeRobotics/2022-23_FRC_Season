@@ -18,7 +18,7 @@
 #     def getCCWLimitSwitch(self):
 
 #         return self.CCWLimitSwitch.get()
-    
+
 #     def getCWLimitSwitch(self):
 
 #         return self.CWLimitSwitch.get()
@@ -28,7 +28,7 @@
 #     baseArm: ArmLength
 #     middleArm: ArmLength
 #     topArm: ArmLength
-    
+
 #     wristMotor: ctre.WPI_TalonFX
 #     grabberMotor: ctre.WPI_TalonSRX
 

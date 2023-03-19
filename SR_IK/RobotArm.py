@@ -1,5 +1,7 @@
-import numpy as np
 import math
+
+import numpy as np
+
 
 class RobotArm2D:
     '''RobotArm2D([xRoot=0, yRoot=0])
@@ -18,6 +20,7 @@ class RobotArm2D:
             lengths[0] is the first link and lengths[N-1] is the last link,
             terminating at the end effector.
     '''
+
     def __init__(self, **kwargs):
         self.xRoot = kwargs.get('xRoot', 0)
         self.yRoot = kwargs.get('yRoot', 0)
@@ -31,7 +34,7 @@ class RobotArm2D:
             by required argument "length". Optionally, the initial angle
             of the joint can be specified.
         '''
-        self.joints = np.append(self.joints, np.array([[0,0,0,1]]).T, axis=1)
+        self.joints = np.append(self.joints, np.array([[0, 0, 0, 1]]).T, axis=1)
         self.lengths.append(kwargs['length'])
         self.thetas = np.append(self.thetas, kwargs.get('thetaInit', 0))
 
@@ -46,14 +49,14 @@ class RobotArm2D:
             [math.sin(theta), math.cos(theta), 0, y],
             [0, 0, 1, 0],
             [0, 0, 0, 1]
-            ])
+        ])
         return transformationMatrix
 
     def update_joint_coords(self):
         '''update_joint_coords()
             Recompute x and y coordinates of each joint and end effector.
         '''
-        
+
         # "T" is a cumulative transformation matrix that is the result of
         # the multiplication of all transformation matrices up to and including
         # the ith joint of the for loop.
@@ -61,13 +64,13 @@ class RobotArm2D:
             self.thetas[0].item(), self.xRoot, self.yRoot)
         for i in range(len(self.lengths) - 1):
             T_next = self.get_transformation_matrix(
-                self.thetas[i+1], self.lengths[i], 0)
+                self.thetas[i + 1], self.lengths[i], 0)
             T = T.dot(T_next)
-            self.joints[:,[i+1]] = T.dot(np.array([[0,0,0,1]]).T)
+            self.joints[:, [i + 1]] = T.dot(np.array([[0, 0, 0, 1]]).T)
 
         # Update end effector coordinates.
-        endEffectorCoords = np.array([[self.lengths[-1],0,0,1]]).T
-        self.joints[:,[-1]] = T.dot(endEffectorCoords)
+        endEffectorCoords = np.array([[self.lengths[-1], 0, 0, 1]]).T
+        self.joints[:, [-1]] = T.dot(endEffectorCoords)
 
     def get_jacobian(self):
         '''get_jacobian()
@@ -75,16 +78,16 @@ class RobotArm2D:
         '''
 
         # Define unit vector "k-hat" pointing along the Z axis.
-        kUnitVec = np.array([[0,0,1]], dtype=np.float_)
+        kUnitVec = np.array([[0, 0, 1]], dtype=np.float_)
 
-        jacobian = np.zeros((3, len(self.joints[0,:]) - 1), dtype=np.float_)
-        endEffectorCoords = self.joints[:3,[-1]]
+        jacobian = np.zeros((3, len(self.joints[0, :]) - 1), dtype=np.float_)
+        endEffectorCoords = self.joints[:3, [-1]]
 
         # Utilize cross product to compute each row of the Jacobian matrix.
-        for i in range(len(self.joints[0,:]) - 1):
-            currentJointCoords = self.joints[:3,[i]]
-            jacobian[:,i] = np.cross(
-                kUnitVec, (endEffectorCoords - currentJointCoords).reshape(3,))
+        for i in range(len(self.joints[0, :]) - 1):
+            currentJointCoords = self.joints[:3, [i]]
+            jacobian[:, i] = np.cross(
+                kUnitVec, (endEffectorCoords - currentJointCoords).reshape(3, ))
         return jacobian
 
     def update_theta(self, deltaTheta):

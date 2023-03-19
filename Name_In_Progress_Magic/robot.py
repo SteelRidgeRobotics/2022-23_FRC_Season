@@ -1,14 +1,15 @@
+import ctre
+import magicbot
 import wpilib
 from wpimath.controller import PIDController
-import magicbot
-import ctre
-import constants
+
 import components.drivetrain
-import components.arm
+import constants
+
 
 class Palpatine(magicbot.MagicRobot):
-
     drivetrain: components.drivetrain.Drivetrain
+
     # arm: components.arm.Arm
 
     def createObjects(self):
@@ -49,22 +50,20 @@ class Palpatine(magicbot.MagicRobot):
     def teleopInit(self):
 
         pass
-    
+
     def teleopPeriodic(self):
 
         left = self.driverController.getLeftY()
         right = self.driverController.getLeftY()
-        
+
         if abs(left) <= constants.DEADBAND:
-            
             left = 0.0
-        
+
         if abs(right) <= constants.DEADBAND:
-            
             right = 0.0
 
         self.drivetrain.move(left, right)
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     wpilib.run(Palpatine)

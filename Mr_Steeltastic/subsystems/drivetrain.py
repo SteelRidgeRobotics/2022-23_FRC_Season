@@ -1,13 +1,13 @@
-import math
+import commands2
+import constants
+import ctre
 import wpilib
 import wpimath.controller
-import commands2
-import ctre
-import constants
+
 
 def deadband(value):
-
     return 0 if abs(value) < constants.DEADBAND else value
+
 
 class Drivetrain(commands2.SubsystemBase):
     """
@@ -56,7 +56,7 @@ class Drivetrain(commands2.SubsystemBase):
         self.BRMotor.selectProfileSlot(0, 0)
 
         # configure the P, I, and D values of our motors
-        self.FLMotor.config_kP(0, constants.MMP, constants.TIMEOUTMS) #please change these values later (value)
+        self.FLMotor.config_kP(0, constants.MMP, constants.TIMEOUTMS)  # please change these values later (value)
         self.FLMotor.config_kI(0, constants.MMI, constants.TIMEOUTMS)
         self.FLMotor.config_kD(0, constants.MMD, constants.TIMEOUTMS)
         self.FLMotor.config_kF(0, constants.MMF, constants.TIMEOUTMS)
@@ -114,13 +114,13 @@ class Drivetrain(commands2.SubsystemBase):
                 rightMotors /= rightMotors
 
         if isAuto:
-            
+
             self.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, leftMotors)
             self.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, rightMotors)
-        
+
         else:
             pass
-            #self.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftMotors))
-            #self.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightMotors))
-        
+            # self.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftMotors))
+            # self.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightMotors))
+
         wpilib.SmartDashboard.putBoolean("Deadband?", not isAuto)

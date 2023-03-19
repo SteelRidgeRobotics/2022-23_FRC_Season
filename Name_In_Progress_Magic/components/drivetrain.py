@@ -1,10 +1,10 @@
-import wpilib
-from wpimath.controller import PIDController
 import ctre
 import magicbot
+import wpilib
+from wpimath.controller import PIDController
+
 
 class Drivetrain:
-
     FLMotor: ctre.WPI_TalonFX
     BLMotor: ctre.WPI_TalonFX
     FRMotor: ctre.WPI_TalonFX
@@ -18,7 +18,6 @@ class Drivetrain:
     right = magicbot.will_reset_to(0)
 
     def setup(self):
-
         self.BLMotor.follow(self.FLMotor)
         self.BRMotor.follow(self.FRMotor)
 
@@ -37,11 +36,9 @@ class Drivetrain:
         self.pidController.reset()
 
     def move(self, left, right):
-
         self.left = left
         self.right = right
 
     def execute(self):
-        
         self.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, self.left)
         self.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, self.right)

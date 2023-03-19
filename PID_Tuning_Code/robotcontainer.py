@@ -1,11 +1,11 @@
-import wpilib
 import commands2
-from commands.getPIDValues import GetPIDValues
-import constants
 import ctre
+import wpilib
 from wpilib import XboxController
-from subsystems.pidTest import PidTest
 
+import constants
+from commands.getPIDValues import GetPIDValues
+from subsystems.pidTest import PidTest
 
 
 class RobotContainer:
@@ -17,42 +17,37 @@ class RobotContainer:
     """
 
     def __init__(self) -> None:
-
         # The driver's controller
         self.driverController = XboxController(constants.kdriverControllerPort)
-        #self.functionsController = XboxController(constants.kfunctionsControllerPort)
+        # self.functionsController = XboxController(constants.kfunctionsControllerPort)
 
         self.frontLeft = ctre.TalonFX(constants.kfrontLeft)
         self.backLeft = ctre.TalonFX(constants.kbackLeft)
         self.frontRight = ctre.TalonFX(constants.kfrontRight)
         self.backRight = ctre.TalonFX(constants.kbackRight)
 
-        
         # The robot's subsystems
-        
+
         self.pid = PidTest()
 
         self.simpleAuto = GetPIDValues
-             
-        
+
         # Autonomous routines
-        
 
         # Chooser
         self.chooser = wpilib.SendableChooser()
 
         # Add commands to the autonomous command chooser
         self.chooser.setDefaultOption("Auto", self.simpleAuto)
-        #self.chooser.addOption("Complex Auto", self.complexAuto)
+        # self.chooser.addOption("Complex Auto", self.complexAuto)
 
         # Put the chooser on the dashboard
         wpilib.SmartDashboard.putData("Autonomous", self.chooser)
 
-
         self.configureButtonBindings()
 
         # set up default drive command
-        self.pid.setDefaultCommand(GetPIDValues(self.pid)) 
+        self.pid.setDefaultCommand(GetPIDValues(self.pid))
 
     def configureButtonBindings(self):
         """

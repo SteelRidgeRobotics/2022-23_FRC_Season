@@ -1,8 +1,8 @@
 import commands2
 import wpilib
-import ctre
-from subsystems.drivetrain import Drivetrain
 from subsystems.arm import Arm
+from subsystems.drivetrain import Drivetrain
+
 
 class StationCorrection(commands2.CommandBase):
 
@@ -13,13 +13,13 @@ class StationCorrection(commands2.CommandBase):
         self.train = train
         self.arm = arm
         self.timer = wpilib.Timer()
-        
+
         self.addRequirements([self.train, self.arm])
 
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
         # self.startTime = wpilib.Timer.getFPGATimestamp()
-        
+
         # self.commandFinished = False
 
     def initialize(self):
@@ -27,7 +27,7 @@ class StationCorrection(commands2.CommandBase):
         self.train.onChargeStation = False
         self.timer.stop()
         self.timer.reset()
-        
+
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
     def execute(self):
@@ -41,7 +41,7 @@ class StationCorrection(commands2.CommandBase):
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
         if self.train.gyro.getAngle() <= 7.5 and not self.train.onChargeStation:
-            
+
             self.train.arcadeDrive(-0.3, 0.0, True)
 
             wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
@@ -52,7 +52,7 @@ class StationCorrection(commands2.CommandBase):
             self.timer.start()
 
         else:
-            
+
             power = (self.train.pidController.calculate(self.train.gyro.getAngle(), 0.0))
 
             wpilib.SmartDashboard.putNumber("Requested Power", power)
@@ -67,7 +67,7 @@ class StationCorrection(commands2.CommandBase):
             else:
 
                 wpilib.SmartDashboard.putBoolean("Power Accepted", False)
-        
+
         self.arm.keepArmsAtZero()
 
         # wpilib.SmartDashboard.putNumberArray("Time", [wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp() - self.startTime])
@@ -76,9 +76,9 @@ class StationCorrection(commands2.CommandBase):
         # wpilib.SmartDashboard.putNumberArray("Time", [self.startTime, wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp - self.startTime])
 
     def end(self, interrupted: bool):
-        
+
         self.train.arcadeDrive(0.0, 0.0)
         wpilib.SmartDashboard.putBoolean("Running", False)
-    
+
     def isFinished(self):
         return False

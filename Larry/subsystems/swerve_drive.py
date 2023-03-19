@@ -1,10 +1,12 @@
-import commands2
-import ctre
-import constants
-import wpilib
-import conversions
 import math
+
+import commands2
+import constants
+import conversions
+import ctre
+import wpilib
 from subsystems.swerve_wheel import SwerveWheel
+
 
 class SwerveDrive(commands2.SubsystemBase):
     def __init__(self) -> None:
@@ -22,7 +24,7 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightRearDirection = ctre.TalonFX(constants.krightRearDirectionID)
         self.rightRearSpeed = ctre.TalonFX(constants.krightRearSpeedID)
 
-        #fix inverse
+        # fix inverse
         self.leftFrontSpeed.setInverted(False)
         self.leftRearSpeed.setInverted(False)
 
@@ -34,14 +36,13 @@ class SwerveDrive(commands2.SubsystemBase):
 
         self.rightFrontDirection.setInverted(False)
         self.rightRearDirection.setInverted(False)
-        
+
         # init swerve modules
         self.leftFrontSwerveModule = SwerveWheel(self.leftFrontDirection, self.leftFrontSpeed)
         self.leftRearSwerveModule = SwerveWheel(self.leftRearDirection, self.leftRearSpeed)
 
         self.rightFrontSwerveModule = SwerveWheel(self.rightFrontDirection, self.rightFrontSpeed)
         self.rightRearSwerveModule = SwerveWheel(self.rightRearDirection, self.rightRearSpeed)
-        
 
         self.gyro = wpilib.ADXRS450_Gyro()
         self.gyro.reset()
@@ -68,25 +69,26 @@ class SwerveDrive(commands2.SubsystemBase):
         # check if the joystick is in use
         if magnitude != 0.0:
             # this is to test that if 360 or zero is closer it goes to 0
-            if (direction == 0.0 or direction == 180.0) and math.fabs(360 - currentAngle) <= math.fabs(currentAngle - opposAngle):
+            if (direction == 0.0 or direction == 180.0) and math.fabs(360 - currentAngle) <= math.fabs(
+                    currentAngle - opposAngle):
                 # this means that 360 or zero is the shortest distance
                 # now we have to find if 0.0 is the direction or the opposite angle
                 if direction == 0.0:
-                    module.turn(self.units*constants.ksteeringGearRatio)
+                    module.turn(self.units * constants.ksteeringGearRatio)
                     module.move(magnitude)
                 else:
-                    module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle)*constants.ksteeringGearRatio)
+                    module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle) * constants.ksteeringGearRatio)
                     module.move(-magnitude)
             # if the original angle is closer
             elif math.fabs(currentAngle - direction) <= math.fabs(currentAngle - opposAngle):
-                #turn to the original angle
-                module.turn(self.units*constants.ksteeringGearRatio)
-                #move in the normal way
+                # turn to the original angle
+                module.turn(self.units * constants.ksteeringGearRatio)
+                # move in the normal way
                 module.move(magnitude)
-            else: # the opposite angle is closer
-                #turn to the other angle
-                module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle)*constants.ksteeringGearRatio)
-                #move in the opposite direction
+            else:  # the opposite angle is closer
+                # turn to the other angle
+                module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle) * constants.ksteeringGearRatio)
+                # move in the opposite direction
                 module.move(-magnitude)
 
     def translate(self, direction: float, magnitude: float):
@@ -94,13 +96,13 @@ class SwerveDrive(commands2.SubsystemBase):
         self.turnWheel(self.leftRearSwerveModule, direction, magnitude)
         self.turnWheel(self.rightFrontSwerveModule, direction, magnitude)
         self.turnWheel(self.rightRearSwerveModule, direction, magnitude)
-    
+
     def turnInPlace(self, turnPower: float):
         self.turnWheel(self.leftFrontSwerveModule, 45.0, turnPower)
         self.turnWheel(self.rightFrontSwerveModule, 135.0, turnPower)
         self.turnWheel(self.rightRearSwerveModule, 225.0, turnPower)
         self.turnWheel(self.leftRearSwerveModule, 315.0, turnPower)
-        
+
     def stopAllMotors(self):
         self.leftFrontSwerveModule.stopAllMotors()
         self.leftRearSwerveModule.stopAllMotors()
@@ -108,15 +110,19 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightRearSwerveModule.stopAllMotors()
 
     def showWheelStats(self):
-        wpilib.SmartDashboard.putNumber(" LF Angle Error", self.leftFrontSwerveModule.directionMotor.getClosedLoopError(0))
-        wpilib.SmartDashboard.putNumber(" LR Angle Error", self.leftRearSwerveModule.directionMotor.getClosedLoopError(0))
-        wpilib.SmartDashboard.putNumber(" RF Angle Error", self.rightFrontSwerveModule.directionMotor.getClosedLoopError(0))
-        wpilib.SmartDashboard.putNumber(" RR Angle Error", self.rightRearSwerveModule.directionMotor.getClosedLoopError(0))
+        wpilib.SmartDashboard.putNumber(" LF Angle Error",
+                                        self.leftFrontSwerveModule.directionMotor.getClosedLoopError(0))
+        wpilib.SmartDashboard.putNumber(" LR Angle Error",
+                                        self.leftRearSwerveModule.directionMotor.getClosedLoopError(0))
+        wpilib.SmartDashboard.putNumber(" RF Angle Error",
+                                        self.rightFrontSwerveModule.directionMotor.getClosedLoopError(0))
+        wpilib.SmartDashboard.putNumber(" RR Angle Error",
+                                        self.rightRearSwerveModule.directionMotor.getClosedLoopError(0))
 
-        wpilib.SmartDashboard.putNumber(" LF Speed ", self.leftFrontSwerveModule.getVelocity())      
-        wpilib.SmartDashboard.putNumber(" LR Speed ", self.leftRearSwerveModule.getVelocity())   
-        wpilib.SmartDashboard.putNumber(" RF Speed ", self.rightFrontSwerveModule.getVelocity())      
-        wpilib.SmartDashboard.putNumber(" RR Speed ", self.rightRearSwerveModule.getVelocity()) 
+        wpilib.SmartDashboard.putNumber(" LF Speed ", self.leftFrontSwerveModule.getVelocity())
+        wpilib.SmartDashboard.putNumber(" LR Speed ", self.leftRearSwerveModule.getVelocity())
+        wpilib.SmartDashboard.putNumber(" RF Speed ", self.rightFrontSwerveModule.getVelocity())
+        wpilib.SmartDashboard.putNumber(" RR Speed ", self.rightRearSwerveModule.getVelocity())
 
         wpilib.SmartDashboard.putNumber(" PDP Channel 0", self.PDP.getCurrent(0))
         wpilib.SmartDashboard.putNumber(" PDP Channel 1", self.PDP.getCurrent(1))
@@ -133,7 +139,7 @@ class SwerveDrive(commands2.SubsystemBase):
 
     def getGyroAngle(self) -> float:
         return self.gyro.getAngle()
-    
+
     def flushWheels(self):
         self.turnWheel(self.leftFrontSwerveModule, 0.0, 0.01)
         self.turnWheel(self.leftRearSwerveModule, 0.0, 0.01)
@@ -143,38 +149,38 @@ class SwerveDrive(commands2.SubsystemBase):
         self.stopAllMotors()
 
     def moveWhileSpinning(self, leftx: float, lefty: float, turnPower: float):
-        straff = -lefty*math.sin(self.getGyroAngle())+leftx*math.cos(self.getGyroAngle())
-        fwrd = lefty*math.cos(self.getGyroAngle())+leftx*math.sin(self.getGyroAngle())
-        a = straff - turnPower*(constants.klength/constants.kr)
-        b = straff + turnPower*(constants.klength/constants.kr)
-        c = fwrd - turnPower*(constants.kwidth/constants.kr)
-        d = fwrd + turnPower*(constants.kwidth/constants.kr)
-        
-        frspeed = math.sqrt(b**2+c**2)
-        flspeed = math.sqrt(b**2+d**2)
-        rlspeed = math.sqrt(a**2+d**2)
-        rrspeed = math.sqrt(a**2+c**2)
+        straff = -lefty * math.sin(self.getGyroAngle()) + leftx * math.cos(self.getGyroAngle())
+        fwrd = lefty * math.cos(self.getGyroAngle()) + leftx * math.sin(self.getGyroAngle())
+        a = straff - turnPower * (constants.klength / constants.kr)
+        b = straff + turnPower * (constants.klength / constants.kr)
+        c = fwrd - turnPower * (constants.kwidth / constants.kr)
+        d = fwrd + turnPower * (constants.kwidth / constants.kr)
 
-        frangle = math.atan2(b,c)*180/math.pi
-        flangle = math.atan2(b,d)*180/math.pi
-        rlangle = math.atan2(a,d)*180/math.pi
-        rrangle = math.atan2(a,c)*180/math.pi
+        frspeed = math.sqrt(b ** 2 + c ** 2)
+        flspeed = math.sqrt(b ** 2 + d ** 2)
+        rlspeed = math.sqrt(a ** 2 + d ** 2)
+        rrspeed = math.sqrt(a ** 2 + c ** 2)
 
-        #the block below checks for the highest speed that a wheel will be turning
-        #if the highest speed is greater than one, we then make the largest value equal one, while keeping the ratios the same
+        frangle = math.atan2(b, c) * 180 / math.pi
+        flangle = math.atan2(b, d) * 180 / math.pi
+        rlangle = math.atan2(a, d) * 180 / math.pi
+        rrangle = math.atan2(a, c) * 180 / math.pi
+
+        # the block below checks for the highest speed that a wheel will be turning
+        # if the highest speed is greater than one, we then make the largest value equal one, while keeping the ratios the same
         max = frspeed
         if flspeed > max:
-            max = flspeed # would use elif, but we can't gurantee that only one value will be larger than the front right wheel speed
+            max = flspeed  # would use elif, but we can't gurantee that only one value will be larger than the front right wheel speed
         if rlspeed > max:
             max = rlspeed
         if rrspeed > max:
             max = rrspeed
-        
+
         if max > 1:
-            frspeed/=max
-            flspeed/=max
-            rlspeed/=max
-            rrspeed/=max
+            frspeed /= max
+            flspeed /= max
+            rlspeed /= max
+            rrspeed /= max
 
         # make wheels turn and spin at the speeds and angles calculated above
         self.turnWheel(self.leftFrontSwerveModule, flangle, flspeed)
