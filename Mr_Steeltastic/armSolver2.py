@@ -56,19 +56,13 @@ class ArmSolver2():
 
                 theta1 = beta - psi
                 
-            if theta1 > 0:
-                
-                if self.elbowUp:
+            if theta1 > 0 and theta1 < 90:
 
-                    self.joints = [[self.baseX, self.baseY],
-                                   [self.baseX + self.length1 * math.cos(theta1), self.baseY + self.length1 * math.sin(theta1)],
-                                   [self.baseX + r * math.cos(beta), self.baseY + r * math.sin(beta)]]
+                print(math.degrees(theta1))
 
-                if not self.elbowUp:
-
-                    self.joints = [[self.baseX, self.baseY],
-                                   [self.baseX + self.length1 * math.cos(theta1), self.baseY + self.length1 * math.sin(theta1)],
-                                   [self.baseX + r * math.cos(beta), self.baseY + r * math.sin(beta)]]
+                self.joints = [[self.baseX, self.baseY],
+                                [self.baseX + self.length1 * math.cos(theta1), self.baseY + self.length1 * math.sin(theta1)],
+                                [self.baseX + r * math.cos(beta), self.baseY + r * math.sin(beta)]]
     
 def draw(surface: pygame.Surface, arm: ArmSolver2, mousePos: tuple):
 
