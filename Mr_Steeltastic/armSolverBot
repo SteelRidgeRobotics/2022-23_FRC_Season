@@ -1,0 +1,41 @@
+import math
+
+def debugPrint(title, value):
+    
+    print(f"{title}: {value}")
+
+
+class ArmSolver2:
+
+    def __init__(self, baseX, baseY, length1, length2):
+
+        self.length1 = length1
+        self.length2 = length2
+
+        self.reach = length1 + length2
+
+        self.baseX = baseX
+        self.baseY = baseY
+
+    def targetToAngles(self, target: tuple):
+
+        r = math.sqrt(((target[0] ** 2) + (target[1] ** 2)))
+
+        if r <= self.reach and r >= self.length1 and r >= self.length2:
+
+            alpha = math.acos(((self.length1 ** 2) + (self.length2 ** 2) - (r ** 2)) / (2 * self.length1 * self.length2))
+            theta2 = (math.radians(180) - alpha)
+
+            psi = math.atan2(self.length2 * math.sin(theta2), (self.length1 + (self.length2 * math.cos(theta2))))
+            beta = math.atan2(target[1], target[0])
+
+            theta1 = beta + psi
+
+            return (math.degrees(theta1), math.degrees(theta2))
+
+        return (None, None)
+
+
+
+arm = ArmSolver2(0, 0, 250, 250)
+print(arm.targetToAngles((394, 50)))

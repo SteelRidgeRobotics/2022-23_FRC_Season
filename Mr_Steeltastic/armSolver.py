@@ -78,6 +78,7 @@ class ArmSolver:
         """
 
         for i in range(len(self.joints) - 1):
+            
             self.joints[i + 1] = [self.joints[i][0] + self.lengths[i] * np.cos(self.thetas[i]),
                                   self.joints[i][1] + self.lengths[i] * np.sin(self.thetas[i])]
 

@@ -1,5 +1,4 @@
 import math
-
 import pygame
 
 pygame.init()
@@ -13,24 +12,26 @@ window.fill((255, 255, 255))
 
 
 def invertCoord(coords):
-    return coords[0], windowSize - coords[1]
+    
+    return (coords[0], windowSize - coords[1])
 
 
 def debugPrint(title, value):
+    
     print(f"{title}: {value}")
 
 
 class ArmSolver2:
 
-    def __init__(self, base_x, base_y, length1, length2):
+    def __init__(self, baseX, baseY, length1, length2):
 
         self.length1 = length1
         self.length2 = length2
 
         self.reach = length1 + length2
 
-        self.baseX = base_x
-        self.baseY = base_y
+        self.baseX = baseX
+        self.baseY = baseY
 
         self.joints = [[self.baseX, self.baseY],
                        [self.baseX + self.length1 * math.cos(45), self.baseY + self.length1 * math.sin(45)],
@@ -43,10 +44,11 @@ class ArmSolver2:
 
         r = math.sqrt(((target[0] ** 2) + (target[1] ** 2)))
 
-        if r <= self.reach:
+        if r <= self.reach and r >= self.length1 and r >= self.length2:
 
-            alpha = math.acos(
-                ((self.length1 ** 2) + (self.length2 ** 2) - (r ** 2)) / (2 * self.length1 * self.length2))
+            print(f"{((self.length1 ** 2) + (self.length2 ** 2) - (r ** 2))}\n-------------------------\n{(2 * self.length1 * self.length2)}\n{r}\nNEXT\n")    
+                
+            alpha = math.acos(((self.length1 ** 2) + (self.length2 ** 2) - (r ** 2)) / (2 * self.length1 * self.length2))
             theta2 = (math.radians(180) - alpha) if self.elbowUp else math.radians(180) - alpha
 
             psi = math.atan2(self.length2 * math.sin(theta2), (self.length1 + (self.length2 * math.cos(theta2))))
@@ -60,34 +62,35 @@ class ArmSolver2:
 
                 theta1 = beta - psi
 
-            if 0 < theta1 < 90:
-                print(math.degrees(theta1))
+            if 0 < theta1:
 
                 self.joints = [[self.baseX, self.baseY],
-                               [self.baseX + self.length1 * math.cos(theta1),
-                                self.baseY + self.length1 * math.sin(theta1)],
+                               [self.baseX + self.length1 * math.cos(theta1), self.baseY + self.length1 * math.sin(theta1)],
                                [self.baseX + r * math.cos(beta), self.baseY + r * math.sin(beta)]]
 
-
-def draw(surface: pygame.Surface, arm: ArmSolver2, mouse_pos: tuple):
-    arm.targetToAngles(invertCoord(mouse_pos))
+def draw(surface: pygame.Surface, arm: ArmSolver2, mousePos: tuple):
+    
+    arm.targetToAngles(invertCoord(mousePos))
 
     surface.fill((255, 255, 255))
 
     pygame.draw.circle(window, (0, 0, 255), (arm.joints[0][0], arm.joints[0][1]), 5)
 
     for jointIdx in range(2):
-        pygame.draw.line(window, (0, 255, 0), invertCoord((arm.joints[jointIdx][0], arm.joints[jointIdx][1])),
+        
+        pygame.draw.line(window, (0, 255, 0), 
+                         invertCoord((arm.joints[jointIdx][0], arm.joints[jointIdx][1])),
                          invertCoord((arm.joints[jointIdx + 1][0], arm.joints[jointIdx + 1][1])), 5)
+        
         pygame.draw.circle(window, (0, 0, 255), invertCoord((arm.joints[jointIdx][0], arm.joints[jointIdx][1])), 5)
 
     pygame.draw.circle(window, (0, 0, 255), invertCoord((arm.joints[2][0], arm.joints[2][1])), 5)
-    pygame.draw.circle(window, (255, 0, 0), (mouse_pos[0], mouse_pos[1]), 3)
+    pygame.draw.circle(window, (255, 0, 0), (mousePos[0], mousePos[1]), 3)
 
     pygame.display.flip()
 
 
-arm = ArmSolver2(0, 0, 250, 250)
+arm = ArmSolver2(0, 0, 150, 200)
 
 draw(window, arm, (0, 0))
 
@@ -106,5 +109,6 @@ while running:
         elif event.type == pygame.KEYDOWN:
 
             if event.key == pygame.K_e:
+                
                 arm.elbowUp = not arm.elbowUp
                 draw(window, arm, pygame.mouse.get_pos())
