@@ -43,7 +43,7 @@ class ArmSolver2():
         if r <= self.reach:
 
             alpha = math.acos(((self.length1 ** 2) + (self.length2 ** 2) - (r ** 2)) / (2 * self.length1 * self.length2))
-            theta2 = -(math.radians(180) - alpha) if self.elbowUp else math.radians(180) - alpha
+            theta2 = (math.radians(180) - alpha) if self.elbowUp else math.radians(180) - alpha
 
             psi = math.atan2(self.length2 * math.sin(theta2), (self.length1 + (self.length2 * math.cos(theta2))))
             beta = math.atan2(target[1], target[0])
@@ -62,13 +62,13 @@ class ArmSolver2():
 
                     self.joints = [[self.baseX, self.baseY],
                                    [self.baseX + self.length1 * math.cos(theta1), self.baseY + self.length1 * math.sin(theta1)],
-                                   [self.baseX + self.length1 * math.cos(theta1) + self.length2 * math.cos(theta1 + theta2), self.baseY + self.length1 * math.sin(theta1) + self.length2 * math.sin(theta1 + theta2)]]
+                                   [self.baseX + r * math.cos(beta), self.baseY + r * math.sin(beta)]]
 
                 if not self.elbowUp:
 
                     self.joints = [[self.baseX, self.baseY],
                                    [self.baseX + self.length1 * math.cos(theta1), self.baseY + self.length1 * math.sin(theta1)],
-                                   [self.baseX + self.length1 * math.cos(theta1) + self.length2 * math.cos(theta1 + theta2), self.baseY + self.length1 * math.sin(theta1) + self.length2 * math.sin(theta1 + theta2)]]
+                                   [self.baseX + r * math.cos(beta), self.baseY + r * math.sin(beta)]]
     
 def draw(surface: pygame.Surface, arm: ArmSolver2, mousePos: tuple):
 
@@ -109,3 +109,4 @@ while running:
             if event.key == pygame.K_e:
 
                 arm.elbowUp = not arm.elbowUp
+                draw(window, arm, pygame.mouse.get_pos())
