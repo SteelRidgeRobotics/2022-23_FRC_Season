@@ -93,17 +93,21 @@ def draw(surface: pygame.Surface, arm: ArmSolver2, target: tuple):
 
     pygame.draw.circle(surface, (255, 255, 255), invertCoord((arm.baseX, arm.baseY)), arm.minReach - 2)
 
+    topleft = invertCoord((arm.baseX - 150, arm.baseY))
+    robot = pygame.Rect(topleft[0], topleft[1], 200, arm.baseY)
+    pygame.draw.rect(surface, (0, 0, 0), robot)
+
     for jointIdx in range(2):
         
-        pygame.draw.line(window, (0, 255, 0), 
+        pygame.draw.line(surface, (0, 255, 0), 
                          invertCoord((arm.joints[jointIdx][0], arm.joints[jointIdx][1])),
                          invertCoord((arm.joints[jointIdx + 1][0], arm.joints[jointIdx + 1][1])), 5)
         
-        pygame.draw.circle(window, (0, 0, 255), invertCoord((arm.joints[jointIdx][0], arm.joints[jointIdx][1])), 5)
+        pygame.draw.circle(surface, (0, 0, 255), invertCoord((arm.joints[jointIdx][0], arm.joints[jointIdx][1])), 5)
 
-    pygame.draw.circle(window, (0, 0, 255), invertCoord((arm.joints[2][0], arm.joints[2][1])), 5)
+    pygame.draw.circle(surface, (0, 0, 255), invertCoord((arm.joints[2][0], arm.joints[2][1])), 5)
 
-    pygame.draw.circle(window, (100, 100, 255), (targetX, targetY), 5)
+    pygame.draw.circle(surface, (100, 100, 255), (targetX, targetY), 5)
 
     invertX, invertY = invertCoord((targetX, targetY))
 
@@ -113,17 +117,17 @@ def draw(surface: pygame.Surface, arm: ArmSolver2, target: tuple):
 
     pygame.display.flip()
 
-arm = ArmSolver2(100, 40, 200, 200)
+armSolver = ArmSolver2(300, 30, 250, 150)
 
-targetX, targetY = invertCoord((arm.joints[2][0], arm.joints[2][1]))
+targetX, targetY = invertCoord((armSolver.joints[2][0], armSolver.joints[2][1]))
 
-draw(window, arm, (0, 0))
+draw(window, armSolver, (0, 0))
 
 running = True
 
 while running:
 
-    draw(window, arm, (targetX, targetY))
+    draw(window, armSolver, (targetX, targetY))
 
     for event in pygame.event.get():
 
@@ -135,23 +139,33 @@ while running:
 
             if event.key == pygame.K_e:
                 
-                arm.elbowUp = not arm.elbowUp
-                draw(window, arm, (targetX, targetY))
+                armSolver.elbowUp = not armSolver.elbowUp
+                draw(window, armSolver, (targetX, targetY))
 
     keys = pygame.key.get_pressed()
     
     if keys[pygame.K_a] or keys[pygame.K_LEFT]:
 
-        targetX -= 0.2
+        targetX -= 0.3
 
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
 
-        targetX += 0.2
+        targetX += 0.3
 
     if keys[pygame.K_w] or keys[pygame.K_UP]:
 
-        targetY -= 0.2
+        targetY -= 0.3
 
     if keys[pygame.K_s] or keys[pygame.K_DOWN]:
 
-        targetY += 0.2
+        targetY += 0.3
+
+    if keys[pygame.K_i]:
+
+        armSolver.baseX -= 0.3
+        targetX -= 0.3
+
+    if keys[pygame.K_p]:
+
+        armSolver.baseX += 0.3
+        targetX += 0.3
