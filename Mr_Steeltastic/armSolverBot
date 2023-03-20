@@ -12,16 +12,19 @@ class ArmSolver2:
         self.length1 = length1
         self.length2 = length2
 
-        self.reach = length1 + length2
+        self.minReach = abs(length1 - length2)
+        self.maxReach = length1 + length2
 
         self.baseX = baseX
         self.baseY = baseY
 
     def targetToAngles(self, target: tuple):
 
+        target = (target[0] - self.baseX, target[1] - self.baseY)
+
         r = math.sqrt(((target[0] ** 2) + (target[1] ** 2)))
 
-        if r <= self.reach and r >= self.length1 and r >= self.length2:
+        if self.minReach <= r <= self.maxReach:
 
             alpha = math.acos(((self.length1 ** 2) + (self.length2 ** 2) - (r ** 2)) / (2 * self.length1 * self.length2))
             theta2 = (math.radians(180) - alpha)
@@ -37,5 +40,5 @@ class ArmSolver2:
 
 
 
-arm = ArmSolver2(0, 0, 250, 250)
-print(arm.targetToAngles((394, 50)))
+arm = ArmSolver2(0, 0, 300, 300)
+print(arm.targetToAngles((350, 350)))
