@@ -30,6 +30,8 @@ class PidTest(commands2.SubsystemBase):
         # create motors as list
         self.motors = [self.motor0, self.motor1, self.motor2, self.motor3, self.motor4, self.motor5
                       self.motor6, self.motor7]
+        
+        self.testingMotor = self.motors[0]
 
         # Config default and sensor positions all motors in the list
         for i in range(len(self.motors)):
@@ -47,8 +49,7 @@ class PidTest(commands2.SubsystemBase):
     def putToSmartDashboard(self) -> None:
         """This method puts values to the smartdashboard."""
         
-        motor = self.motors[]
-        # self.motor = ctre.TalonFX(SmartDashboard.getNumber("Motor Port", 0))
+        self.testingMotor = self.motors[SmartDashboard.getNumber("Motor Port")]
 
         # create motor names for smartdashboard & show whether motors are inverted
         for self.motor in self.motors:
@@ -88,17 +89,13 @@ class PidTest(commands2.SubsystemBase):
     def putMotorValuesToSmartDashboard(self) -> None:
         """This method puts motor values to the smartdashboard."""
 
-        self.motors = [self.motor1, self.motor2, self.motor3, self.motor4]
-
-        self.motor = [ctre.TalonFX, ctre.TalonFX, ctre.TalonFX, ctre.TalonFX]
+        self.testingMotor = self.motors[SmartDashboard.getNumber("Motor Port")]
 
         # create names for smartdashboard & targets/errors
-        for self.motor in self.motors:
-            self.motorName = "Motor " + str(self.motor.getDeviceID()) + " "
 
-            SmartDashboard.putNumber(self.motorName + "target", self.motor.getClosedLoopTarget())
-            SmartDashboard.putNumber(self.motorName + "velocity", self.motor.getSelectedSensorVelocity())
-            SmartDashboard.putNumber(self.motorName + "error", self.motor.getClosedLoopError())
+        SmartDashboard.putNumber(self.motorName + "target", self.testingMotor.getClosedLoopTarget())
+        SmartDashboard.putNumber(self.motorName + "velocity", self.testingMotor.getSelectedSensorVelocity())
+        SmartDashboard.putNumber(self.motorName + "error", self.testingMotor.getClosedLoopError())
 
     def periodic(self) -> None:
         """This method runs periodically to check whether to flush or not and continues to update the smartdashboard."""
