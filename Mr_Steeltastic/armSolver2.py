@@ -1,6 +1,4 @@
 import math
-from operator import invert
-from cairo import Surface
 import pygame
 
 pygame.init()
@@ -23,7 +21,7 @@ def debugPrint(title, value):
     
     print(f"{title}: {value}")
 
-def label(screen: Surface, xy: tuple, text: str, color: tuple):
+def label(screen: pygame.Surface, xy: tuple, text: str, color: tuple):
 
         screen.blit(font.render(text, False, color), xy)
 
