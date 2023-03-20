@@ -28,10 +28,11 @@ class PidTest(commands2.SubsystemBase):
         self.motor7.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, ktimeoutMs)
 
         # create motors as list
-        self.motor = self.motor0
+        self.motors = [self.motor0, self.motor1, self.motor2, self.motor3, self.motor4, self.motor5
+                      self.motor6, self.motor7]
 
         # Config default and sensor positions all motors in the list
-        for self.motor in self.motors:
+        for i in range(len(self.motors)):
             self.motor.configFactoryDefault()
 
             self.motor.setSelectedSensorPosition(0.0)
@@ -41,12 +42,13 @@ class PidTest(commands2.SubsystemBase):
         self.flush()
 
     def initSmartDashboard(self) -> None:
-        SmartDashboard.putNumber()
+        SmartDashboard.putNumber("Motor Port",0)
 
     def putToSmartDashboard(self) -> None:
         """This method puts values to the smartdashboard."""
-
-        self.motor = ctre.TalonFX(SmartDashboard.getNumber("Motor Port", 0))
+        
+        motor = self.motors[]
+        # self.motor = ctre.TalonFX(SmartDashboard.getNumber("Motor Port", 0))
 
         # create motor names for smartdashboard & show whether motors are inverted
         for self.motor in self.motors:
