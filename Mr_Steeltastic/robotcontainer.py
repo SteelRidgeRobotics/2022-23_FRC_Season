@@ -10,6 +10,7 @@ from commands.stationCorrectionMobility import StationCorrection
 from commands.timedDrive import TimedDrive
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
+from commands.joystickControlArm import JoystickControlArm
 
 
 class RobotContainer:
@@ -39,7 +40,7 @@ class RobotContainer:
 
         self.arm.setDefaultCommand(KeepAtZero(self.arm))
 
-        # self.arm.setDefaultCommand(JoystickControlArm(self.arm, lambda: self.functionsController.getLeftBumper(), lambda: self.functionsController.getRightBumper(), lambda: self.functionsController.getLeftY(), lambda: -self.functionsController.getRightY(), lambda: self.functionsController.getRightTriggerAxis(), lambda: self.functionsController.getLeftTriggerAxis(), lambda: self.functionsController.getXButton(), lambda: self.functionsController.getYButton()))
+        self.arm.setDefaultCommand(JoystickControlArm(self.arm, lambda: self.functionsController.getLeftBumper(), lambda: self.functionsController.getRightBumper(), lambda: self.functionsController.getLeftY(), lambda: -self.functionsController.getRightY(), lambda: self.functionsController.getRightTriggerAxis(), lambda: self.functionsController.getLeftTriggerAxis(), lambda: self.functionsController.getXButton(), lambda: self.functionsController.getYButton()))
 
         # JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(PoseArm(self.arm, [0, 0, 0, 0, 0]))
 
