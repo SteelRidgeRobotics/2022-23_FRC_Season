@@ -69,4 +69,4 @@ class ArmSolverBot:
         return (None, None)
 
 arm = ArmSolverBot(0, 0, 22, 22)
-print(arm.targetToAngles((44 * math.cos(math.radians(45)), 44 * math.sin(math.radians(45)))))
+print(arm.targetToAngles((17, 14)))
