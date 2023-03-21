@@ -10,5 +10,12 @@ class GetPIDValues(commands2.CommandBase):
 
         self.addRequirements([self.pid])
 
+    
     def execute(self) -> None:
-        SmartDashboard.getNumber("", )
+        self.pid.periodic()
+    
+    def end(self, interrupted: bool) -> None:
+        print()
+        
+    def isFinished(self) -> bool:
+        return False

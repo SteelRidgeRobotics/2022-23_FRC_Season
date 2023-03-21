@@ -1,6 +1,7 @@
 import commands2
 import ctre
 from wpilib import SmartDashboard
+from constants import *
 
 
 class PidTest(commands2.SubsystemBase):
@@ -28,16 +29,15 @@ class PidTest(commands2.SubsystemBase):
         self.motor7.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, ktimeoutMs)
 
         # create motors as list
-        self.motors = [self.motor0, self.motor1, self.motor2, self.motor3, self.motor4, self.motor5
-                      self.motor6, self.motor7]
+        self.motors = [self.motor0, self.motor1, self.motor2, self.motor3, self.motor4, self.motor5, self.motor6, self.motor7]
         
         self.testingMotor = self.motors[0]
 
         # Config default and sensor positions all motors in the list
         for i in range(len(self.motors)):
-            self.motor.configFactoryDefault()
+            self.motors[i].configFactoryDefault()
 
-            self.motor.setSelectedSensorPosition(0.0)
+            self.motors[i].setSelectedSensorPosition(0.0)
 
         self.putToSmartDashboard()
 
@@ -49,53 +49,52 @@ class PidTest(commands2.SubsystemBase):
     def putToSmartDashboard(self) -> None:
         """This method puts values to the smartdashboard."""
         
-        self.testingMotor = self.motors[SmartDashboard.getNumber("Motor Port")]
+        self.testingMotor = self.motors[int(SmartDashboard.getNumber("Motor Port", 0))]
 
-        # create motor names for smartdashboard & show whether motors are inverted
-        for self.motor in self.motors:
-            self.motorName = "Motor " + str(self.motor.getDeviceID()) + " "
-
-            # SmartDashboard.putBoolean(self.motorName + "inverted", self.motor.getInverted())
-            SmartDashboard.putNumber(str(self.motorName + "Port"), self.motor.getDeviceID())
         # Put boolean to "reset" values, PIDF values & a velocity setpoint
         SmartDashboard.putBoolean("Flush", False)
         SmartDashboard.putNumber("kP", 0)
         SmartDashboard.putNumber("kI", 0)
         SmartDashboard.putNumber("kD", 0)
         SmartDashboard.putNumber("kF", 0)
+
+        SmartDashboard.putNumber("Cruise Velocity", 0)
+        SmartDashboard.putNumber("Cruise Accel", 0)
+
         SmartDashboard.putNumber("Setpoint", 0)
+        SmartDashboard.putBoolean("Inverted", False)
 
     def flush(self) -> None:
-        """This method resets values on the smartdashboard."""
-
-        self.motors = [self.motor1, self.motor2, self.motor3, self.motor4]
-
-        self.motor = [ctre.TalonFX, ctre.TalonFX, ctre.TalonFX, ctre.TalonFX]
+        self.testingMotor = self.motors[int(SmartDashboard.getNumber("Motor Port", 0))]
 
         # create names for smartdashboard, sets Talons to velocity control mode for tuning and prints when values are updated to the stream
-        for self.motor in self.motors:
-            self.motorName = "Motor " + str(self.motor.getDeviceID()) + " "
+        self.testingMotor.setInverted(SmartDashboard.getBoolean("Inverted", False))
 
-            self.motor.config_kF(0, SmartDashboard.getNumber("kF", 0), ktimeoutMs)
-            self.motor.config_kP(0, SmartDashboard.getNumber("kP", 0), ktimeoutMs)
-            self.motor.config_kI(0, SmartDashboard.getNumber("kI", 0), ktimeoutMs)
-            self.motor.config_kD(0, SmartDashboard.getNumber("kD", 0), ktimeoutMs)
-            self.motor.set(ctre.ControlMode.Velocity, SmartDashboard.getNumber("Setpoint", 0))
+        self.testingMotor.config_kF(0, SmartDashboard.getNumber("kF", 0), ktimeoutMs)
+        self.testingMotor.config_kP(0, SmartDashboard.getNumber("kP", 0), ktimeoutMs)
+        self.testingMotor.config_kI(0, SmartDashboard.getNumber("kI", 0), ktimeoutMs)
+        self.testingMotor.config_kD(0, SmartDashboard.getNumber("kD", 0), ktimeoutMs)
 
-            print("Updated " + str(self.motor.getDeviceID()))
+    
+        self.testingMotor.configMotionCruiseVelocity(SmartDashboard.getNumber("Cruise Velocity", 0), ktimeoutMs)
+        self.testingMotor.configMotionAcceleration(SmartDashboard.getNumber("Cruise Accel", 0), ktimeoutMs)
+
+        self.testingMotor.set(ctre.TalonFXControlMode.MotionMagic, SmartDashboard.getNumber("Setpoint", 0))
 
         SmartDashboard.putBoolean("Flush", False)
 
     def putMotorValuesToSmartDashboard(self) -> None:
         """This method puts motor values to the smartdashboard."""
 
-        self.testingMotor = self.motors[SmartDashboard.getNumber("Motor Port")]
+        self.testingMotor = self.motors[int(SmartDashboard.getNumber("Motor Port", 0))]
 
         # create names for smartdashboard & targets/errors
+        SmartDashboard.putNumber("Motor Port", self.testingMotor.getDeviceID())
+        SmartDashboard.putBoolean("Flush", False)
 
-        SmartDashboard.putNumber(self.motorName + "target", self.testingMotor.getClosedLoopTarget())
-        SmartDashboard.putNumber(self.motorName + "velocity", self.testingMotor.getSelectedSensorVelocity())
-        SmartDashboard.putNumber(self.motorName + "error", self.testingMotor.getClosedLoopError())
+        ctre.TalonFX.getClosedLoopError
+
+        SmartDashboard.putNumber("Closed Loop Error", self.testingMotor.getClosedLoopError())
 
     def periodic(self) -> None:
         """This method runs periodically to check whether to flush or not and continues to update the smartdashboard."""
