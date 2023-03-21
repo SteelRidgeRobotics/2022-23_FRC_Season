@@ -4,7 +4,7 @@ import pygame
 # set up pygame
 pygame.init()
 
-windowSize = 600
+windowSize = 800
 window = pygame.display.set_mode((windowSize, windowSize))
 
 pygame.display.set_caption("Robot Arm Inverse Kinematics")
@@ -155,7 +155,7 @@ def draw(surface: pygame.Surface, arm: ArmSolver2, target: tuple):
     pygame.display.flip()
 
 # arm with baseX, baseY, length1, and length2
-armSolver = ArmSolver2(300, 30, 250, 150)
+armSolver = ArmSolver2(300, 30, 220, 220)
 
 # initialize targetX and targetY
 targetX, targetY = invertCoord((armSolver.joints[2][0], armSolver.joints[2][1]))
@@ -195,31 +195,31 @@ while running:
     # if a or LEFT is held, move targetX left
     if keys[pygame.K_a] or keys[pygame.K_LEFT]:
 
-        targetX -= 0.3
+        targetX -= 0.2
     
     # if d or RIGHT is held, move targetX right
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
 
-        targetX += 0.3
+        targetX += 0.2
     
     # if w or UP is held, move targetY up
     if keys[pygame.K_w] or keys[pygame.K_UP]:
 
-        targetY -= 0.3
+        targetY -= 0.2
     
     # if s or DOWN is held, move targetY down
     if keys[pygame.K_s] or keys[pygame.K_DOWN]:
 
-        targetY += 0.3
+        targetY += 0.2
     
     # if i is held move robot left
     if keys[pygame.K_i]:
 
-        armSolver.baseX -= 0.3
-        targetX -= 0.3
+        armSolver.baseX -= 0.2
+        targetX -= 0.2
     
     # if p is held move robot right
     if keys[pygame.K_p]:
 
-        armSolver.baseX += 0.3
-        targetX += 0.3
+        armSolver.baseX += 0.2
+        targetX += 0.2
