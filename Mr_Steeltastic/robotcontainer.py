@@ -11,6 +11,7 @@ from commands.timedDrive import TimedDrive
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 from commands.joystickControlArm import JoystickControlArm
+from commands.setPositions import SetPositions
 
 
 class RobotContainer:
@@ -38,16 +39,19 @@ class RobotContainer:
                                                    lambda: self.driverController.getRightBumper(),
                                                    lambda: self.driverController.getAButtonReleased()))
 
-        self.arm.setDefaultCommand(KeepAtZero(self.arm))
+        # self.arm.setDefaultCommand(KeepAtZero(self.arm))
 
-        self.arm.setDefaultCommand(JoystickControlArm(self.arm, lambda: self.functionsController.getLeftBumper(), lambda: self.functionsController.getRightBumper(), lambda: self.functionsController.getLeftY(), lambda: -self.functionsController.getRightY(), lambda: self.functionsController.getRightTriggerAxis(), lambda: self.functionsController.getLeftTriggerAxis(), lambda: self.functionsController.getXButton(), lambda: self.functionsController.getYButton()))
+        #self.arm.setDefaultCommand(JoystickControlArm(self.arm, lambda: self.functionsController.getLeftBumper(), lambda: self.functionsController.getRightBumper(), lambda: self.functionsController.getLeftY(), lambda: -self.functionsController.getRightY(), lambda: self.functionsController.getRightTriggerAxis(), lambda: self.functionsController.getLeftTriggerAxis(), lambda: self.functionsController.getXButton(), lambda: self.functionsController.getYButton()))
 
         # JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(PoseArm(self.arm, [0, 0, 0, 0, 0]))
 
         # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
         # JoystickButton(self.driverController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm, lambda: self.driverController.getAButton()))
 
-        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
+        #JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
+
+        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(SetPositions(self.arm))
+
         # JoystickButton(self.driverController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm))
 
     def getAutonomousCommand(self) -> commands2.CommandBase:

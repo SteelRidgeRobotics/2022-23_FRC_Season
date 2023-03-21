@@ -35,13 +35,13 @@ class JoystickControlArm(commands2.CommandBase):
         if self.rightBumper():
             rvalue = -1
 
-        self.arm.manualbaseMotor(0.5 * self.base())
-        self.arm.manualmidMotor(0.5 * self.mid())
-        self.arm.manualtopMotor(lvalue * 0.5 * self.top())
-        self.arm.manualgrabberMotor(rvalue * 0.2 * self.grabber())
+        self.arm.manualBaseMotor(0.5 * self.base())
+        self.arm.manualMidMotor(0.5 * self.mid())
+        self.arm.manualTopMotor(lvalue * 0.5 * self.top())
+        self.arm.manualGrabberMotor(rvalue * 0.2 * self.grabber())
 
     def end(self, interrupted: bool):
-        self.arm.holdAtPercentage(0, 0, 0, 0)
+        self.arm.holdAtPercentage(0, 0, 0)
 
     def isFinished(self) -> bool:
         return False
