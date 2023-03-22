@@ -28,7 +28,7 @@ class ArmMotor:
         self.holdPercentage = holdPercentage
         self.gearRatio = gearRatio
         
-        self.motor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.motor.setNeutralMode(ctre.NeutralMode.Coast)
         
         #self.motor.configForwardLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, motorID, 10)
         #self.motor.configReverseLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, motorID, 10)
@@ -51,6 +51,13 @@ class ArmMotor:
         
         self.motor.set(ctre.TalonFXControlMode.MotionMagic, 0)
   
+    def moveToAngle(self, angle):
+        
+        feedForward = self.holdPercentage * numpy.cos(math.radians(self.getCurrentAngle()))
+        self.motor.set(ctre.TalonFXControlMode.MotionMagic, 
+                       (angle * 2048/360) * self.gearRatio, 
+                       ctre.DemandType.ArbitraryFeedForward, feedForward)
+
     def moveToPos(self, pos, aRBFF=True):
         if aRBFF:
             feed_forward = self.holdPercentage * numpy.cos(math.radians(self.getCurrentAngle()))
@@ -69,11 +76,25 @@ class Arm(commands2.SubsystemBase):
         
         super().__init__()
 
-        self.cycleList = [[0, 0, 0], 
-                          [-11244, -148657, 3608],
-                         ]
-
-        self.cycleIndex = 0
+        # self.baseMotor = ArmMotor(constants.ARMBASEPORT, constants.BASEENCODERPORT, constants.ARMBASEHOLDPERCENT, constants.ARMBASEF, 
+        #                           constants.ARMBASEP, constants.ARMBASED, 
+        #                           constants.ARMBASECRUISEVEL, constants.ARMBASEACCEL, 
+        #                           constants.BASERATIO, 0)
+        
+        # self.midMotor = ArmMotor(constants.ARMMIDPORT, constants.MIDENCODERPORT, constants.ARMMIDHOLDPERCENT, constants.ARMMIDF, 
+        #                          constants.ARMMIDP, constants.ARMMIDD, 
+        #                          constants.ARMMIDCRUISEVEL, constants.ARMMIDACCEL, 
+        #                          constants.MIDDLERATIO, 0)
+        
+        # self.topMotor = ArmMotor(constants.ARMTOPPORT, constants.TOPENCODERPORT, constants.ARMTOPHOLDPERCENT, constants.ARMTOPF, 
+        #                          constants.ARMTOPP, constants.ARMTOPD, 
+        #                          constants.ARMTOPCRUISEVEL, constants.ARMTOPACCEL, 
+        #                          constants.TOPRATIO, 0)
+        
+        # self.grabberMotor = ArmMotor(constants.ARMGRABBERPORT, constants.GRABBERENCODERPORT, constants.ARMGRABBERHOLDPERCENT, constants.ARMGRABBERF, 
+        #                              constants.ARMGRABBERP, constants.ARMGRABBERD, 
+        #                              constants.ARMGRABBERCRUISEVEL, constants.ARMGRABBERACCEL, 
+        #                              constants.GRABBERRATIO, 0)
 
         self.baseMotor = ArmMotor(constants.ARMBASEPORT, constants.ARMBASEHOLDPERCENT, constants.ARMBASEF, 
                                   constants.ARMBASEP, constants.ARMBASED, 
@@ -106,13 +127,23 @@ class Arm(commands2.SubsystemBase):
         self.midMotor.keepAtZero()
         self.topMotor.keepAtZero()
         self.grabberMotor.keepAtZero()
+        
+    def moveArmToPose(self, base: float, mid: float, top: float, grabber: float):
+        """
+        Move the arm to a specific pose.
+        Requires angles for the base, middle, top, grabber, and wrist motors.
+        """
+
+        self.baseMotor.moveToAngle(base)
+        self.midMotor.moveToAngle(mid)
+        self.topMotor.moveToAngle(top)
+        self.grabberMotor.moveToAngle(grabber)
 
     def armToPos(self, base: int, mid: int, top: int, grabber: int):
-        
-        self.baseMotor.moveToPos(base * constants.BASERATIO, aRBFF=False)
-        self.midMotor.moveToPos(mid * constants.MIDDLERATIO)
-        self.topMotor.moveToPos(top * constants.TOPRATIO)
-        self.grabberMotor.moveToPos(grabber * constants.GRABBERRATIO)
+        self.baseMotor.moveToPos(base, aRBFF=False)
+        self.midMotor.moveToPos(mid)
+        self.topMotor.moveToPos(top)
+        self.grabberMotor.moveToPos(grabber)
 
     def holdAtPercentage(self, base: float, mid: float, top: float):
         

@@ -1,25 +1,31 @@
 import commands2
-import constants
+import ctre
 from subsystems.arm import Arm
+from armSolverBot import ArmSolverBot
 
 class MoveArm(commands2.CommandBase):
     
-    def __init__(self, arm: Arm):
+    def __init__(self, arm: Arm, targetX, targetY):
 
         super().__init__()
 
         self.arm = arm
 
+        self.targetX = targetX
+        self.targetY = targetY
+
+        self.solver = ArmSolverBot(0, 0, 22, 22)
+
         self.addRequirements([self.arm])
 
     def execute(self):
         
-        neededPoses = self.arm.cycleList[self.arm.cycleIndex]
-        self.arm.armToPos(neededPoses[0], neededPoses[1], neededPoses[2], 0)
+        angles = self.solver.targetToAngles((self.targetX(), self.targetY()))
+        self.arm.armToPos(angles[0] * (2048 / 360), angles[1] * (2048 / 360), 0, 0)
 
     def end(self):
 
-        pass
+        self.arm.armToPos(self.arm.baseMotor.getCurrentAngle() * (2048 / 360), self.arm.midMotor.getCurrentAngle() * (2048 / 360), 0, 0)
 
     def isFinished(self):
 
