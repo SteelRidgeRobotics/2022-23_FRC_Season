@@ -17,7 +17,7 @@ class MoveArm(commands2.CommandBase):
         
         neededPoses = self.arm.cycleList
 
-    def end(self):
+    def end(self, interrupted: bool):
         pass
     def isFinished(self):
 

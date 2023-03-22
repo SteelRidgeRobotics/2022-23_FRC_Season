@@ -14,6 +14,9 @@ from commands.joystickControlArm import JoystickControlArm
 from commands.setPositions import SetPositions
 from commands.changePosition import ChangePosition
 from commands.moveArm import MoveArm
+from commands.setGrabber import SetGrabber
+from commands.moveArmToPose import MoveArmToPose
+from commands.moveArmup import MoveArmUp
 
 
 class RobotContainer:
@@ -54,11 +57,13 @@ class RobotContainer:
 
         #JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
 
+        # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(MoveArmUp(self.arm))
+
         JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(SetPositions(self.arm))
 
-        # JoystickButton(self.driverController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm))
-        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenReleased(ChangePosition(self.arm, True))
-        JoystickButton(self.driverController, wpilib.XboxController.Button.kX).whenReleased(ChangePosition(self.arm, False))
+        JoystickButton(self.driverController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm))
+        # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenReleased(ChangePosition(self.arm, True))
+        # JoystickButton(self.driverController, wpilib.XboxController.Button.kX).whenReleased(ChangePosition(self.arm, False))
 
     def getAutonomousCommand(self) -> commands2.CommandBase:
         

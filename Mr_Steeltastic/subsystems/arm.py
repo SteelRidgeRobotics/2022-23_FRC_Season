@@ -98,6 +98,8 @@ class Arm(commands2.SubsystemBase):
 
         self.grabberOpen = False
         self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
+
+        self.moved = False
         
     def keepArmsAtZero(self):
 
@@ -117,6 +119,12 @@ class Arm(commands2.SubsystemBase):
         self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, base)
         self.midMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, mid)
         self.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, top)
+
+    def holdAtPos(self):
+        self.baseMotor.moveToPos(self.baseMotor.motor.getSelectedSensorPosition(), aRBFF=False)
+        self.midMotor.moveToPos(self.midMotor.motor.getSelectedSensorPosition())
+        self.topMotor.moveToPos(self.topMotor.motor.getSelectedSensorPosition())
+        self.grabberMotor.moveToPos(self.grabberMotor.motor.getSelectedSensorPosition())
 
     def setGrabber(self, bool: bool): # Soon (TM)
         """
@@ -139,6 +147,14 @@ class Arm(commands2.SubsystemBase):
         else:
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
         self.grabberOpen = not self.grabberOpen
+
+    def toggleArm(self) -> None: # This doesn't work oopsie
+        if self.moved:
+            self.armToPos(0, (-40 * (2048/360)), 0, 0)
+            self.moved = False
+        else:
+            self.armToPos(-11244/constants.BASERATIO, -148657/constants.MIDDLERATIO, 3608/constants.TOPRATIO, 0) # Cube place (Mid)
+            self.moved = True
 
     def getGrabberState(self):
 
