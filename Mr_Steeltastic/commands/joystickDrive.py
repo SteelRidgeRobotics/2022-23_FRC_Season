@@ -34,8 +34,8 @@ class JoystickDrive(commands2.CommandBase):
             self.placeMode = not self.placeMode
 
         if self.placeMode:
-            self.left *= 0.1
-            self.right *= 0.1
+            self.left *= 0.17
+            self.right *= 0.17
 
         if self.leftBumper or self.rightBumper:
             self.left *= 0.5

@@ -4,7 +4,7 @@ from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 
 
-class StationCorrection(commands2.CommandBase):
+class StationCorrectionMobility(commands2.CommandBase):
 
     def __init__(self, train: Drivetrain, arm: Arm):
 
@@ -43,16 +43,16 @@ class StationCorrection(commands2.CommandBase):
         # wpilib.SmartDashboard.putNumber("Time", wpilib.Timer.getFPGATimestamp() - self.startTime)
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
-        if self.train.gyro.getAngle() <= 20 and not self.train.onChargeStation and not self.train.offChargeStation:
+        if self.train.gyro.getAngle() <= 12.5 and not self.train.onChargeStation and not self.train.offChargeStation:
 
             self.train.arcadeDrive(-0.35, 0.0, True)
 
             wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
 
-        elif self.timer.get() <= 3.5:
+        elif self.timer.get() <= 4:
 
             self.train.onChargeStation = True
-            self.train.arcadeDrive(-0.25, 0.0, True)
+            self.train.arcadeDrive(-0.3, 0.0, True)
 
             wpilib.SmartDashboard.putString("Auto Status", "1st On CS")
 
@@ -65,7 +65,7 @@ class StationCorrection(commands2.CommandBase):
 
         elif self.train.gyro.getAngle() - self.drift >= -7.5 and not self.train.onChargeStation2:
 
-            self.train.arcadeDrive(0.2, 0.0, True)
+            self.train.arcadeDrive(0.35, 0.0, True)
 
             wpilib.SmartDashboard.putString("Auto Status", "2nd Driving to Station")
 
@@ -82,7 +82,7 @@ class StationCorrection(commands2.CommandBase):
 
             if abs(power) <= 0.5:
 
-                self.train.arcadeDrive(power, 0.0)
+                self.train.arcadeDrive(power, 0.0, True)
 
                 wpilib.SmartDashboard.putBoolean("Power Accepted?", True)
 
@@ -103,7 +103,7 @@ class StationCorrection(commands2.CommandBase):
 
     def end(self, interrupted: bool):
 
-        self.train.arcadeDrive(0.0, 0.0)
+        self.train.arcadeDrive(0.0, 0.0, False)
         wpilib.SmartDashboard.putBoolean("Running", False)
 
     def isFinished(self):
