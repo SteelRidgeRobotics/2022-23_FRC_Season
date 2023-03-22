@@ -11,12 +11,14 @@ from commands.timedDrive import TimedDrive
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 from commands.joystickControlArm import JoystickControlArm
-from commands.setPositions import SetPositions
+from commands.changePosition import ChangePosition
+from commands.moveArm import MoveArm
 
 
 class RobotContainer:
 
     def __init__(self):
+        
         self.driverController = wpilib.XboxController(constants.DRIVERCONTROLLERPORT)
         self.functionsController = wpilib.XboxController(constants.FUNCTIONSCONTROLLERPORT)
 
@@ -31,13 +33,15 @@ class RobotContainer:
         self.chooser.setDefaultOption("Auto Charging Station", stationCorrection)
         self.chooser.addOption("Timed Drive", TimedDrive(self.train))
 
-        wpilib.SmartDashboard.putData("Autonomoues", self.chooser)
+        wpilib.SmartDashboard.putData("Autonomoose", self.chooser)
 
         self.train.setDefaultCommand(JoystickDrive(self.train, lambda: self.driverController.getLeftY(),
                                                    lambda: self.driverController.getRightX(),
                                                    lambda: self.driverController.getLeftBumper(),
                                                    lambda: self.driverController.getRightBumper(),
                                                    lambda: self.driverController.getAButtonReleased()))
+
+        self.arm.setDefaultCommand(MoveArm(self.arm))
 
         # self.arm.setDefaultCommand(KeepAtZero(self.arm))
 
@@ -50,9 +54,11 @@ class RobotContainer:
 
         #JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
 
-        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(SetPositions(self.arm))
+        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenReleased(ChangePosition(self.arm, True))
+        JoystickButton(self.driverController, wpilib.XboxController.Button.kX).whenReleased(ChangePosition(self.arm, False))
 
         # JoystickButton(self.driverController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm))
 
     def getAutonomousCommand(self) -> commands2.CommandBase:
+        
         return self.chooser.getSelected()
