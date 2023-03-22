@@ -6,17 +6,20 @@ import constants
 from commands.armTest import ArmTest
 from commands.joystickDrive import JoystickDrive
 from commands.keepAtZero import KeepAtZero
-from commands.stationCorrectionMobility import StationCorrection
+from commands.stationCorrectionMobility import StationCorrectionMobility
 from commands.timedDrive import TimedDrive
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 from commands.joystickControlArm import JoystickControlArm
 from commands.setPositions import SetPositions
+from commands.changePosition import ChangePosition
+from commands.moveArm import MoveArm
 
 
 class RobotContainer:
 
     def __init__(self):
+
         self.driverController = wpilib.XboxController(constants.DRIVERCONTROLLERPORT)
         self.functionsController = wpilib.XboxController(constants.FUNCTIONSCONTROLLERPORT)
 
@@ -26,12 +29,12 @@ class RobotContainer:
 
         self.chooser = wpilib.SendableChooser()
 
-        stationCorrection = StationCorrection(self.train, self.arm)
+        stationCorrection = StationCorrectionMobility(self.train, self.arm)
 
         self.chooser.setDefaultOption("Auto Charging Station", stationCorrection)
         self.chooser.addOption("Timed Drive", TimedDrive(self.train))
 
-        wpilib.SmartDashboard.putData("Autonomoues", self.chooser)
+        wpilib.SmartDashboard.putData("Autonomoose", self.chooser)
 
         self.train.setDefaultCommand(JoystickDrive(self.train, lambda: self.driverController.getLeftY(),
                                                    lambda: self.driverController.getRightX(),
@@ -39,6 +42,7 @@ class RobotContainer:
                                                    lambda: self.driverController.getRightBumper(),
                                                    lambda: self.driverController.getAButtonReleased()))
 
+        self.arm.setDefaultCommand(MoveArm(self.arm))
         # self.arm.setDefaultCommand(KeepAtZero(self.arm))
 
         #self.arm.setDefaultCommand(JoystickControlArm(self.arm, lambda: self.functionsController.getLeftBumper(), lambda: self.functionsController.getRightBumper(), lambda: self.functionsController.getLeftY(), lambda: -self.functionsController.getRightY(), lambda: self.functionsController.getRightTriggerAxis(), lambda: self.functionsController.getLeftTriggerAxis(), lambda: self.functionsController.getXButton(), lambda: self.functionsController.getYButton()))
@@ -53,6 +57,9 @@ class RobotContainer:
         JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(SetPositions(self.arm))
 
         # JoystickButton(self.driverController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm))
+        JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenReleased(ChangePosition(self.arm, True))
+        JoystickButton(self.driverController, wpilib.XboxController.Button.kX).whenReleased(ChangePosition(self.arm, False))
 
     def getAutonomousCommand(self) -> commands2.CommandBase:
+        
         return self.chooser.getSelected()
