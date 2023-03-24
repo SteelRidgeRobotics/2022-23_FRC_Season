@@ -6,7 +6,7 @@ import constants
 
 ## create command class that enters numbers into the HoldAtPercentage method of
 #  the Arm object.
-class ArmTest(commands2.CommandBase):
+class HoldPos(commands2.CommandBase):
 
     def __init__(self, arm: Arm) -> None:
         super().__init__()
@@ -27,14 +27,12 @@ class ArmTest(commands2.CommandBase):
         
         # self.arm.holdAtPercentage(-0.135, -0.105, 0.125)
 
-        self.arm.midMotor.moveToPos(-16420)
-
-        
+        self.arm.holdAtPos()
 
         # For cone for future reference: self.arm.holdAtPercentage(0.0, 0.0, 0.145)
 
     def end(self, interrupted):
-        self.arm.holdAtPos(self.arm.baseMotor.motor.getSelectedSensorPosition(), self.arm.midMotor.motor.getSelectedSensorPosition(), self.arm.baseMotor.motor.getSelectedSensorPosition())
+        self.arm.holdAtPos()
 
     def isFinished(self):
         """

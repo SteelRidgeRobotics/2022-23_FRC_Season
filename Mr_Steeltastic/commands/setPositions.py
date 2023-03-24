@@ -7,7 +7,7 @@ import constants
 #  the Arm object.
 class SetPositions(commands2.CommandBase):
 
-    def __init__(self, arm: Arm) -> None:
+    def __init__(self, arm: Arm, basePos, midPos, topPos, grabberAngle) -> None:
         
         super().__init__()
         
@@ -15,12 +15,11 @@ class SetPositions(commands2.CommandBase):
         self.addRequirements([self.arm])
 
         wpilib.SmartDashboard.putBoolean("Moving Arm?", False)
-    
-        # self.grabber = grabber
-        
-        self.start = 0.0
 
-        self.isDone = False
+        self.baseAngle = basePos
+        self.midAngle = midPos
+        self.topAngle = topPos
+        self.grabberAngle = grabberAngle
 
         self.moved = False
 
@@ -29,21 +28,32 @@ class SetPositions(commands2.CommandBase):
         self.arm.topMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
         self.arm.grabberMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
 
-        self.arm.armToPos(0, (-40 * (2048/360)), 0, 0)
+        #self.arm.armToPos(0, (-40 * (2048/360)), 0, 0)
+        
+        
+    def initialize(self) -> None:
+        self.done = False
+        self.moved = False
 
     def execute(self):
+        wpilib.SmartDashboard.putBoolean("Close Enough", False)
         #self.arm.baseMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, -0.5)
         #self.arm.holdAtPercentage(-0.135, -0.105, 0.125)
         wpilib.SmartDashboard.putBoolean("Moving Arm?", True)
         #self.arm.armToPos((-30 * (2048 / 360)), (-120 * (2048 / 360)), (0 * (2048 / 360)), 0) 
-        self.arm.toggleArm()
-        self.isDone = True
-        #self.arm.armToPos(60197/constants.BASERATIO, -15196/constants.MIDDLERATIO, 8038/constants.TOPRATIO, 0) #Cube pick up
+        #self.arm.toggleArm()
+        if self.arm.armToPos(self.baseAngle/constants.BASERATIO, self.midAngle/constants.MIDDLERATIO, self.topAngle/constants.TOPRATIO, 0):
+            self.done = True
+        #self.arm.armToPos(57077/constants.BASERATIO, -33794/constants.MIDDLERATIO, -252/constants.TOPRATIO, 0) #Cube pick up
+        
+        #wpilib.SmartDashboard.putNumber("Mid Motor Pos", self.arm.midMotor.motor.getSelectedSensorPosition())
 
         #self.arm.armToPos((-30 * (2048 / 360)), (-30*(2048 / 360)), 0, 0) 
 
         #self.arm.armToPos(self.arm.baseMotor.getCurrentAngle() * (2048 / 360), (-45 * (2048 / 360)), self.arm.topMotor.getCurrentAngle() * (2048 / 360), 0)
         # For cone for future reference: self.arm.holdAtPercentage(0.0, 0.0, 0.145)
+            #wpilib.SmartDashboard.putValue("Pos", self.arm.baseMotor.motor.getSelectedSensorPosition())
+            #wpilib.SmartDashboard.putValue("Active Traj Pos", self.arm.baseMotor.motor.getActiveTrajectoryPosition())
     
     def end(self, interrupted):
         wpilib.SmartDashboard.putBoolean("Moving Arm?", False)
@@ -55,4 +65,4 @@ class SetPositions(commands2.CommandBase):
         """
             
         #return wpilib.Timer.getFPGATimestamp() - self.start >= 30
-        return self.isDone
+        return self.done

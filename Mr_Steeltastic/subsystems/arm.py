@@ -28,7 +28,7 @@ class ArmMotor:
         self.holdPercentage = holdPercentage
         self.gearRatio = gearRatio
         
-        self.motor.setNeutralMode(ctre.NeutralMode.Brake)
+        self.motor.setNeutralMode(ctre.NeutralMode.Coast)
         
         #self.motor.configForwardLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, motorID, 10)
         #self.motor.configReverseLimitSwitchSource(ctre.LimitSwitchSource.RemoteTalon, ctre.LimitSwitchNormal.NormallyOpen, motorID, 10)
@@ -109,10 +109,45 @@ class Arm(commands2.SubsystemBase):
         self.grabberMotor.keepAtZero()
 
     def armToPos(self, base: int, mid: int, top: int, grabber: int):
+        
+        self.grabberMotor.moveToPos(grabber * constants.GRABBERRATIO)
+        self.grabberMotor.moveToPos(self.grabberMotor.motor.getSelectedSensorPosition())
+
+        wpilib.SmartDashboard.putNumber('Base Motor Target', base * constants.BASERATIO)
+        wpilib.SmartDashboard.putNumber('Mid Motor Target', mid * constants.MIDDLERATIO)
+        wpilib.SmartDashboard.putNumber('Top Motor Target', top * constants.TOPRATIO)
+
+        wpilib.SmartDashboard.putNumber('Base Motor Pos', self.baseMotor.motor.getSelectedSensorPosition())
+        wpilib.SmartDashboard.putNumber('Mid Motor Pos', self.midMotor.motor.getSelectedSensorPosition())
+        wpilib.SmartDashboard.putNumber('Top Motor Pos', self.topMotor.motor.getSelectedSensorPosition())
+
+        if round(self.topMotor.motor.getSelectedSensorPosition(), -2) == round(top * constants.TOPRATIO, -2) or self.topMotor.motor.getSelectedSensorVelocity() == 0:
+            self.topMotor.moveToPos(self.topMotor.motor.getSelectedSensorPosition())
+            wpilib.SmartDashboard.putBoolean("Top Motor Good?", True)
+            if round(self.midMotor.motor.getSelectedSensorPosition(), -2) == round(mid * constants.MIDDLERATIO, -2) or self.midMotor.motor.getSelectedSensorVelocity() == 0:
+                self.midMotor.moveToPos(self.midMotor.motor.getSelectedSensorPosition())
+                wpilib.SmartDashboard.putBoolean("Mid Motor Good?", True)
+                if round(self.baseMotor.motor.getSelectedSensorPosition(), -2) != round(base * constants.BASERATIO, -2) or self.baseMotor.motor.getSelectedSensorVelocity() == 0:
+                    wpilib.SmartDashboard.putBoolean("Base Motor Good?", False)
+                    self.baseMotor.moveToPos(base * constants.BASERATIO, aRBFF=False)
+                else:
+                    wpilib.SmartDashboard.putBoolean("Base Motor Good?", True)
+                    return True
+            else:
+                wpilib.SmartDashboard.putBoolean("Mid Motor Good?", False)
+                self.midMotor.moveToPos(mid * constants.MIDDLERATIO)
+        else:
+            wpilib.SmartDashboard.putBoolean("Top Motor Good?", False)
+            self.topMotor.moveToPos(top * constants.TOPRATIO)
+
+        return False
+    
+    def armToPosSimulataneously(self, base: int, mid: int, top: int, grabber: int):
+        
+        self.grabberMotor.moveToPos(grabber * constants.GRABBERRATIO)
         self.baseMotor.moveToPos(base * constants.BASERATIO, aRBFF=False)
         self.midMotor.moveToPos(mid * constants.MIDDLERATIO)
         self.topMotor.moveToPos(top * constants.TOPRATIO)
-        self.grabberMotor.moveToPos(grabber * constants.GRABBERRATIO)
 
     def holdAtPercentage(self, base: float, mid: float, top: float):
         
@@ -121,7 +156,7 @@ class Arm(commands2.SubsystemBase):
         self.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, top)
 
     def holdAtPos(self):
-        self.baseMotor.moveToPos(self.baseMotor.motor.getSelectedSensorPosition(), aRBFF=False)
+        self.baseMotor.moveToPos(self.baseMotor.motor.getSelectedSensorPosition())
         self.midMotor.moveToPos(self.midMotor.motor.getSelectedSensorPosition())
         self.topMotor.moveToPos(self.topMotor.motor.getSelectedSensorPosition())
         self.grabberMotor.moveToPos(self.grabberMotor.motor.getSelectedSensorPosition())
