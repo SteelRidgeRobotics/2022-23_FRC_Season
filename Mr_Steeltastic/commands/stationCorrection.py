@@ -77,7 +77,7 @@ class StationCorrection(commands2.CommandBase):
 
     def end(self, interrupted: bool):
 
-        self.train.arcadeDrive(0.0, 0.0)
+        self.train.arcadeDrive(0.0, 0.0, False)
         wpilib.SmartDashboard.putBoolean("Running", False)
 
     def isFinished(self):

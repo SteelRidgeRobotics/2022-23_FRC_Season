@@ -87,6 +87,7 @@ class Drivetrain(commands2.SubsystemBase):
 
         # Gyroscope to keep track of robot pitch
         self.gyro = wpilib.ADIS16470_IMU()
+        self.gyro.CalibrationTime(2)
         self.gyro.setYawAxis(self.gyro.IMUAxis.kX)
 
         self.onChargeStation = False

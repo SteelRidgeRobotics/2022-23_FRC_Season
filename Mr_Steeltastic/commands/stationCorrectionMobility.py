@@ -49,7 +49,7 @@ class StationCorrectionMobility(commands2.CommandBase):
 
             wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
 
-        elif self.timer.get() <= 4:
+        elif self.timer.get() <= 3.5:
 
             self.train.onChargeStation = True
             self.train.arcadeDrive(-0.3, 0.0, True)

@@ -19,15 +19,15 @@ class TimedDrive(commands2.CommandBase):
         self.startTime = wpilib.Timer.getFPGATimestamp()
         # self.timer.reset()
 
-        self.train.arcadeDrive(0.0, 0.0)
+        self.train.arcadeDrive(0.0, 0.0, True)
 
         # wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
     def execute(self) -> None:
-        self.train.arcadeDrive(-0.25, 0.0)
+        self.train.arcadeDrive(-0.25, 0.0, True)
 
     def end(self, interrupted: bool):
-        self.train.arcadeDrive(0.0, 0.0)
+        self.train.arcadeDrive(0.0, 0.0, False)
 
     def isFinished(self) -> bool:
         return wpilib.Timer.getFPGATimestamp() - self.startTime >= 2.0

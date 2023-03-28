@@ -2,7 +2,7 @@ import commands2
 import wpilib
 
 from robotcontainer import RobotContainer
-
+from subsystems.vision import cameraLaunch
 
 class Steeltastic(commands2.TimedCommandRobot):
 
@@ -10,6 +10,7 @@ class Steeltastic(commands2.TimedCommandRobot):
 
         self.container = RobotContainer()
         self.autoCommand = self.container.getAutonomousCommand()
+        cameraLaunch()
 
     def robotPeriodic(self):
 

@@ -58,6 +58,9 @@
     },
     "transitory": {
       "SmartDashboard": {
+        "Autonomoose": {
+          "open": true
+        },
         "open": true
       }
     }

@@ -8,8 +8,8 @@ class MoveArmToPose(commands2.SequentialCommandGroup):
         super().__init__()
         self.addCommands(
             MoveArmUp(arm),
-            #commands2.WaitCommand(0.5),
+            commands2.WaitCommand(0.5),
             #SetPositions(arm, 46835, -10093, 7705, 0),
-            #commands2.WaitCommand(0.5),
+            #commands2.WaitCommand(0.5), # mid was 8821
             SetPositions(arm, 44500, -8750, 8821, 0)
             )
