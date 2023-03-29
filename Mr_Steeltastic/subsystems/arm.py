@@ -45,7 +45,10 @@ class ArmMotor:
         self.motor.setSensorPhase(False)
         self.motor.configIntegratedSensorOffset(offset)
 
-        self.motor.setSelectedSensorPosition(0)
+        #self.motor.setSelectedSensorPosition(0)
+        self.motor.configSupplyCurrentLimit(currLimitConfigs=ctre.SupplyCurrentLimitConfiguration(True, 40.0, 30.0, 2.0))
+        self.motor.enableVoltageCompensation(True)
+        self.motor.configVoltageCompSaturation(11.8)
 
     def keepAtZero(self):
         
@@ -100,13 +103,29 @@ class Arm(commands2.SubsystemBase):
         self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
 
         self.moved = False
+
+        self.globalBaseAngle = 0
+        self.globalMidAngle = 0
+        self.globalTopAngle = 0
+
+        self.motorList = [self.baseMotor, self.midMotor, self.topMotor, self.grabberMotor]
         
+    def updateGlobalAngles(self):
+
+        self.globalBaseAngle = self.baseMotor.getCurrentAngle()
+        self.globalMidAngle = self.globalBaseAngle + self.midMotor.getCurrentAngle()
+        self.globalTopAngle = self.globalMidAngle + self.topMotor.getCurrentAngle()
+
     def keepArmsAtZero(self):
 
+        for i in range(len(self.motorList)-1):
+            self.motorList[i].keepAtZero()
+        """
         self.baseMotor.keepAtZero()
         self.midMotor.keepAtZero()
         self.topMotor.keepAtZero()
         self.grabberMotor.keepAtZero()
+        """
 
     def armToPos(self, base: int, mid: int, top: int, grabber: int):
         
@@ -150,16 +169,20 @@ class Arm(commands2.SubsystemBase):
         self.topMotor.moveToPos(top * constants.TOPRATIO)
 
     def holdAtPercentage(self, base: float, mid: float, top: float):
-        
+
         self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, base)
         self.midMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, mid)
         self.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, top)
 
     def holdAtPos(self):
+        for i in range(len(self.motorList)-1):
+            self.motorList[i].moveToPos(self.motorList[i].motor.getSelectedSensorPosition())
+        """
         self.baseMotor.moveToPos(self.baseMotor.motor.getSelectedSensorPosition())
         self.midMotor.moveToPos(self.midMotor.motor.getSelectedSensorPosition())
         self.topMotor.moveToPos(self.topMotor.motor.getSelectedSensorPosition())
         self.grabberMotor.moveToPos(self.grabberMotor.motor.getSelectedSensorPosition())
+        """
 
     def setGrabber(self, bool: bool): # Soon (TM)
         """
@@ -177,17 +200,26 @@ class Arm(commands2.SubsystemBase):
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
         
     def toggleGrabber(self) -> None:
+
         if self.grabberOpen:
+
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
+
         else:
+
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
+
         self.grabberOpen = not self.grabberOpen
 
     def toggleArm(self) -> None: # This doesn't work oopsie
+
         if self.moved:
+
             self.armToPos(0, (-40 * (2048/360)), 0, 0)
             self.moved = False
+
         else:
+
             self.armToPos(-11244/constants.BASERATIO, -148657/constants.MIDDLERATIO, 3608/constants.TOPRATIO, 0) # Cube place (Mid)
             self.moved = True
 

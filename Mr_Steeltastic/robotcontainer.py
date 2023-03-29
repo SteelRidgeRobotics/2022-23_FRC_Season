@@ -72,8 +72,6 @@ class RobotContainer:
         JoystickButton(self.functionsController, wpilib.XboxController.Button.kX).whenPressed(SetPositions(self.arm, 0, 0, 0, 0))
         #JoystickButton(self.functionsController, wpilib.XboxController.Button.kLeftBumper).whenPressed(SetPositions(self.arm, 61869, -60707, 3571, 0))
         
-    
-
        # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
 
 
