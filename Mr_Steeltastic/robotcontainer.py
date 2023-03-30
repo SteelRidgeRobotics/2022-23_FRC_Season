@@ -4,23 +4,30 @@ from commands2.button import JoystickButton
 
 import constants
 from commands.armTest import ArmTest
+
 from commands.joystickDrive import JoystickDrive
+
+from commands.autoDock import StationCorrectionMobility
+from commands.autoDock import StationCorrection
+
 from commands.keepAtZero import KeepAtZero
-from commands.stationCorrectionMobility import StationCorrectionMobility
+
 from commands.timedDrive import TimedDrive
-from subsystems.arm import Arm
-from subsystems.drivetrain import Drivetrain
+
 from commands.joystickControlArm import JoystickControlArm
 from commands.setPositions import SetPositions
 from commands.changePosition import ChangePosition
-from commands.moveArm import MoveArm
+from commands.moveArmCommands import MoveArm
 from commands.setGrabber import SetGrabber
-from commands.moveArmToPose import MoveArmToPose
-from commands.moveArmup import MoveArmUp
+from commands.moveArmCommands import MoveArmToPose
+from commands.moveArmCommands import MoveArmUp
 from commands.holdPos import HoldPos
-from commands.moveBacktoHome import MoveBackToHome
-from commands.placeCubeMid import PlaceCubeMid
-from commands.stationCorrection import StationCorrection
+from commands.moveArmCommands import MoveBackToHome
+from commands.moveArmCommands import PlaceCubeMid
+
+from subsystems.arm import Arm
+from subsystems.drivetrain import Drivetrain
+
 
 class RobotContainer:
 
