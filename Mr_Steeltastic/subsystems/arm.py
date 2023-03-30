@@ -54,9 +54,15 @@ class ArmMotor:
         
         self.motor.set(ctre.TalonFXControlMode.MotionMagic, 0)
 
-    def moveToPos(self, pos, aRBFF=True):
+
+    def moveToPos(self, **kwargs):
+        pos = kwargs.get("pos", self.motor.getSelectedSensorPosition())
+        angle = kwargs.get("angle", self.getCurrentAngle())
+        aRBFF = kwargs.get("aRBFF", True)
+
+
         if aRBFF:
-            feed_forward = self.holdPercentage * numpy.cos(math.radians(self.getCurrentAngle()))
+            feed_forward = self.holdPercentage * numpy.cos(math.radians(angle))
             self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos, 
                         ctre.DemandType.ArbitraryFeedForward, feed_forward)
         else:
@@ -65,7 +71,7 @@ class ArmMotor:
     def getCurrentAngle(self):
         
         return self.motor.getSelectedSensorPosition() * 360/2048
-
+    
 class Arm(commands2.SubsystemBase):
 
     def __init__(self):
@@ -129,8 +135,7 @@ class Arm(commands2.SubsystemBase):
 
     def armToPos(self, base: int, mid: int, top: int, grabber: int):
         
-        self.grabberMotor.moveToPos(grabber * constants.GRABBERRATIO)
-        self.grabberMotor.moveToPos(self.grabberMotor.motor.getSelectedSensorPosition())
+        self.grabberMotor.moveToPos(pos=self.grabberMotor.motor.getSelectedSensorPosition())
 
         wpilib.SmartDashboard.putNumber('Base Motor Target', base * constants.BASERATIO)
         wpilib.SmartDashboard.putNumber('Mid Motor Target', mid * constants.MIDDLERATIO)
@@ -141,48 +146,78 @@ class Arm(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber('Top Motor Pos', self.topMotor.motor.getSelectedSensorPosition())
 
         if round(self.topMotor.motor.getSelectedSensorPosition(), -2) == round(top * constants.TOPRATIO, -2) or self.topMotor.motor.getSelectedSensorVelocity() == 0:
-            self.topMotor.moveToPos(self.topMotor.motor.getSelectedSensorPosition())
+            self.topMotor.moveToPos(pos=self.topMotor.motor.getSelectedSensorPosition(), angle=self.globalTopAngle)
             wpilib.SmartDashboard.putBoolean("Top Motor Good?", True)
             if round(self.midMotor.motor.getSelectedSensorPosition(), -2) == round(mid * constants.MIDDLERATIO, -2) or self.midMotor.motor.getSelectedSensorVelocity() == 0:
-                self.midMotor.moveToPos(self.midMotor.motor.getSelectedSensorPosition())
+                self.midMotor.moveToPos(pos=self.midMotor.motor.getSelectedSensorPosition(), angle=self.globalMidAngle)
                 wpilib.SmartDashboard.putBoolean("Mid Motor Good?", True)
                 if round(self.baseMotor.motor.getSelectedSensorPosition(), -2) != round(base * constants.BASERATIO, -2) or self.baseMotor.motor.getSelectedSensorVelocity() == 0:
                     wpilib.SmartDashboard.putBoolean("Base Motor Good?", False)
-                    self.baseMotor.moveToPos(base * constants.BASERATIO, aRBFF=False)
+                    self.baseMotor.moveToPos(pos=base * constants.BASERATIO, angle=self.globalBaseAngle, aRBFF=False)
                 else:
                     wpilib.SmartDashboard.putBoolean("Base Motor Good?", True)
                     return True
             else:
                 wpilib.SmartDashboard.putBoolean("Mid Motor Good?", False)
-                self.midMotor.moveToPos(mid * constants.MIDDLERATIO)
+                self.midMotor.moveToPos(pos=mid * constants.MIDDLERATIO, angle=self.globalMidAngle)
         else:
             wpilib.SmartDashboard.putBoolean("Top Motor Good?", False)
-            self.topMotor.moveToPos(top * constants.TOPRATIO)
+            self.topMotor.moveToPos(pos=top * constants.TOPRATIO, angle=self.globalTopAngle)
 
         return False
     
     def armToPosSimulataneously(self, base: int, mid: int, top: int, grabber: int):
+
+        wpilib.SmartDashboard.putNumber('Base Motor Target', base * constants.BASERATIO)
+        wpilib.SmartDashboard.putNumber('Mid Motor Target', mid * constants.MIDDLERATIO)
+        wpilib.SmartDashboard.putNumber('Top Motor Target', top * constants.TOPRATIO)
+
+        wpilib.SmartDashboard.putNumber('Base Motor Pos', self.baseMotor.motor.getSelectedSensorPosition())
+        wpilib.SmartDashboard.putNumber('Mid Motor Pos', self.midMotor.motor.getSelectedSensorPosition())
+        wpilib.SmartDashboard.putNumber('Top Motor Pos', self.topMotor.motor.getSelectedSensorPosition())
         
-        self.grabberMotor.moveToPos(grabber * constants.GRABBERRATIO)
-        self.baseMotor.moveToPos(base * constants.BASERATIO, aRBFF=False)
-        self.midMotor.moveToPos(mid * constants.MIDDLERATIO)
-        self.topMotor.moveToPos(top * constants.TOPRATIO)
+        self.grabberMotor.moveToPos(pos=grabber * constants.GRABBERRATIO)
+        self.baseMotor.moveToPos(pos=base * constants.BASERATIO, aRBFF=False, angle=self.globalBaseAngle)
+        self.midMotor.moveToPos(pos=mid * constants.MIDDLERATIO, angle=self.globalMidAngle)
+        self.topMotor.moveToPos(pos=top * constants.TOPRATIO, angle=self.globalTopAngle)
 
     def holdAtPercentage(self, base: float, mid: float, top: float):
+
+        wpilib.SmartDashboard.putNumber('Base Motor Target', base * constants.BASERATIO)
+        wpilib.SmartDashboard.putNumber('Mid Motor Target', mid * constants.MIDDLERATIO)
+        wpilib.SmartDashboard.putNumber('Top Motor Target', top * constants.TOPRATIO)
+
+        wpilib.SmartDashboard.putNumber('Base Motor Pos', self.baseMotor.motor.getSelectedSensorPosition())
+        wpilib.SmartDashboard.putNumber('Mid Motor Pos', self.midMotor.motor.getSelectedSensorPosition())
+        wpilib.SmartDashboard.putNumber('Top Motor Pos', self.topMotor.motor.getSelectedSensorPosition())
 
         self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, base)
         self.midMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, mid)
         self.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, top)
 
     def holdAtPos(self):
+
+        wpilib.SmartDashboard.putNumber('Base Motor Pos', self.baseMotor.motor.getSelectedSensorPosition())
+        wpilib.SmartDashboard.putNumber('Mid Motor Pos', self.midMotor.motor.getSelectedSensorPosition())
+        wpilib.SmartDashboard.putNumber('Top Motor Pos', self.topMotor.motor.getSelectedSensorPosition())
+
+        wpilib.SmartDashboard.putNumber('Base Motor Target', self.baseMotor.motor.getSelectedSensorPosition())
+        wpilib.SmartDashboard.putNumber('Mid Motor Target', self.midMotor.motor.getSelectedSensorPosition())
+        wpilib.SmartDashboard.putNumber('Top Motor Target', self.topMotor.motor.getSelectedSensorPosition())
+
         for i in range(len(self.motorList)-1):
-            self.motorList[i].moveToPos(self.motorList[i].motor.getSelectedSensorPosition())
+            if i == 0:
+                self.motorList[i].moveToPos(pos=self.motorList[i].motor.getSelectedSensorPosition(), aRBFF=False)
+            else:
+                self.motorList[i].moveToPos(pos=self.motorList[i].motor.getSelectedSensorPosition())
+        
         """
-        self.baseMotor.moveToPos(self.baseMotor.motor.getSelectedSensorPosition())
-        self.midMotor.moveToPos(self.midMotor.motor.getSelectedSensorPosition())
-        self.topMotor.moveToPos(self.topMotor.motor.getSelectedSensorPosition())
-        self.grabberMotor.moveToPos(self.grabberMotor.motor.getSelectedSensorPosition())
+        self.baseMotor.moveToPos(pos=self.baseMotor.motor.getSelectedSensorPosition(), angle=self.globalBaseAngle)
+        self.midMotor.moveToPos(pos=self.midMotor.motor.getSelectedSensorPosition(), angle=self.globalMidAngle)
+        self.topMotor.moveToPos(pos=self.topMotor.motor.getSelectedSensorPosition(), angle=self.globalTopAngle)
+        self.grabberMotor.moveToPos(pos=self.grabberMotor.motor.getSelectedSensorPosition())
         """
+        
 
     def setGrabber(self, bool: bool): # Soon (TM)
         """
