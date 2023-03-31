@@ -27,7 +27,7 @@ class ArmTest(commands2.CommandBase):
         
         # self.arm.holdAtPercentage(-0.135, -0.105, 0.125)
 
-        self.arm.midMotor.moveToPos(-16420)
+        self.arm.holdAtPercentage(0.0, 0.0, 0.125)
 
         
 

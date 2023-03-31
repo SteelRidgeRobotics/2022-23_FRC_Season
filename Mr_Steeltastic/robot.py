@@ -1,6 +1,5 @@
 import commands2
 import wpilib
-
 from robotcontainer import RobotContainer
 from subsystems.vision import cameraLaunch
 
