@@ -15,6 +15,7 @@ class ArmTest(commands2.CommandBase):
         self.addRequirements([self.arm])
 
         # self.grabber = grabber
+        #self.arm.topMotor.motor.config_kF(constants.ARMTOPF)
 
         self.start = 0.0
 
@@ -26,15 +27,16 @@ class ArmTest(commands2.CommandBase):
         self.arm.grabberMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
         
         # self.arm.holdAtPercentage(-0.135, -0.105, 0.125)
-
-        self.arm.holdAtPercentage(0.0, 0.0, 0.125)
+        
+        #self.arm.holdAtPercentage(0.0, 0.0, 0.125)
 
         
 
         # For cone for future reference: self.arm.holdAtPercentage(0.0, 0.0, 0.145)
 
     def end(self, interrupted):
-        self.arm.holdAtPos(self.arm.baseMotor.motor.getSelectedSensorPosition(), self.arm.midMotor.motor.getSelectedSensorPosition(), self.arm.baseMotor.motor.getSelectedSensorPosition())
+
+        self.arm.holdAtPos()
 
     def isFinished(self):
         """
