@@ -4,16 +4,12 @@ from commands2.button import JoystickButton
 
 import constants
 from commands.armTest import ArmTest
-
 from commands.joystickDrive import JoystickDrive
-
-from commands.autoDock import StationCorrectionMobility
-from commands.autoDock import StationCorrection
-
 from commands.keepAtZero import KeepAtZero
-
+from commands.autoDock import StationCorrectionMobility
 from commands.timedDrive import TimedDrive
-
+from subsystems.arm import Arm
+from subsystems.drivetrain import Drivetrain
 from commands.joystickControlArm import JoystickControlArm
 from commands.setPositions import SetPositions
 from commands.changePosition import ChangePosition
@@ -22,19 +18,10 @@ from commands.setGrabber import SetGrabber
 from commands.moveArmCommands import MoveArmToPose
 from commands.moveArmCommands import MoveArmUp
 from commands.holdPos import HoldPos
-<<<<<<< Updated upstream
 from commands.moveArmCommands import MoveBackToHome
 from commands.moveArmCommands import PlaceCubeMid
-
-from subsystems.arm import Arm
-from subsystems.drivetrain import Drivetrain
-
-=======
-from commands.moveBacktoHome import MoveBackToHome
-from commands.placeCubeMid import PlaceCubeMid
-from commands.stationCorrection import StationCorrection
+from commands.autoDock import StationCorrection
 from commands.toggleBrakeMode import ToggleBrakeMode
->>>>>>> Stashed changes
 
 class RobotContainer:
 
@@ -86,7 +73,7 @@ class RobotContainer:
         #JoystickButton(self.functionsController, wpilib.XboxController.Button.kY).whenPressed(MoveBackToHome(self.arm))
         #JoystickButton(self.functionsController, wpilib.XboxController.Button.kX).whenPressed(SetPositions(self.arm, 0, 0, 0, 0))
         JoystickButton(self.functionsController,wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
-        JoystickButton(self.functionsController,wpilib.XboxController.Button.kY).whenReleased(ToggleBrakeMode(self.arm))
+        #JoystickButton(self.functionsController,wpilib.XboxController.Button.kY).whenReleased(ToggleBrakeMode(self.arm))
         
         #JoystickButton(self.functionsController, wpilib.XboxController.Button.kLeftBumper).whenPressed(SetPositions(self.arm, 61869, -60707, 3571, 0))
         
