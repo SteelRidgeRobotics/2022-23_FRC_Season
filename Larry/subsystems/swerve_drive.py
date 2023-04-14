@@ -44,9 +44,11 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightFrontSwerveModule = SwerveWheel(self.rightFrontDirection, self.rightFrontSpeed)
         self.rightRearSwerveModule = SwerveWheel(self.rightRearDirection, self.rightRearSpeed)
 
-        self.gyro = wpilib.ADXRS450_Gyro()
-        self.gyro.reset()
-        self.gyro.calibrate()
+        self.gyro = wpilib.ADIS16470_IMU()
+        self.gyro.CalibrationTime(2)
+        if wpilib.RobotBase.isReal():
+            self.gyro.setYawAxis(wpilib.ADIS16470_IMU.IMUAxis.kX)
+        
         self.PDP = wpilib.PowerDistribution(0, wpilib.PowerDistribution.ModuleType.kCTRE)
 
     def turnWheel(self, module: SwerveWheel, direction: float, magnitude: float):
@@ -190,7 +192,7 @@ class SwerveDrive(commands2.SubsystemBase):
 
     def reset(self):
         self.gyro.reset()
-        self.gyro.calibrate()
+        #self.gyro.calibrate()
 
         self.leftFrontDirection.setSelectedSensorPosition(0.0, constants.kPIDLoopIdx, constants.ktimeoutMs)
         self.leftFrontSpeed.setSelectedSensorPosition(0.0, constants.kPIDLoopIdx, constants.ktimeoutMs)

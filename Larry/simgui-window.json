@@ -6,12 +6,12 @@
     "GLOBAL": {
       "fps": "120",
       "height": "1021",
-      "maximized": "0",
+      "maximized": "1",
       "style": "0",
       "userScale": "2",
       "width": "1600",
-      "xpos": "31",
-      "ypos": "167"
+      "xpos": "0",
+      "ypos": "56"
     }
   },
   "Window": {
@@ -28,7 +28,7 @@
     "###Joysticks": {
       "Collapsed": "0",
       "Pos": "312,581",
-      "Size": "1594,127"
+      "Size": "1876,127"
     },
     "###NetworkTables": {
       "Collapsed": "0",
