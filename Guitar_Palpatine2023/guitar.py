@@ -51,7 +51,7 @@ class Guitar(GenericHID):
     
     def getStrumBar(self) -> bool:
         """
-        Returns true if the strum bar is being pressed up OR down.
+        Returns true if the strum bar is being strummed/pressed up OR down.
 
         The strum bar is technically 2 buttons, but in case you want to treat it as 1 button (pushed either up or down) use this.
         """
@@ -59,7 +59,7 @@ class Guitar(GenericHID):
     
     def getStrumBarUp(self) -> bool:
         """
-        Returns true if the strum bar is being "strummed" or pressed up.
+        Returns true if the strum bar is being "strummed" upwards.
 
         Up is considered when you're facing the guitar and holding the guitar pointing right.
         """
@@ -67,13 +67,13 @@ class Guitar(GenericHID):
     
     def getStrumBarDown(self) -> bool:
         """
-        Returns true if the strum bar is being "strummed" or pressed down.
+        Returns true if the strum bar is being "strummed" downwards.
 
         Down is considered when you're facing the guitar and holding the guitar pointing right.
         """
         return self.getButton(6)
     
-    def getVolumeButtonsPressed(self) -> bool:
+    def getVolumeButtons(self) -> bool:
         """
         Returns true if either volume button is being pressed.
 
@@ -81,7 +81,7 @@ class Guitar(GenericHID):
         """
         return self.getButton(7)
     
-    def getStarPowerButtonPressed(self) -> bool:
+    def getStarPowerButton(self) -> bool:
         """
         Returns true if the Star Power button is being pressed.
 
@@ -113,7 +113,7 @@ class Guitar(GenericHID):
         """
         return self.getAxis(1)
     
-    def getWhammyBarRot(self) -> float:
+    def getWhammyBar(self) -> float:
         """
         Returns the current Whammy Bar rotation.
 
@@ -121,7 +121,7 @@ class Guitar(GenericHID):
         """
         return self.getAxis(2)
     
-    def getSliderValue(self) -> float:
+    def getSlider(self) -> float:
         """
         Returns current value of the slider (located beneath the Orange Fret button).
 
