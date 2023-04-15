@@ -22,11 +22,8 @@ class DriveByGuitar(commands2.CommandBase):
         # Inputs currently reversed, slider goes forward/backward, while joystick Y controls turning. WIll probably fix later.
         self.drive.userDrive(forwardSum(self.guitar.getJoystickY(), self.guitar.getSlider()), reverseSum(self.guitar.getJoystickY(), self.guitar.getSlider()), 0.5)
 
-        wpilib.SmartDashboard.putNumberArray('Joystick - ', [self.guitar.getJoystickX(), self.guitar.getJoystickY()])
-        wpilib.SmartDashboard.putBooleanArray("Fret Buttons: ", [self.guitar.getGreenButton(), self.guitar.getRedButton(), self.guitar.getYellowButton(), self.guitar.getBlueButton(), self.guitar.getOrangeButton()])
-        wpilib.SmartDashboard.putBooleanArray("Strum Bar (U, D):", [self.guitar.getStrumBarUp(), self.guitar.getStrumBarDown()])
-        wpilib.SmartDashboard.putNumber('Slider - ', self.guitar.getSlider())
-        wpilib.SmartDashboard.putNumber("Whammy Bar - ", self.guitar.getWhammyBar())
+        self.guitar.sendValuesToSmartDashboard()
+
         wpilib.SmartDashboard.putNumber("Left Velocity - ", self.drive.frontLeft.getSelectedSensorVelocity())
         wpilib.SmartDashboard.putNumber("Right Velocity - ", self.drive.frontRight.getSelectedSensorVelocity())
 

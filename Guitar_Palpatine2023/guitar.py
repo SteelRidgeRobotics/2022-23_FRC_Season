@@ -1,5 +1,6 @@
-import wpilib
+from wpilib import SmartDashboard
 from wpilib.interfaces import GenericHID
+
 
 class Guitar(GenericHID):
     """
@@ -10,6 +11,16 @@ class Guitar(GenericHID):
 
     def __init__(self, port: int) -> None:
         super().__init__(port)
+
+    def sendValuesToSmartDashboard(s) -> None: # Renamed 'self' to 's' to keep this function readable
+        """
+        Adds all button and axis values to Smart Dashboard.
+        """
+        SmartDashboard.putNumberArray("Joystick XY", [s.getJoystickX(), s.getJoystickY()])
+        SmartDashboard.putBooleanArray("Fret Buttons", [s.getGreenButton(), s.getRedButton(), s.getYellowButton(), s.getBlueButton(), s.getOrangeButton()])
+        SmartDashboard.putBooleanArray("Strum Bar (Up, Down)", [s.getStrumBarUp(), s.getStrumBarDown()])
+        SmartDashboard.putNumber("Slider", s.getSlider())
+        SmartDashboard.putNumber("Whammy Bar", s.getWhammyBar())
 
     def getButton(self, id) -> bool:
         """
