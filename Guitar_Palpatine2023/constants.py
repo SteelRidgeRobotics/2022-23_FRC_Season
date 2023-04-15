@@ -27,11 +27,6 @@ kP = 0.375
 kD = 11.25
 kI = 0.0
 
-# Controller Dead Zone (Controller joysticks return 0 if their absolute value is less than or equal to this number)
-# Note: THESE VALUES CHANGE THE MORE YOU USE THE CONTROLLER!!! If you see the controller drifting again, increase the values.
-controllerDeadZoneLeft = 0.2
-controllerDeadZoneRight = 0.07
-
 # Physical constants
 kunitsPerRotation = 2048.0
 kwheelCircumference = 1.57  # this is in feet
