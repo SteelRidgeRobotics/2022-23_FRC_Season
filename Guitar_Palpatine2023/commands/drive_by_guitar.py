@@ -31,18 +31,17 @@ class DriveByGuitar(commands2.CommandBase):
     def isFinished(self) -> bool:
         return False
     
+def clamp(n, minn, maxn):
+    """
+    Simple number cap:
+    If n < minn, n = minn OR if n > maxn, n = maxn
+    """
+    return max(min(maxn, n), minn)
+    
 def forwardSum(x, y) -> float:
         finalValue = -y + x
-        if (finalValue > 1):
-            finalValue = 1
-        elif (finalValue < -1):
-            finalValue = -1
-        return finalValue
+        return clamp(finalValue)
 
 def reverseSum(x, y) -> float:
     finalValue = -y - x
-    if (finalValue > 1):
-        finalValue = 1
-    elif (finalValue < -1):
-        finalValue = -1
-    return finalValue
+    return clamp(finalValue)
