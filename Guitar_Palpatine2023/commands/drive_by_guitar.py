@@ -19,9 +19,11 @@ class DriveByGuitar(commands2.CommandBase):
         self.addRequirements([self.drive])
 
     def execute(self) -> None:
-        self.drive.userDrive(forwardSum(self.guitar.getSlider(), self.guitar.getJoystickY()), reverseSum(self.guitar.getSlider(), self.guitar.getJoystickY()), 0.33)
+        self.drive.userDrive(forwardSum(-self.guitar.getSlider(), -self.guitar.getJoystickY()), reverseSum(-self.guitar.getSlider(), -self.guitar.getJoystickY()), 0.33)
 
         self.guitar.sendValuesToSmartDashboard()
+        wpilib.SmartDashboard.putNumber("Forward Sum - ", forwardSum(self.guitar.getSlider(), self.guitar.getJoystickY()))
+        wpilib.SmartDashboard.putNumber("Reverse Sum - ", reverseSum(self.guitar.getSlider(), self.guitar.getJoystickY()))
         wpilib.SmartDashboard.putNumber("Left Velocity - ", self.drive.frontLeft.getSelectedSensorVelocity())
         wpilib.SmartDashboard.putNumber("Right Velocity - ", self.drive.frontRight.getSelectedSensorVelocity())
 
@@ -40,8 +42,8 @@ def clamp(n, minn, maxn):
     
 def forwardSum(x, y) -> float:
         finalValue = -y + x
-        return clamp(finalValue)
+        return clamp(finalValue, -1, 1)
 
 def reverseSum(x, y) -> float:
     finalValue = -y - x
-    return clamp(finalValue)
+    return clamp(finalValue, -1, 1)
