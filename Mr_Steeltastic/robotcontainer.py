@@ -38,22 +38,6 @@ class RobotContainer:
                                                    lambda: self.driverController.getLeftBumper(),
                                                    lambda: self.driverController.getRightBumper(),
                                                    lambda: self.driverController.getAButtonReleased()))
-
-        #self.arm.setDefaultCommand(MoveArm(self.arm))
-        # self.arm.setDefaultCommand(KeepAtZero(self.arm))
-
-        # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
-
-        #self.arm.setDefaultCommand(JoystickControlArm(self.arm, lambda: self.functionsController.getLeftBumper(), lambda: self.functionsController.getRightBumper(), lambda: self.functionsController.getLeftY(), lambda: -self.functionsController.getRightY(), lambda: self.functionsController.getRightTriggerAxis(), lambda: self.functionsController.getLeftTriggerAxis(), lambda: self.functionsController.getXButton(), lambda: self.functionsController.getYButton()))
-        #self.arm.setDefaultCommand(HoldPos(self.arm))
-        # JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(PoseArm(self.arm, [0, 0, 0, 0, 0]))
-
-        # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
-        # JoystickButton(self.driverController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm, lambda: self.driverController.getAButton()))
-
-        #JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
-
-        # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(MoveArmUp(self.arm))
         
         #DONT DELETE ME PLZ I HAVE A WIFE AND KIDS
         #JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(MoveArmToPose(self.arm))
