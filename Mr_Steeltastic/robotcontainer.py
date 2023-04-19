@@ -5,23 +5,11 @@ from commands2.button import JoystickButton
 import constants
 from commands.armTest import ArmTest
 from commands.joystickDrive import JoystickDrive
-from commands.keepAtZero import KeepAtZero
 from commands.autoDock import StationCorrectionMobility
 from commands.timedDrive import TimedDrive
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
-from commands.joystickControlArm import JoystickControlArm
-from commands.setPositions import SetPositions
-from commands.changePosition import ChangePosition
-from commands.moveArmCommands import MoveArm
-from commands.setGrabber import SetGrabber
-from commands.moveArmCommands import MoveArmToPose
-from commands.moveArmCommands import MoveArmUp
-from commands.holdPos import HoldPos
-from commands.moveArmCommands import MoveBackToHome
-from commands.moveArmCommands import PlaceCubeMid
 from commands.autoDock import StationCorrection
-from commands.toggleBrakeMode import ToggleBrakeMode
 
 class RobotContainer:
 
@@ -73,15 +61,6 @@ class RobotContainer:
         #JoystickButton(self.functionsController, wpilib.XboxController.Button.kY).whenPressed(MoveBackToHome(self.arm))
         #JoystickButton(self.functionsController, wpilib.XboxController.Button.kX).whenPressed(SetPositions(self.arm, 0, 0, 0, 0))
         JoystickButton(self.functionsController,wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
-        #JoystickButton(self.functionsController,wpilib.XboxController.Button.kY).whenReleased(ToggleBrakeMode(self.arm))
-        
-        #JoystickButton(self.functionsController, wpilib.XboxController.Button.kLeftBumper).whenPressed(SetPositions(self.arm, 61869, -60707, 3571, 0))
-        
-       # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
-
-
-        # JoystickButton(self.driverController, wpilib.XboxController.Button.kB).whenReleased(ChangePosition(self.arm, True))
-        # JoystickButton(self.driverController, wpilib.XboxController.Button.kX).whenReleased(ChangePosition(self.arm, False))
 
     def getAutonomousCommand(self) -> commands2.CommandBase:
 
