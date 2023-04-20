@@ -1,5 +1,6 @@
 from wpilib import SmartDashboard
 from wpilib.interfaces import GenericHID
+from wpilib import XboxController
 
 
 class Guitar(GenericHID):
@@ -11,6 +12,23 @@ class Guitar(GenericHID):
 
     def __init__(self, port: int) -> None:
         super().__init__(port)
+
+    class Axis():
+        kJoyX = 0
+        kJoyY = 1
+        kWhamBar = 2
+        kSlider = 4
+        
+    class Button():
+        kGreen = 1
+        kRed = 2
+        kYellow = 3
+        kBlue = 4
+        kOrange = 5
+        kStrumDown = 6
+        kVol = 7
+        kStar = 8
+        kStrumUp = 9
 
     def sendValuesToSmartDashboard(s) -> None: # Renamed 'self' to 's' to keep this function readable
         """
@@ -34,31 +52,31 @@ class Guitar(GenericHID):
         """
         Returns true if the Green Fret button is being pressed.
         """
-        return self.getButton(1)
+        return self.getButton(self.Button.kGreen)
     
     def getRedButton(self) -> bool:
         """
         Returns true if the Red Fret button is being pressed.
         """
-        return self.getButton(2)
+        return self.getButton(self.Button.kRed)
 
     def getYellowButton(self) -> bool:
         """
         Returns true if the Yellow Fret button is being pressed.
         """
-        return self.getButton(3)
+        return self.getButton(self.Button.kYellow)
 
     def getBlueButton(self) -> bool:
         """
         Returns true if the Blue Fret button is being pressed.
         """
-        return self.getButton(4)
+        return self.getButton(self.Button.kBlue)
 
     def getOrangeButton(self) -> bool:
         """
         Returns true if the Orange Fret button is being pressed.
         """
-        return self.getButton(5)
+        return self.getButton(self.Button.kOrange)
     
     def getStrumBar(self) -> bool:
         """
@@ -66,7 +84,7 @@ class Guitar(GenericHID):
 
         The strum bar is technically 2 buttons, but in case you want to treat it as 1 button (pushed either up or down) use this.
         """
-        return self.getButton(6) or self.getButton(9)
+        return self.getButton(self.Button.kStrumDown) or self.getButton(self.Button.kStrumUp)
     
     def getStrumBarUp(self) -> bool:
         """
@@ -74,7 +92,7 @@ class Guitar(GenericHID):
 
         Up is considered when you're facing the guitar and holding the guitar pointing right.
         """
-        return self.getButton(9)
+        return self.getButton(self.Button.kStrumUp)
     
     def getStrumBarDown(self) -> bool:
         """
@@ -82,7 +100,7 @@ class Guitar(GenericHID):
 
         Down is considered when you're facing the guitar and holding the guitar pointing right.
         """
-        return self.getButton(6)
+        return self.getButton(self.Button.kStrumDown)
     
     def getVolumeButtons(self) -> bool:
         """
@@ -90,7 +108,7 @@ class Guitar(GenericHID):
 
         Both volume buttons are recognized as 1 button in Driver Station.
         """
-        return self.getButton(7)
+        return self.getButton(self.Button.kVol)
     
     def getStarPowerButton(self) -> bool:
         """
@@ -98,7 +116,7 @@ class Guitar(GenericHID):
 
         The Star Power button is located in between the volume buttons. It also says "Star Power" on it.
         """
-        return self.getButton(8)
+        return self.getButton(self.Button.kStar)
     
     def getAxis(self, id) -> float:
         """
@@ -114,7 +132,7 @@ class Guitar(GenericHID):
 
         Minimum value (may differ from guitar to guitar) is -0.75, maximum value is 0.81. (Values may differ between guitars)
         """
-        return self.getAxis(0)
+        return self.getAxis(self.Axis.kJoyX)
     
     def getJoystickY(self) -> float:
         """
@@ -122,7 +140,7 @@ class Guitar(GenericHID):
 
         Minimum value (may differ from guitar to guitar) is -0.94, maximum value is 0.78. (Values may differ between guitars)
         """
-        return self.getAxis(1)
+        return self.getAxis(self.Axis.kJoyY)
     
     def getWhammyBar(self) -> float:
         """
@@ -130,7 +148,7 @@ class Guitar(GenericHID):
 
         The Whammy Bar only moves in 1 axis (recognized in Driver Station as Axis 2)
         """
-        return self.getAxis(2)
+        return self.getAxis(self.Axis.kWhamBar)
     
     def getSlider(self) -> float:
         """
@@ -138,5 +156,5 @@ class Guitar(GenericHID):
 
         Values range from -0.94 - 0.73.
         """
-        return self.getAxis(4)
+        return self.getAxis(self.Axis.kSlider)
     
