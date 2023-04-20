@@ -3,7 +3,7 @@ import wpilib
 DRIVERCONTROLLERPORT = 0
 FUNCTIONSCONTROLLERPORT = 1
 
-USINGGUITARCONTROLLER = False # Turn this to True if using the guitar controller. Everything will explode if you don't
+USINGGUITARCONTROLLER = True # Turn this to True if using the guitar controller. Everything will explode if you don't
 
 FRONTLEFT = 0
 BACKLEFT = 1
