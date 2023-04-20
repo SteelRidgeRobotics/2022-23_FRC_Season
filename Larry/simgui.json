@@ -5,6 +5,9 @@
         "header": {
           "open": true
         }
+      },
+      "window": {
+        "visible": false
       }
     }
   },
@@ -19,9 +22,11 @@
   "NetworkTables": {
     "SmartDashboard": {
       "open": true
+    },
+    "transitory": {
+      "SmartDashboard": {
+        "open": true
+      }
     }
-  },
-  "NetworkTables View": {
-    "visible": false
   }
 }

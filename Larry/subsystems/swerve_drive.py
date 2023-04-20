@@ -53,11 +53,16 @@ class SwerveDrive(commands2.SubsystemBase):
 
     def turnWheel(self, module: SwerveWheel, direction: float, magnitude: float):
         self.units = conversions.convertDegreesToTalonFXUnits(direction)
+
         if magnitude >= 1.0:
             magnitude = 1.0
+        elif magnitude <= -1.0:
+            magnitude = -1.0
+
         # find current angle
         currentAngle = conversions.convertTalonFXUnitsToDegrees(module.directionMotor.getSelectedSensorPosition())
         currentAngle /= constants.ksteeringGearRatio
+        """
         # see if the abs value is greater than 180
         if math.fabs(direction) >= 180.0:
             # find the abs value of the opposite angle
@@ -65,11 +70,18 @@ class SwerveDrive(commands2.SubsystemBase):
         else:
             # find the abs value of the opposite angle
             opposAngle = math.fabs(direction) + 180.0
+        """
+
+        if direction <= 0:
+            opposAngle = direction + 180
+        else:
+            opposAngle = direction - 180
         # print some stats for debugging
         wpilib.SmartDashboard.putNumber(" Original Angle -", direction)
         wpilib.SmartDashboard.putNumber(" Abs Opposit Angle -", opposAngle)
         # check if the joystick is in use
         if magnitude != 0.0:
+            """
             # this is to test that if 360 or zero is closer it goes to 0
             if (direction == 0.0 or direction == 180.0) and math.fabs(360 - currentAngle) <= math.fabs(
                     currentAngle - opposAngle):
@@ -81,8 +93,9 @@ class SwerveDrive(commands2.SubsystemBase):
                 else:
                     module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle) * constants.ksteeringGearRatio)
                     module.move(-magnitude)
+            """
             # if the original angle is closer
-            elif math.fabs(currentAngle - direction) <= math.fabs(currentAngle - opposAngle):
+            if math.fabs(currentAngle - direction) <= math.fabs(currentAngle - opposAngle):
                 # turn to the original angle
                 module.turn(self.units * constants.ksteeringGearRatio)
                 # move in the normal way
