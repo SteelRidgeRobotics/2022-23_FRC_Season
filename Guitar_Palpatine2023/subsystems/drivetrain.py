@@ -2,11 +2,12 @@ import commands2
 import constants
 import ctre
 
+
 class Drivetrain(commands2.SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
-        # initialize motors
+        # initilize motors
         self.frontLeft = ctre.TalonFX(constants.kfrontLeft)
         self.backLeft = ctre.TalonFX(constants.kbackLeft)
         self.frontRight = ctre.TalonFX(constants.kfrontRight)
