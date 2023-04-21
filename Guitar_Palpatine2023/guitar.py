@@ -1,6 +1,8 @@
 from wpilib import SmartDashboard
 from wpilib.interfaces import GenericHID
 from wpilib import XboxController
+from wpilib.event import BooleanEvent
+from wpilib.event import EventLoop
 
 
 class Guitar(GenericHID):
@@ -53,6 +55,9 @@ class Guitar(GenericHID):
         Returns true if the Green Fret button is being pressed.
         """
         return self.getButton(self.Button.kGreen)
+    
+    def greenButton(self, loop: EventLoop) -> BooleanEvent:
+        return BooleanEvent(loop, lambda: self.getGreenButton)
     
     def getRedButton(self) -> bool:
         """
