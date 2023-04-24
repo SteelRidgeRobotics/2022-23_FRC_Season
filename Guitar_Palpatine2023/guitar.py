@@ -2,6 +2,14 @@ from wpilib import SmartDashboard
 from wpilib.event import BooleanEvent, EventLoop
 from wpilib.interfaces import GenericHID
 
+
+"""
+guitar.py
+
+Created by Pickle_Face5
+
+Version 1.0.0
+"""
 class Guitar(GenericHID):
     """
     Handle input from guitar controllers connected to the Driver Station.
@@ -82,6 +90,9 @@ class Guitar(GenericHID):
         return self.getButtonReleased(self.Button.kGreen)
     
     def greenButton(self, loop: EventLoop) -> BooleanEvent:
+        """
+        Constructs an event instance around the Green Fret button's digital signal.
+        """
         return BooleanEvent(loop, lambda: self.getGreenButton)
     
     def getRedButton(self) -> bool:
@@ -103,6 +114,9 @@ class Guitar(GenericHID):
         return self.getButtonReleased(self.Button.kRed)
     
     def redButton(self, loop: EventLoop) -> BooleanEvent:
+        """
+        Constructs an event instance around the Red Fret button's digital signal.
+        """
         return BooleanEvent(loop, lambda: self.getRedButton)
 
     def getYellowButton(self) -> bool:
@@ -124,6 +138,9 @@ class Guitar(GenericHID):
         return self.getButtonReleased(self.Button.kYellow)
     
     def yellowButton(self, loop: EventLoop) -> BooleanEvent:
+        """
+        Constructs an event instance around the Yellow Fret button's digital signal.
+        """
         return BooleanEvent(loop, lambda: self.getYellowButton)
 
     def getBlueButton(self) -> bool:
@@ -145,6 +162,9 @@ class Guitar(GenericHID):
         return self.getButtonReleased(self.Button.kBlue)
     
     def blueButton(self, loop: EventLoop) -> BooleanEvent:
+        """
+        Constructs an event instance around the Blue Fret button's digital signal.
+        """
         return BooleanEvent(loop, lambda: self.getBlueButton)
 
     def getOrangeButton(self) -> bool:
@@ -166,6 +186,9 @@ class Guitar(GenericHID):
         return self.getButtonReleased(self.Button.kOrange)
     
     def orangeButton(self, loop: EventLoop) -> BooleanEvent:
+        """
+        Constructs an event instance around the Orange Fret button's digital signal.
+        """
         return BooleanEvent(loop, lambda: self.getOrangeButton)
     
     def getStrumBar(self) -> bool:
@@ -193,6 +216,9 @@ class Guitar(GenericHID):
         return self.getButtonReleased(self.Button.kStrumDown) or self.getButtonReleased(self.Button.kStrumUp)
     
     def strumBar(self, loop: EventLoop) -> BooleanEvent:
+        """
+        Constructs an event instance around the Strum Bar's digital signals.
+        """
         return BooleanEvent(loop, lambda: self.getStrumBar)
     
     def getStrumBarUp(self) -> bool:
@@ -220,6 +246,9 @@ class Guitar(GenericHID):
         return self.getButtonReleased(self.Button.kStrumUp)
     
     def strumBarUp(self, loop: EventLoop) -> BooleanEvent:
+        """
+        Constructs an event instance around the Strum Bar's upwards digital signal.
+        """
         return BooleanEvent(loop, lambda: self.getStrumBarUp)
     
     def getStrumBarDown(self) -> bool:
@@ -247,6 +276,9 @@ class Guitar(GenericHID):
         return self.getButtonReleased(self.Button.kStrumDown)
     
     def strumBarDown(self, loop: EventLoop) -> BooleanEvent:
+        """
+        Constructs an event instance around the Strum Bar's downwards digital signal.
+        """
         return BooleanEvent(loop, lambda: self.getStrumBarDown)
     
     def getVolumeButtons(self) -> bool:
@@ -274,6 +306,9 @@ class Guitar(GenericHID):
         return self.getButtonReleased(self.Button.kVol)
     
     def volumeButtons(self, loop: EventLoop) -> BooleanEvent:
+        """
+        Constructs an event instance around the Volume buttons's digital signal.
+        """
         return BooleanEvent(loop, lambda: self.getVolumeButtons)
     
     def getStarPowerButton(self) -> bool:
@@ -301,6 +336,9 @@ class Guitar(GenericHID):
         return self.getButtonReleased(self.Button.kStar)
     
     def starPowerButton(self, loop: EventLoop) -> BooleanEvent:
+        """
+        Constructs an event instance around the Star Power buttons's digital signal.
+        """
         return BooleanEvent(loop, lambda: self.getStarPowerButton)
     
     def getAxis(self, id) -> float:
