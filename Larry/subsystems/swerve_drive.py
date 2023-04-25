@@ -71,14 +71,25 @@ class SwerveDrive(commands2.SubsystemBase):
             # find the abs value of the opposite angle
             opposAngle = math.fabs(direction) + 180.0
         """
-
-        if direction <= 0:
+        
+        if direction < 0:
             opposAngle = direction + 180
-        else:
+            negAngle = 360 + direction
+        elif direction > 0:
             opposAngle = direction - 180
+            negAngle = direction - 360
+            
+        else:
+            if conversions.sign(direction) == -1:
+                opposAngle = -180
+                negAngle = 0
+            else:
+                opposAngle = 180
+                negAngle = 0
         # print some stats for debugging
         wpilib.SmartDashboard.putNumber(" Original Angle -", direction)
-        wpilib.SmartDashboard.putNumber(" Abs Opposit Angle -", opposAngle)
+        wpilib.SmartDashboard.putNumber(" Abs Opposite Angle -", opposAngle)
+        wpilib.SmartDashboard.putNumber(" Neg Angle -", negAngle)
         # check if the joystick is in use
         if magnitude != 0.0:
             """
@@ -139,18 +150,6 @@ class SwerveDrive(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber(" RF Speed ", self.rightFrontSwerveModule.getVelocity())
         wpilib.SmartDashboard.putNumber(" RR Speed ", self.rightRearSwerveModule.getVelocity())
 
-        wpilib.SmartDashboard.putNumber(" PDP Channel 0", self.PDP.getCurrent(0))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 1", self.PDP.getCurrent(1))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 2", self.PDP.getCurrent(2))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 3", self.PDP.getCurrent(3))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 4", self.PDP.getCurrent(4))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 5", self.PDP.getCurrent(5))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 6", self.PDP.getCurrent(6))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 7", self.PDP.getCurrent(7))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 8", self.PDP.getCurrent(8))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 9", self.PDP.getCurrent(9))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 10", self.PDP.getCurrent(10))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 11", self.PDP.getCurrent(11))
 
     def getGyroAngle(self) -> float:
         return self.gyro.getAngle()
