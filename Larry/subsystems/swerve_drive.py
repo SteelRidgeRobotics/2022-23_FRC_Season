@@ -105,17 +105,26 @@ class SwerveDrive(commands2.SubsystemBase):
                     module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle) * constants.ksteeringGearRatio)
                     module.move(-magnitude)
             """
-            # if the original angle is closer
-            if math.fabs(currentAngle - direction) <= math.fabs(currentAngle - opposAngle):
+
+            # if negAngle is closer
+            if math.fabs(currentAngle - direction) >= math.fabs(currentAngle - negAngle):
+                module.turn(conversions.convertDegreesToTalonFXUnits(negAngle) * constants.ksteeringGearRatio)
+                wpilib.SmartDashboard.putNumber("1", math.fabs(currentAngle - direction))
+                wpilib.SmartDashboard.putNumber("-", math.fabs(currentAngle - negAngle))
+                wpilib.SmartDashboard.putBoolean("Using - ANGLE: ", True)
+            # if the original angle is closer   
+            elif math.fabs(currentAngle - direction) <= math.fabs(currentAngle - opposAngle):
                 # turn to the original angle
                 module.turn(self.units * constants.ksteeringGearRatio)
                 # move in the normal way
                 module.move(magnitude)
+                wpilib.SmartDashboard.putBoolean("Using - ANGLE: ", False)
             else:  # the opposite angle is closer
                 # turn to the other angle
                 module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle) * constants.ksteeringGearRatio)
                 # move in the opposite direction
                 module.move(-magnitude)
+                wpilib.SmartDashboard.putBoolean("Using - ANGLE: ", False)
 
     def translate(self, direction: float, magnitude: float):
         self.turnWheel(self.leftFrontSwerveModule, direction, magnitude)
