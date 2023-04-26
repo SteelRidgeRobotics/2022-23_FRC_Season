@@ -50,7 +50,7 @@ class RobotContainer:
             JoystickButton(self.functionsController, Guitar.Button.kBlue).whenPressed(SetGrabber(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kYellow).whenPressed(MoveBackToHome(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kStar).whenPressed(SetPositions(self.arm, 0, 0, 0, 0))
-            #JoystickButton(self.functionsController, Guitar.Button.kOrange).whenPressed(ArmTest(self.arm))
+            JoystickButton(self.functionsController, Guitar.Button.kOrange).whenPressed(ArmTest(self.arm))
         else:
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(MoveArmToPose(self.arm))
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm))

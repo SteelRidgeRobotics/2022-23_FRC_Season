@@ -116,10 +116,14 @@ class MoveArmUp(commands2.CommandBase):
         #self.arm.holdAtPercentage(-0.135, -0.105, 0.125)
         wpilib.SmartDashboard.putBoolean("Moving Arm?", True)
         #self.arm.armToPos((-30 * (2048 / 360)), (-120 * (2048 / 360)), (0 * (2048 / 360)), 0) 
+        """
         self.arm.armToPosSimulataneously(0, (-40*(2048 / 360)), 0, 0) 
         if self.arm.baseMotor.motor.getSelectedSensorVelocity() != 0 or self.arm.midMotor.motor.getSelectedSensorVelocity() != 0 or self.arm.topMotor.motor.getSelectedSensorVelocity() != 0:
             self.moved = True
         if self.moved and self.arm.baseMotor.motor.getSelectedSensorVelocity() == 0 and self.arm.midMotor.motor.getSelectedSensorVelocity() == 0 and self.arm.topMotor.motor.getSelectedSensorVelocity() == 0:
+            self.done = True
+        """
+        if self.arm.armToPosPriority(0, (-40*(2048 / 360)), 0, 0, [0, 1, 0]):
             self.done = True
         # For cone for future reference: self.arm.holdAtPercentage(0.0, 0.0, 0.145)
     
