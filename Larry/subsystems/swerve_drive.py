@@ -86,6 +86,10 @@ class SwerveDrive(commands2.SubsystemBase):
             else:
                 opposAngle = 180
                 negAngle = 0
+
+        preRev = (conversions.getRevolutions(self.units) - 1) * 2048
+        curRev = conversions.getRevolutions(self.units) * 2048
+        nextRev = (conversions.getRevolutions(self.units) + 1) * 2048
         # print some stats for debugging
         wpilib.SmartDashboard.putNumber(" Original Angle -", direction)
         wpilib.SmartDashboard.putNumber(" Abs Opposite Angle -", opposAngle)
