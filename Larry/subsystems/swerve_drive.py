@@ -109,6 +109,17 @@ class SwerveDrive(commands2.SubsystemBase):
                     module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle) * constants.ksteeringGearRatio)
                     module.move(-magnitude)
             """
+            revCompensation = conversions.getRevolutions(currentAngle) * 2048
+            if conversions.sign(currentAngle) == -1:
+                if (direction + 360) > 360:
+                    pass
+                else:
+                    pass
+            elif conversions.sign(currentAngle) == 0:
+                pass
+            else:
+                if (direction - 360) < 360:
+                    pass
 
             # if negAngle is closer
             if math.fabs(currentAngle - direction) >= math.fabs(currentAngle - negAngle):

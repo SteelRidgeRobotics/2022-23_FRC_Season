@@ -14,7 +14,7 @@ def convertTalonFXUnitsToDegrees(num: float) -> float:
     return num % 360
 
 def getRevolutions(num: float) -> int:
-    return (num - num % 2048)/2048
+    return (num - num % 360)/360
 
 def sign(num) -> int:
     if num > 0:
