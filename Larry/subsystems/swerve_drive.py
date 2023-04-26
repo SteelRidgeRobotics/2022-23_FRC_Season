@@ -112,14 +112,12 @@ class SwerveDrive(commands2.SubsystemBase):
             revCompensation = conversions.getRevolutions(currentAngle) * 2048
             if conversions.sign(currentAngle) == -1:
                 if (direction + 360) > 360:
-                    pass
-                else:
-                    pass
+                    revCompensation = (conversions.getRevolutions(currentAngle) + 1) * 2048
             elif conversions.sign(currentAngle) == 0:
                 pass
             else:
                 if (direction - 360) < 360:
-                    pass
+                    revCompensation = (conversions.getRevolutions(currentAngle) - 1) * 2048
 
             # if negAngle is closer
             if math.fabs(currentAngle - direction) >= math.fabs(currentAngle - negAngle):
