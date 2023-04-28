@@ -11,10 +11,12 @@ def getRevolutions(pos) -> int:
 
 def convertTalonFXUnitsToDegrees(num: float) -> float:
     num *= (360 / 2048)
-    return num % 360
+    num = (num % 360) if sign(num) == 1 or sign(num) == 0 else -(math.fabs(num) % 360) 
+    return num
 
 def getRevolutions(num: float) -> int:
-    return (num - num % 360)/360
+    num =  (num - num % 360) if sign(num) == 1 or sign(num) == 0 else (num + math.fabs(num) % 360)
+    return num/360
 
 def sign(num) -> int:
     if num > 0:

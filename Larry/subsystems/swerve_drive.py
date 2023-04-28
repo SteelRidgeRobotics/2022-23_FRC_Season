@@ -60,8 +60,7 @@ class SwerveDrive(commands2.SubsystemBase):
             magnitude = -1.0
 
         # find current angle
-        currentAngle = conversions.convertTalonFXUnitsToDegrees(module.directionMotor.getSelectedSensorPosition())
-        currentAngle /= constants.ksteeringGearRatio
+        currentAngle = conversions.convertTalonFXUnitsToDegrees(module.directionMotor.getSelectedSensorPosition()/constants.ksteeringGearRatio)
         """
         # see if the abs value is greater than 180
         if math.fabs(direction) >= 180.0:
@@ -87,9 +86,6 @@ class SwerveDrive(commands2.SubsystemBase):
                 opposAngle = 180
                 negAngle = 0
 
-        preRev = (conversions.getRevolutions(self.units) - 1) * 2048
-        curRev = conversions.getRevolutions(self.units) * 2048
-        nextRev = (conversions.getRevolutions(self.units) + 1) * 2048
         # print some stats for debugging
         wpilib.SmartDashboard.putNumber(" Original Angle -", direction)
         wpilib.SmartDashboard.putNumber(" Abs Opposite Angle -", opposAngle)
@@ -138,7 +134,9 @@ class SwerveDrive(commands2.SubsystemBase):
                 # move in the opposite direction
                 module.move(-magnitude)
                 wpilib.SmartDashboard.putBoolean("Using - ANGLE: ", False)
-            wpilib.SmartDashboard.putBoolean("Rev")
+            wpilib.SmartDashboard.putNumber("Rev", revCompensation)
+            wpilib.SmartDashboard.putNumber("REVOLUTIONS", conversions.getRevolutions(currentAngle))
+            wpilib.SmartDashboard.putNumber("Current Angle", currentAngle)
 
     def translate(self, direction: float, magnitude: float):
         self.turnWheel(self.leftFrontSwerveModule, direction, magnitude)
