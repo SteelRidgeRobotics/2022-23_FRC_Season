@@ -105,12 +105,12 @@ class SwerveDrive(commands2.SubsystemBase):
                     module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle) * constants.ksteeringGearRatio)
                     module.move(-magnitude)
             """
-            revCompensation = conversions.getRevolutions(currentAngle) * 360
+            revCompensation = conversions.getRevolutions(currentAngle)
             if conversions.sign(currentAngle) == -1:
                 if (direction + 360) > 360:
                     revCompensation = (conversions.getRevolutions(currentAngle) + 1) * 360
             elif conversions.sign(currentAngle) == 0:
-                pass
+                revCompensation = 0
             else:
                 if (direction - 360) < 360:
                     revCompensation = (conversions.getRevolutions(currentAngle) - 1) * 360
