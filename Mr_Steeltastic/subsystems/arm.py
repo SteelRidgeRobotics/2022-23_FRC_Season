@@ -188,11 +188,6 @@ class Arm(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber('Base Motor Pos', self.baseMotor.motor.getSelectedSensorPosition())
         wpilib.SmartDashboard.putNumber('Mid Motor Pos', self.midMotor.motor.getSelectedSensorPosition())
         wpilib.SmartDashboard.putNumber('Top Motor Pos', self.topMotor.motor.getSelectedSensorPosition())
-
-    def sendMotorPos(self):
-        wpilib.SmartDashboard.putNumber('Base Motor Pos', self.baseMotor.motor.getSelectedSensorPosition())
-        wpilib.SmartDashboard.putNumber('Mid Motor Pos', self.midMotor.motor.getSelectedSensorPosition())
-        wpilib.SmartDashboard.putNumber('Top Motor Pos', self.topMotor.motor.getSelectedSensorPosition())
     
     def armToPosSimulataneously(self, base: int, mid: int, top: int, grabber: int):
 
@@ -233,20 +228,11 @@ class Arm(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber('Mid Motor Target', self.midMotor.motor.getSelectedSensorPosition())
         wpilib.SmartDashboard.putNumber('Top Motor Target', self.topMotor.motor.getSelectedSensorPosition())
 
-        for i in range(len(self.motorList)-1):
-            if i == 0:
-                self.motorList[i].moveToPos(pos=self.motorList[i].motor.getSelectedSensorPosition(), aRBFF=False)
-            else:
-                self.motorList[i].moveToPos(pos=self.motorList[i].motor.getSelectedSensorPosition())
-        
-        """
-        self.baseMotor.moveToPos(pos=self.baseMotor.motor.getSelectedSensorPosition(), angle=self.globalBaseAngle)
+        self.baseMotor.moveToPos(pos=self.baseMotor.motor.getSelectedSensorPosition(), angle=self.globalBaseAngle, aRBFF=False)
         self.midMotor.moveToPos(pos=self.midMotor.motor.getSelectedSensorPosition(), angle=self.globalMidAngle)
         self.topMotor.moveToPos(pos=self.topMotor.motor.getSelectedSensorPosition(), angle=self.globalTopAngle)
         self.grabberMotor.moveToPos(pos=self.grabberMotor.motor.getSelectedSensorPosition())
-        """
         
-
     def setGrabber(self, bool: bool): # Soon (TM)
         """
         Tell the grabber to open or close

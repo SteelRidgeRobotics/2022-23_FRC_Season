@@ -12,7 +12,7 @@ from subsystems.drivetrain import Drivetrain
 from commands.autoDock import StationCorrection
 from commands.setGrabber import SetGrabber
 from commands.moveArmToPose import MoveArmToPose
-from commands.moveArmCommands import SetPositions, MoveBackToHome, MoveBackToOrigin
+from commands.moveArmCommands import MoveBackToHome, MoveBackToOrigin
 from guitar import Guitar
 
 class RobotContainer:
