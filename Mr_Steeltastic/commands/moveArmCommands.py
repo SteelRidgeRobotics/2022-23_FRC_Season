@@ -3,6 +3,8 @@ import wpilib
 from subsystems.arm import Arm
 import ctre
 import constants
+from commands.setPositionCombos import SetPositionBaseMid
+from commands.setPositionTop import SetPositionTop
 ## create command class that enters numbers into the HoldAtPercentage method of
 #  the Arm object.
 class SetPositions(commands2.CommandBase):
@@ -116,15 +118,12 @@ class MoveArmUp(commands2.CommandBase):
         #self.arm.holdAtPercentage(-0.135, -0.105, 0.125)
         wpilib.SmartDashboard.putBoolean("Moving Arm?", True)
         #self.arm.armToPos((-30 * (2048 / 360)), (-120 * (2048 / 360)), (0 * (2048 / 360)), 0) 
-        """
         self.arm.armToPosSimulataneously(0, (-40*(2048 / 360)), 0, 0) 
         if self.arm.baseMotor.motor.getSelectedSensorVelocity() != 0 or self.arm.midMotor.motor.getSelectedSensorVelocity() != 0 or self.arm.topMotor.motor.getSelectedSensorVelocity() != 0:
             self.moved = True
         if self.moved and self.arm.baseMotor.motor.getSelectedSensorVelocity() == 0 and self.arm.midMotor.motor.getSelectedSensorVelocity() == 0 and self.arm.topMotor.motor.getSelectedSensorVelocity() == 0:
             self.done = True
-        """
-        if self.arm.armToPosPriority(0, (-40*(2048 / 360)), 0, 0, [0, 1, 0]):
-            self.done = True
+        
         # For cone for future reference: self.arm.holdAtPercentage(0.0, 0.0, 0.145)
     
     def end(self, interrupted):
@@ -173,3 +172,13 @@ class PlaceCubeMid(commands2.SequentialCommandGroup):
             commands2.WaitCommand(0.25),
             SetPositions(arm, -27652, -117375, 5110, 12145),
             )
+        
+class MoveBackToOrigin(commands2.SequentialCommandGroup):
+    def __init__(self, arm: Arm):
+        super().__init__()
+        self.addCommands(
+            MoveArmUp(arm),
+            commands2.WaitCommand(0.25),
+            SetPositionTop(arm, 0),
+            SetPositionBaseMid(arm, 0, 0)
+        )

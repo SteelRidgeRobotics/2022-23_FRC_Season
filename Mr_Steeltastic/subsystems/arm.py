@@ -72,6 +72,10 @@ class ArmMotor:
         
         return self.motor.getSelectedSensorPosition() * 360/2048
     
+    def isMotorPos(self, pos: int) -> bool:
+        wpilib.SmartDashboard.putNumber("test", round(self.motor.getSelectedSensorPosition(), -2))
+        return round(self.motor.getSelectedSensorPosition(), -2) == round(pos * self.gearRatio, -2)
+    
 class Arm(commands2.SubsystemBase):
 
     def __init__(self):
@@ -161,7 +165,7 @@ class Arm(commands2.SubsystemBase):
 
         return False
     
-    def motorToPos(self, motor: ArmMotor, pos: int) -> bool:
+    def motorToPos(self, motor: ArmMotor, pos: int):
         """Moves a single motor to a postition. If the motor is in position, returns true."""
         motor_ratio = None
         if motor == self.baseMotor:
@@ -185,121 +189,10 @@ class Arm(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber('Mid Motor Pos', self.midMotor.motor.getSelectedSensorPosition())
         wpilib.SmartDashboard.putNumber('Top Motor Pos', self.topMotor.motor.getSelectedSensorPosition())
 
-        if round(motor.motor.getSelectedSensorPosition(), -2) == round(pos * motor_ratio, -2) or motor.motor.getSelectedSensorVelocity() == 0:
-            return True
-        else:
-            return False
-
-
-
-
-    def armToPosPriority(self, base: int, mid: int, top: int, grabber: int, priority: list) -> bool:
-        wpilib.SmartDashboard.putNumber('Base Motor Target', base * constants.BASERATIO)
-        wpilib.SmartDashboard.putNumber('Mid Motor Target', mid * constants.MIDDLERATIO)
-        wpilib.SmartDashboard.putNumber('Top Motor Target', top * constants.TOPRATIO)
-
+    def sendMotorPos(self):
         wpilib.SmartDashboard.putNumber('Base Motor Pos', self.baseMotor.motor.getSelectedSensorPosition())
         wpilib.SmartDashboard.putNumber('Mid Motor Pos', self.midMotor.motor.getSelectedSensorPosition())
         wpilib.SmartDashboard.putNumber('Top Motor Pos', self.topMotor.motor.getSelectedSensorPosition())
-
-        priority_indexes = numpy.argsort(priority)
-        print(priority_indexes)
-
-        moving_motors = [False, False, False]
-        motors_done = [False, False, False]
-
-        moving_motors[priority_indexes[0]] = True
-
-        if priority[priority_indexes[0]] == priority[priority_indexes[1]]:
-            moving_motors[priority_indexes[1]] = True
-
-            if priority[priority_indexes[1]] == priority[priority_indexes[2]]:
-                moving_motors[priority_indexes[2]] = True
-        print(moving_motors)
-
-        wpilib.SmartDashboard.putBoolean("Base Motor Good?", False)
-        wpilib.SmartDashboard.putBoolean("Mid Motor Good?", False)
-        wpilib.SmartDashboard.putBoolean("Top Motor Good?", False)
-
-        for i in range(len(moving_motors)):
-            if not moving_motors[i]:
-                return
-            
-            if self.motorList[i] is self.baseMotor:
-                self.baseMotor.moveToPos(pos=base * constants.BASERATIO, angle=self.globalBaseAngle, aRBFF=False)
-
-                if round(self.baseMotor.motor.getSelectedSensorPosition(), -2) == round(base * constants.BASERATIO, -2) or self.baseMotor.motor.getSelectedSensorVelocity() == 0:
-                    motors_done[i] = True
-                    wpilib.SmartDashboard.putBoolean("Base Motor Good?", True)
-                    
-
-            elif self.motorList[i] is self.midMotor:
-                self.midMotor.moveToPos(pos=self.midMotor.motor.getSelectedSensorPosition(), angle=self.globalMidAngle)
-
-                if round(self.midMotor.motor.getSelectedSensorPosition(), -2) == round(mid * constants.MIDDLERATIO, -2) or self.midMotor.motor.getSelectedSensorVelocity() == 0:
-                    motors_done[i] = True
-                    wpilib.SmartDashboard.putBoolean("Mid Motor Good?", True)
-            
-            elif self.motorList[i] is self.topMotor:
-                self.topMotor.moveToPos(pos=self.topMotor.motor.getSelectedSensorPosition(), angle=self.globalTopAngle)
-
-                if round(self.topMotor.motor.getSelectedSensorPosition(), -2) == round(top * constants.TOPRATIO, -2) or self.topMotor.motor.getSelectedSensorVelocity() == 0:
-                    motors_done[i] = True
-                    wpilib.SmartDashboard.putBoolean("Top Motor Good?", True)
-
-        if any(motors_done) and moving_motors == motors_done:
-            moving_motors.reverse()
-
-            for i in range(len(moving_motors)):
-                if not moving_motors[i]:
-                    return
-            
-                if self.motorList[i] is self.baseMotor:
-                    self.baseMotor.moveToPos(pos=base * constants.BASERATIO, angle=self.globalBaseAngle, aRBFF=False)
-
-                    if round(self.baseMotor.motor.getSelectedSensorPosition(), -2) == round(base * constants.BASERATIO, -2) or self.baseMotor.motor.getSelectedSensorVelocity() == 0:
-                        motors_done[i] = True
-                        wpilib.SmartDashboard.putBoolean("Base Motor Good?", True)
-
-                elif self.motorList[i] is self.midMotor:
-                    self.midMotor.moveToPos(pos=self.midMotor.motor.getSelectedSensorPosition(), angle=self.globalMidAngle)
-
-                    if round(self.midMotor.motor.getSelectedSensorPosition(), -2) == round(mid * constants.MIDDLERATIO, -2) or self.midMotor.motor.getSelectedSensorVelocity() == 0:
-                        motors_done[i] = True
-                        wpilib.SmartDashboard.putBoolean("Mid Motor Good?", True)
-            
-                elif self.motorList[i] is self.topMotor:
-                    self.topMotor.moveToPos(pos=self.topMotor.motor.getSelectedSensorPosition(), angle=self.globalTopAngle)
-
-                    if round(self.topMotor.motor.getSelectedSensorPosition(), -2) == round(top * constants.TOPRATIO, -2) or self.topMotor.motor.getSelectedSensorVelocity() == 0:
-                        motors_done[i] = True
-                        wpilib.SmartDashboard.putBoolean("Top Motor Good?", True)
-
-        wpilib.SmartDashboard.putBooleanArray("Moving Motors:", moving_motors)
-        wpilib.SmartDashboard.putBooleanArray("Motors Done:", motors_done)
-
-        if all(motors_done):
-            return True
-
-
-            
-
-
-
-
-
-
-
-            
-
-            
-
-
-
-
-
-
-    
     
     def armToPosSimulataneously(self, base: int, mid: int, top: int, grabber: int):
 

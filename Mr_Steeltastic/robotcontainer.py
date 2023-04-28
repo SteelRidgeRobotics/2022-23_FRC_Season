@@ -12,7 +12,7 @@ from subsystems.drivetrain import Drivetrain
 from commands.autoDock import StationCorrection
 from commands.setGrabber import SetGrabber
 from commands.moveArmToPose import MoveArmToPose
-from commands.moveArmCommands import SetPositions, MoveBackToHome
+from commands.moveArmCommands import SetPositions, MoveBackToHome, MoveBackToOrigin
 from guitar import Guitar
 
 class RobotContainer:
@@ -49,13 +49,13 @@ class RobotContainer:
             JoystickButton(self.functionsController, Guitar.Button.kRed).whenPressed(MoveArmToPose(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kBlue).whenPressed(SetGrabber(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kYellow).whenPressed(MoveBackToHome(self.arm))
-            JoystickButton(self.functionsController, Guitar.Button.kStar).whenPressed(SetPositions(self.arm, 0, 0, 0, 0))
-            JoystickButton(self.functionsController, Guitar.Button.kOrange).whenPressed(ArmTest(self.arm))
+            JoystickButton(self.functionsController, Guitar.Button.kStar).whenPressed(MoveBackToOrigin(self.arm))
+            #JoystickButton(self.functionsController, Guitar.Button.kOrange).whenPressed(ArmTest(self.arm))
         else:
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(MoveArmToPose(self.arm))
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm))
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kY).whenPressed(MoveBackToHome(self.arm))
-            JoystickButton(self.functionsController, wpilib.XboxController.Button.kX).whenPressed(SetPositions(self.arm, 0, 0, 0, 0))
+            JoystickButton(self.functionsController, wpilib.XboxController.Button.kX).whenPressed(MoveBackToOrigin(self.arm))
             #JoystickButton(self.functionsController,wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
 
     def getAutonomousCommand(self) -> commands2.CommandBase:
