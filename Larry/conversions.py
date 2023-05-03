@@ -18,6 +18,55 @@ def getRevolutions(num: float) -> int:
     num =  (num - num % 360) if sign(num) == 1 or sign(num) == 0 else (num + math.fabs(num) % 360)
     return num/360
 
+def giveRevCompensation(currentAngle, direction):
+
+    revCompensation = getRevolutions(currentAngle)
+    curRev = revCompensation * 360
+
+    if math.fabs(curRev - (direction + curRev)) < math.fabs(curRev - direction):
+
+        revCompensation *= 360
+
+    return revCompensation
+
+def getclosest(currentAngle, direction):
+
+    rev = giveRevCompensation(currentAngle, direction)
+
+    if direction < 0:
+
+        opposAngle = direction + 180
+        negAngle = 360 + direction
+
+    elif direction > 0:
+
+        opposAngle = direction - 180
+        negAngle = direction - 360
+        
+    else:
+
+        if sign(direction) == -1:
+
+            opposAngle = -180
+            negAngle = 0
+
+        else:
+
+            opposAngle = 180
+            negAngle = 0
+
+    if math.fabs(currentAngle - direction) >= math.fabs(currentAngle - negAngle):
+
+        return negAngle + rev
+
+    elif math.fabs(currentAngle - direction) <= math.fabs(currentAngle - opposAngle):
+
+        return direction + rev
+
+    else:
+
+        return opposAngle + rev
+
 def sign(num) -> int:
     if num > 0:
         # positive
