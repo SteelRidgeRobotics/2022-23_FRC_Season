@@ -60,7 +60,6 @@ class ArmMotor:
         angle = kwargs.get("angle", self.getCurrentAngle())
         aRBFF = kwargs.get("aRBFF", True)
 
-
         if aRBFF:
             feed_forward = self.holdPercentage * numpy.cos(math.radians(angle))
             self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos, 
@@ -73,8 +72,13 @@ class ArmMotor:
         return self.motor.getSelectedSensorPosition() * 360/2048
     
     def isMotorPos(self, pos: int) -> bool:
-        wpilib.SmartDashboard.putNumber("test", round(self.motor.getSelectedSensorPosition(), -2))
-        return round(self.motor.getSelectedSensorPosition(), -2) == round(pos * self.gearRatio, -2)
+        roundedMotorPos = round(self.motor.getSelectedSensorPosition(), -2)
+        roundedTarget = round(pos * self.gearRatio, -2)
+        wpilib.SmartDashboard.putNumber("test", roundedMotorPos)
+        wpilib.SmartDashboard.putNumber("test2", roundedTarget)
+        #if abs(roundedMotorPos) - abs(roundedTarget) < 250:
+            #return True
+        return roundedMotorPos == roundedTarget
     
 class Arm(commands2.SubsystemBase):
 

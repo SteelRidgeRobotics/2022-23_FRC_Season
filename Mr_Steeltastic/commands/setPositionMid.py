@@ -22,9 +22,11 @@ class SetPositionMid(commands2.CommandBase):
         self.done = False
         
     def initialize(self) -> None:
+        self.done = False
         self.arm.motorToPos(self.arm.midMotor, self.midAngle/constants.MIDDLERATIO)
         self.timer.start()
         wpilib.SmartDashboard.putBoolean("Moving Mid?", True)
+        wpilib.SmartDashboard.putString("Current Command", "PositionMid")
 
     def execute(self):
         wpilib.SmartDashboard.putNumber("Mid Timer", self.timer.get())
@@ -38,6 +40,7 @@ class SetPositionMid(commands2.CommandBase):
     
     def end(self, interrupted):
         wpilib.SmartDashboard.putBoolean("Moving Mid?", False)
+        wpilib.SmartDashboard.putString("Current Command", "None")
         self.timer.stop()
         self.timer.reset()
         wpilib.SmartDashboard.putNumber("Mid Time", 0)

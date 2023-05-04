@@ -22,10 +22,12 @@ class SetPositionBase(commands2.CommandBase):
         self.done = False
         
     def initialize(self) -> None:
+        self.done = False
         self.arm.motorToPos(self.arm.baseMotor, self.baseAngle/constants.BASERATIO)
         self.timer.start()
         self.timer.reset()
         wpilib.SmartDashboard.putBoolean("Moving Base?", True)
+        wpilib.SmartDashboard.putString("Current Command", "PositionBase")
 
     def execute(self):
         wpilib.SmartDashboard.putNumber("Base Timer", self.timer.get())
@@ -40,6 +42,7 @@ class SetPositionBase(commands2.CommandBase):
     def end(self, interrupted):
         wpilib.SmartDashboard.putBoolean("Moving Arm?", False)
         wpilib.SmartDashboard.putBoolean("Moving Base?", False)
+        wpilib.SmartDashboard.putString("Current Command", "None")
         self.timer.stop()
         wpilib.SmartDashboard.putNumber("Base Time", 0)
         self.arm.baseMotor.moveToPos(pos=self.arm.baseMotor.motor.getSelectedSensorPosition(), angle=self.arm.globalBaseAngle)
