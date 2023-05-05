@@ -3,8 +3,9 @@ import wpilib
 from subsystems.arm import Arm
 import ctre
 import constants
-from commands.setPositionCombos import SetPositionBaseMid, SetPositionAll
+from commands.setPositionCombos import SetPositionBaseMid, SetPositionAll, SetPositionAllInRange, SetPositionCubePickup, SetPositionMidTop
 from commands.setPositionTop import SetPositionTop
+from commands.setPositionBase import SetPositionBase
 ## create command class that enters numbers into the HoldAtPercentage method of
 #  the Arm object.
 class SetPositions(commands2.CommandBase):
@@ -159,7 +160,7 @@ class MoveBackToHome(commands2.SequentialCommandGroup):
             #SetPositions(arm, 46835, -10093, 7705, 0),
             #commands2.WaitCommand(0.5),
             )
-
+"""
 class PlaceCubeMid(commands2.SequentialCommandGroup):
     def __init__(self, arm: Arm):
         super().__init__()
@@ -172,13 +173,29 @@ class PlaceCubeMid(commands2.SequentialCommandGroup):
             commands2.WaitCommand(0.25),
             SetPositions(arm, -27652, -117375, 5110, 12145),
             )
+            """
+class PlaceCubeMid(commands2.SequentialCommandGroup):
+    def __init__(self, arm: Arm):
+        super().__init__()
+        self.addCommands(
+            SetPositionAllInRange(arm, 0, -30340, 0),
+            SetPositionMidTop(arm, -117375, 5110),
+            SetPositionBase(arm, -27652)
+        )
         
 class MoveBackToOrigin(commands2.SequentialCommandGroup):
     def __init__(self, arm: Arm):
         super().__init__()
         self.addCommands(
-            SetPositionAll(arm, 0, -30340, 0),
+            SetPositionAllInRange(arm, 0, -30340, 0),
             commands2.WaitCommand(0.25),
-            SetPositionTop(arm, 0),
-            SetPositionBaseMid(arm, 0, 0)
+            SetPositionAll(arm, 0, 0, 0)
+        )
+
+class MoveCubePickup(commands2.SequentialCommandGroup):
+    def __init__(self, arm: Arm):
+        super().__init__()
+        self.addCommands(
+            SetPositionAllInRange(arm, 0, -30340, 0),
+            SetPositionCubePickup(arm)
         )

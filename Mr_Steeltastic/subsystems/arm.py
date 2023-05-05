@@ -76,9 +76,16 @@ class ArmMotor:
         roundedTarget = round(pos * self.gearRatio, -2)
         wpilib.SmartDashboard.putNumber("test", roundedMotorPos)
         wpilib.SmartDashboard.putNumber("test2", roundedTarget)
-        #if abs(roundedMotorPos) - abs(roundedTarget) < 250:
-            #return True
         return roundedMotorPos == roundedTarget
+    
+    def isMotorPosInRange(self, pos: int, range=325) -> bool:
+        roundedMotorPos = round(self.motor.getSelectedSensorPosition(), -2)
+        roundedTarget = round(pos * self.gearRatio, -2)
+        minTarget = roundedTarget - range
+        maxTarget = roundedTarget + range
+        wpilib.SmartDashboard.putNumber("test", roundedMotorPos)
+        wpilib.SmartDashboard.putNumber("test2", roundedTarget)
+        return minTarget <= roundedMotorPos <= maxTarget
     
 class Arm(commands2.SubsystemBase):
 
