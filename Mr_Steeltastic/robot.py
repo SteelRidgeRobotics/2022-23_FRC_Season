@@ -22,7 +22,6 @@ class Steeltastic(commands2.TimedCommandRobot):
             self.autoCommand.schedule()
 
     def autonomousPeriodic(self):
-
         pass
 
     def teleopInit(self):

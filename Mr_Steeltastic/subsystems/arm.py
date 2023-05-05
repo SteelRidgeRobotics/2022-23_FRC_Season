@@ -3,7 +3,6 @@ import commands2
 import ctre
 import constants
 import math
-import numpy
 
 def deadband(value):
 
@@ -61,7 +60,7 @@ class ArmMotor:
         aRBFF = kwargs.get("aRBFF", True)
 
         if aRBFF:
-            feed_forward = self.holdPercentage * numpy.cos(math.radians(angle))
+            feed_forward = self.holdPercentage * math.cos(math.radians(angle))
             self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos, 
                         ctre.DemandType.ArbitraryFeedForward, feed_forward)
         else:

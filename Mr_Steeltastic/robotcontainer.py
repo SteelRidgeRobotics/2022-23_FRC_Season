@@ -11,8 +11,7 @@ from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 from commands.autoDock import StationCorrection
 from commands.setGrabber import SetGrabber
-from commands.moveArmToPose import MoveArmToPose
-from commands.moveArmCommands import MoveBackToHome, MoveBackToOrigin, MoveCubePickup, SetPositionAllInRange, PlaceCubeMid
+from commands.moveArmCommands import MoveBackToHome, MoveBackToOrigin, MoveCubePickup, PlaceCubeMid
 from guitar import Guitar
 
 class RobotContainer:
@@ -52,11 +51,11 @@ class RobotContainer:
             JoystickButton(self.functionsController, Guitar.Button.kStar).whenPressed(MoveBackToOrigin(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kOrange).whenPressed(PlaceCubeMid(self.arm))
         else:
-            JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(MoveArmToPose(self.arm))
+            JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(MoveCubePickup(self.arm))
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm))
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kY).whenPressed(MoveBackToHome(self.arm))
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kX).whenPressed(MoveBackToOrigin(self.arm))
-            JoystickButton(self.functionsController,wpilib.XboxController.Button.kB).whenPressed(ArmTest(self.arm))
+            JoystickButton(self.functionsController,wpilib.XboxController.Button.kStart).whenPressed(PlaceCubeMid(self.arm))
 
     def getAutonomousCommand(self) -> commands2.CommandBase:
 
