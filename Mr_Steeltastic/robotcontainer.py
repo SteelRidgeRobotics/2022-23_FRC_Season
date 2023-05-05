@@ -3,7 +3,6 @@ import wpilib
 from commands2.button import JoystickButton
 
 import constants
-from commands.armTest import ArmTest
 from commands.joystickDrive import JoystickDrive
 from commands.autoDock import StationCorrectionMobility
 from commands.timedDrive import TimedDrive
