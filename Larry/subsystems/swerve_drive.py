@@ -128,7 +128,9 @@ class SwerveDrive(commands2.SubsystemBase):
                 module.move(-magnitude)
                 wpilib.SmartDashboard.putBoolean("Using - ANGLE: ", False)
             """
-            
+            module.turn(constants.ksteeringGearRatio * conversions.convertDegreesToTalonFXUnits(conversions.getclosest(currentAngle, direction, magnitude)[0]))
+            module.move(conversions.getclosest(currentAngle, direction, magnitude)[1])
+
             wpilib.SmartDashboard.putNumber("Rev", rev)
             wpilib.SmartDashboard.putNumber("REVOLUTIONS", conversions.getRevolutions(currentAngle))
             wpilib.SmartDashboard.putNumber("Current Angle", currentAngle)
