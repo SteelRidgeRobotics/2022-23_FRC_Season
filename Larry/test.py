@@ -1,6 +1,7 @@
 import conversions
 import math
 
+"""
 def test(direction):
     if direction < 0:
 
@@ -66,7 +67,7 @@ def giveRevCompensation(currentAngle, direction):
 
                 print("negative")
                 revCompensation = (curRev - 360)
-                
+
             elif math.fabs(currentAngle - curRev) < math.fabs(currentAngle): ## 361 - 360 < 361 ## -360 + 360 -1
 
                 print("go down rev")
@@ -111,7 +112,11 @@ def getclosest(currentAngle, direction):
     print("opposAngle = " + str(opposAngle + rev))
     print("negAngle = " + str(negAngle + rev))
 
-    if math.fabs(currentAngle - direction) >= math.fabs(currentAngle - negAngle):
+    if direction == 0:
+        
+        return giveRevCompensation(currentAngle, direction)
+
+    elif math.fabs(currentAngle - direction) >= math.fabs(currentAngle - negAngle):
 
         print("negAngle closer")
         return negAngle + rev
@@ -128,9 +133,18 @@ def getclosest(currentAngle, direction):
 
 cA = float(input("currentAngle? = "))
 d = float(input("direction? = "))
-#closest = getclosest(cA, d)
-#print("closest = " + str(closest))
+closest = getclosest(cA, d)
+print("closest = " + str(closest))
 
 rev = giveRevCompensation(cA, d)
 print("rev = " + str(rev))
 print(str(d+rev))
+"""
+
+def test():
+    pass
+
+cA = float(input("currentAngle? = "))
+d = float(input("direction? = "))
+print(str(conversions.giveRevCompensation(cA, d)))
+print(str(conversions.getclosest(cA, d, 1)))
