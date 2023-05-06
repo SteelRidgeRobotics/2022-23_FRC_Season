@@ -11,6 +11,7 @@ from subsystems.drivetrain import Drivetrain
 from commands.autoDock import StationCorrection
 from commands.setGrabber import SetGrabber
 from commands.moveArmCommands import MoveBackToHome, MoveBackToOrigin, MoveCubePickup, PlaceCubeMid
+from commands.miscArmCommands import ToggleArmCoast
 from guitar import Guitar
 
 class RobotContainer:
@@ -49,6 +50,7 @@ class RobotContainer:
             JoystickButton(self.functionsController, Guitar.Button.kYellow).whenPressed(MoveBackToHome(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kStar).whenPressed(MoveBackToOrigin(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kOrange).whenPressed(PlaceCubeMid(self.arm))
+            JoystickButton(self.functionsController, Guitar.Button.kVol).whenPressed(ToggleArmCoast(self.arm))
         else:
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(MoveCubePickup(self.arm))
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kA).whenPressed(SetGrabber(self.arm))
