@@ -1,8 +1,34 @@
 import commands2
 import wpilib
-from subsystems.arm import Arm
+from subsystems.arm import Arm, ArmMotor
 import ctre
 import constants
+
+class SetPosition(commands2.CommandBase):
+    def __init__(self, motor: ArmMotor, pos):
+        super().__init__()
+        self.motor = motor
+        self.addRequirements([self.motor])
+        self.timer = wpilib.Timer()
+        self.done = False
+    
+    def initialize(self) -> None:
+        self.done = False
+        self.timer.start()
+
+    def execute(self):
+        # TODO
+        pass
+    
+    def end(self, interrupted):
+        # TODO
+        pass
+        
+    def isFinished(self):
+        """
+        Return whether or not the command is finished.
+        """
+        return self.done
 
 class SetPositionTop(commands2.CommandBase):
     """
