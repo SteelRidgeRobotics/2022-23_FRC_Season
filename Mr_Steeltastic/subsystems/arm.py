@@ -20,9 +20,10 @@ class ArmMotor:
         
     def __init__(self, motorID: int, holdPercentage: float, feedForward: float, 
                  armP: float, armD: float, cruiseVel: float, accel: float, 
-                 gearRatio: float, offset: float):
+                 gearRatio: float, offset: float, name: str):
 
         self.motor = ctre.TalonFX(motorID)
+        self.motorID = motorID
         # self.encoder = ctre.CANCoder(encoderID)
         self.holdPercentage = holdPercentage
         self.gearRatio = gearRatio
@@ -48,6 +49,8 @@ class ArmMotor:
         self.motor.configSupplyCurrentLimit(currLimitConfigs=ctre.SupplyCurrentLimitConfiguration(True, 40.0, 30.0, 2.0))
         self.motor.enableVoltageCompensation(True)
         self.motor.configVoltageCompSaturation(11.8)
+
+        self.name = name
 
     def keepAtZero(self):
         
@@ -86,6 +89,16 @@ class ArmMotor:
         wpilib.SmartDashboard.putNumber("test2", roundedTarget)
         return minTarget <= roundedMotorPos <= maxTarget
     
+    def toPos(self, pos: int):
+        """Moves the motor to a postition."""
+        wpilib.SmartDashboard.putNumber(self.name + ' Motor Target', pos * self.gearRatio)
+        if self.motorID == 5: 
+            self.moveToPos(pos=pos * self.gearRatio, angle=self.getCurrentAngle(), aRBFF=False)
+        else:
+            self.moveToPos(pos=pos * self.gearRatio, angle=self.getCurrentAngle())
+
+        wpilib.SmartDashboard.putNumber(self.name + ' Motor Pos', self.motor.getSelectedSensorPosition())
+    
 class Arm(commands2.SubsystemBase):
 
     def __init__(self):
@@ -100,22 +113,22 @@ class Arm(commands2.SubsystemBase):
         self.baseMotor = ArmMotor(constants.ARMBASEPORT, constants.ARMBASEHOLDPERCENT, constants.ARMBASEF, 
                                   constants.ARMBASEP, constants.ARMBASED, 
                                   constants.ARMBASECRUISEVEL, constants.ARMBASEACCEL, 
-                                  constants.BASERATIO, 110432)
+                                  constants.BASERATIO, 110432, "Base")
         
         self.midMotor = ArmMotor(constants.ARMMIDPORT, constants.ARMMIDHOLDPERCENT, constants.ARMMIDF, 
                                  constants.ARMMIDP, constants.ARMMIDD, 
                                  constants.ARMMIDCRUISEVEL, constants.ARMMIDACCEL, 
-                                 constants.MIDDLERATIO, -91211)
+                                 constants.MIDDLERATIO, -91211, "Mid")
         
         self.topMotor = ArmMotor(constants.ARMTOPPORT, constants.ARMTOPHOLDPERCENT, constants.ARMTOPF, 
                                  constants.ARMTOPP, constants.ARMTOPD, 
                                  constants.ARMTOPCRUISEVEL, constants.ARMTOPACCEL, 
-                                 constants.TOPRATIO, 4362)
+                                 constants.TOPRATIO, 4362, "Top")
         
         self.grabberMotor = ArmMotor(constants.ARMGRABBERPORT, constants.ARMGRABBERHOLDPERCENT, constants.ARMGRABBERF, 
                                      constants.ARMGRABBERP, constants.ARMGRABBERD, 
                                      constants.ARMGRABBERCRUISEVEL, constants.ARMGRABBERACCEL, 
-                                     constants.GRABBERRATIO, 0)
+                                     constants.GRABBERRATIO, 0, "Grabber")
         
         self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
 
