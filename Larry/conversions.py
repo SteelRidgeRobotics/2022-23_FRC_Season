@@ -46,7 +46,10 @@ def giveRevCompensation(currentAngle, direction):
 
     elif math.fabs(curRev - (direction + curRev)) < math.fabs(curRev - direction):
 
-        revCompensation *= 360
+        revCompensation = (revCompensation + 1) *360
+    ## step up
+    elif math.fabs((curRev + 360 + direction) - curRev - 360) <= math.fabs(curRev - direction):
+        revCompensation = curRev + 360
     
     return revCompensation
 
