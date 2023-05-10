@@ -37,29 +37,8 @@ def giveRevCompensation(currentAngle, direction):
     currentAngle %= 360 ## now it is the angle relative to the revolution
 
     if direction == 0:
-
-        ## current angle is also 0
-        if sign(currentAngle) == 0:
-
-            revCompensation = curRev
         
-        else: ##  359 => 360; 361 => 360
-
-            if math.fabs((curRev + 360) - currentAngle) < math.fabs(currentAngle - curRev): ## 360 + 360 - 719 < currentAngle 
-
-                revCompensation = curRev + 360
-
-            elif (math.fabs(curRev + 360) + currentAngle) < math.fabs(currentAngle - curRev):
-
-                revCompensation = (curRev - 360)
-                
-            elif math.fabs(currentAngle - curRev) < math.fabs(currentAngle): ## 361 - 360 < 361 ## -360 + 360 -1
-
-                revCompensation = currentAngle - (currentAngle - curRev)
-
-        if round(originalAngle % 360) == 0:
-
-            revCompensation = curRev
+        revCompensation = roundToNearestRev(originalAngle)
     
     ## step down
     elif math.fabs(360 + currentAngle - direction) <= math.fabs(direction): ## (36)1 => 350
