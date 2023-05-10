@@ -148,31 +148,44 @@ def giveRevCompensation(currentAngle, direction):
     currentAngle is the true angle, all the revolutions
     direction is the relative angle that we want to go to
     """
+    originalAngle = currentAngle
     curRev = getRevolutions(currentAngle) * 360
     revCompensation = getRevolutions(currentAngle)
     currentAngle %= 360 ## now it is the angle relative to the revolution
 
     if direction == 0:
-        print("direction is not 0")
+        print("direction is 0")
 
         ## current angle is also 0
         if sign(currentAngle) == 0:
 
-            revCompensation = 0
+            revCompensation = curRev
 
         else: ##  359 => 360; 361 => 360
+            ## up
+            print(str(originalAngle - curRev))
+            print(str(originalAngle + curRev))
+            if (originalAngle - curRev) > (0):
+                print("up")
+            else:
+                print("down")
 
-            if math.fabs((curRev + 360) - currentAngle) < math.fabs(currentAngle - curRev): ## 360 + 360 - 719 < currentAngle 
+            if sign(curRev - originalAngle) == -1:
 
+                print("upUP")
                 revCompensation = curRev + 360
 
-            elif (math.fabs(curRev + 360) + currentAngle) < math.fabs(currentAngle - curRev):
-
+            elif (math.fabs(curRev + 360) + currentAngle) < math.fabs(originalAngle):
+                print("down")
                 revCompensation = (curRev - 360)
                 
-            elif math.fabs(currentAngle - curRev) < math.fabs(currentAngle): ## 361 - 360 < 361 ## -360 + 360 -1
+            elif math.fabs(currentAngle - curRev) < math.fabs(originalAngle): ## 361 - 360 < 361 ## -360 + 360 -1
 
                 revCompensation = currentAngle - (currentAngle - curRev)
+
+        if originalAngle % 360 == 0:
+            print("gotcha!")
+            revCompensation = curRev
     
     ## step down
     elif math.fabs(360 + currentAngle - direction) <= math.fabs(direction): ## (36)1 => 350
