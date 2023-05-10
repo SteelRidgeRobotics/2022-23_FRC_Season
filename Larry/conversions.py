@@ -18,6 +18,14 @@ def getRevolutions(num: float) -> int:
     num =  (num - num % 360) if sign(num) == 1 or sign(num) == 0 else (num + math.fabs(num) % 360)
     return num/360
 
+def roundToNearestRev(num):
+    val = num % 360
+    if val >= 180:
+        val = num - (val) + 360
+    else:
+        val = num - (val)
+    return val
+
 def giveRevCompensation(currentAngle, direction):
     """
     currentAngle is the true angle, all the revolutions
