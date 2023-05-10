@@ -6,7 +6,7 @@ def convertDegreesToTalonFXUnits(num: float) -> float:
     num *= conversionFactor
     return num
 
-def getRevolutions(pos) -> int:
+def talonGetRevolutions(pos) -> int:
     return int(pos/2048)
 
 def convertTalonFXUnitsToDegrees(num: float) -> float:
