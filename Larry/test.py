@@ -140,11 +140,66 @@ rev = giveRevCompensation(cA, d)
 print("rev = " + str(rev))
 print(str(d+rev))
 """
+import math
+from conversions import *
 
-def test():
-    pass
+def giveRevCompensation(currentAngle, direction):
+    """
+    currentAngle is the true angle, all the revolutions
+    direction is the relative angle that we want to go to
+    """
+    curRev = getRevolutions(currentAngle) * 360
+    revCompensation = getRevolutions(currentAngle)
+    currentAngle %= 360 ## now it is the angle relative to the revolution
+
+    if direction == 0:
+        print("direction is not 0")
+
+        ## current angle is also 0
+        if sign(currentAngle) == 0:
+
+            revCompensation = 0
+
+        else: ##  359 => 360; 361 => 360
+
+            if math.fabs((curRev + 360) - currentAngle) < math.fabs(currentAngle - curRev): ## 360 + 360 - 719 < currentAngle 
+
+                revCompensation = curRev + 360
+
+            elif (math.fabs(curRev + 360) + currentAngle) < math.fabs(currentAngle - curRev):
+
+                revCompensation = (curRev - 360)
+                
+            elif math.fabs(currentAngle - curRev) < math.fabs(currentAngle): ## 361 - 360 < 361 ## -360 + 360 -1
+
+                revCompensation = currentAngle - (currentAngle - curRev)
+    
+    ## step down
+    elif math.fabs(360 + currentAngle - direction) <= math.fabs(direction): ## (36)1 => 350
+
+        print("step down")
+        revCompensation = curRev - 360
+
+    ## if it is closer not to add revCompensation
+    elif math.fabs(currentAngle - direction) < math.fabs(curRev - (direction + curRev)):
+
+        print("don't")
+        revCompensation = curRev
+
+    elif math.fabs(curRev - (direction + curRev)) <= math.fabs(curRev - direction):
+
+        print(str(math.fabs(curRev - (direction + curRev))) + " <= " + str(math.fabs(curRev - direction)))
+        print("stEP UP positive")
+        revCompensation = (revCompensation + 1) * 360
+
+    else:
+        revCompensation = curRev
+
+    print("(currentAngle) - (360)) ===== " + str(math.fabs((currentAngle) - (360))))
+    print("(curRev + 360 + currentAngle) - (curRev + 360) == " + str((curRev + 360 + currentAngle) - (curRev + 360)))
+    print("(curRev - direction) == " + str((curRev - direction)))
+    return revCompensation
 
 cA = float(input("currentAngle? = "))
 d = float(input("direction? = "))
-print(str(conversions.giveRevCompensation(cA, d)))
-print(str(conversions.getclosest(cA, d, 1)))
+print(str(giveRevCompensation(cA, d)))

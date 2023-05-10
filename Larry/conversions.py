@@ -11,7 +11,7 @@ def getRevolutions(pos) -> int:
 
 def convertTalonFXUnitsToDegrees(num: float) -> float:
     num *= (360 / 2048)
-    num = (num % 360) if sign(num) == 1 or sign(num) == 0 else -(math.fabs(num) % 360) 
+    #num = (num % 360) if sign(num) == 1 or sign(num) == 0 else -(math.fabs(num) % 360) 
     return num
 
 def getRevolutions(num: float) -> int:
@@ -19,9 +19,13 @@ def getRevolutions(num: float) -> int:
     return num/360
 
 def giveRevCompensation(currentAngle, direction):
-
+    """
+    currentAngle is the true angle, all the revolutions
+    direction is the relative angle that we want to go to
+    """
+    curRev = getRevolutions(currentAngle) * 360
     revCompensation = getRevolutions(currentAngle)
-    curRev = revCompensation * 360
+    currentAngle %= 360 ## now it is the angle relative to the revolution
 
     if direction == 0:
 
@@ -43,15 +47,26 @@ def giveRevCompensation(currentAngle, direction):
             elif math.fabs(currentAngle - curRev) < math.fabs(currentAngle): ## 361 - 360 < 361 ## -360 + 360 -1
 
                 revCompensation = currentAngle - (currentAngle - curRev)
-
-    elif math.fabs(curRev - (direction + curRev)) < math.fabs(curRev - direction):
-
-        revCompensation = (revCompensation + 1) *360
-    ## step up
-    elif math.fabs((curRev + 360 + direction) - curRev - 360) <= math.fabs(curRev - direction):
-        revCompensation = curRev + 360
     
+    ## step down
+    elif math.fabs(360 + currentAngle - direction) <= math.fabs(direction): ## (36)1 => 350
+
+        revCompensation = curRev - 360
+
+    ## if it is closer not to add revCompensation
+    elif math.fabs(currentAngle - direction) < math.fabs(curRev - (direction + curRev)):
+
+        revCompensation = curRev
+
+    elif math.fabs(curRev - (direction + curRev)) <= math.fabs(curRev - direction):
+
+        revCompensation = (revCompensation + 1) * 360
+
+    else:
+        revCompensation = curRev
+
     return revCompensation
+
 
 def getclosest(currentAngle, direction, magnitude):
 
