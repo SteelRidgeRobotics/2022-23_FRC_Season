@@ -142,6 +142,13 @@ print(str(d+rev))
 """
 import math
 from conversions import *
+def roundToNearestRev(num):
+    val = num % 360
+    if val >= 180:
+        val = num
+    else:
+
+    
 
 def giveRevCompensation(currentAngle, direction):
     """
