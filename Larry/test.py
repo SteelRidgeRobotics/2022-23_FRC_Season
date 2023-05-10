@@ -145,10 +145,10 @@ from conversions import *
 def roundToNearestRev(num):
     val = num % 360
     if val >= 180:
-        val = num
+        val = num - (val) + 360
     else:
-
-    
+        val = num - (val)
+    return val
 
 def giveRevCompensation(currentAngle, direction):
     """
@@ -223,3 +223,5 @@ def giveRevCompensation(currentAngle, direction):
 cA = float(input("currentAngle? = "))
 d = float(input("direction? = "))
 print(str(giveRevCompensation(cA, d)))
+deg = float(input(" deg = "))
+print(str(roundToNearestRev(deg)))
