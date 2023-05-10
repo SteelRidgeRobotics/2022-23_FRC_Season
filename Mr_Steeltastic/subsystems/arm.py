@@ -8,7 +8,7 @@ def deadband(value):
 
     return 0 if abs(value) < constants.DEADBAND else value
 
-class ArmMotor:
+class ArmMotor(commands2.SubsystemBase):
 
     """
     Motor for arm ;)
@@ -21,6 +21,7 @@ class ArmMotor:
     def __init__(self, motorID: int, holdPercentage: float, feedForward: float, 
                  armP: float, armD: float, cruiseVel: float, accel: float, 
                  gearRatio: float, offset: float, name: str):
+        super().__init__()
 
         self.motor = ctre.TalonFX(motorID)
         self.motorID = motorID
@@ -82,7 +83,7 @@ class ArmMotor:
     
     def isMotorPosInRange(self, pos: int, range=325) -> bool:
         roundedMotorPos = round(self.motor.getSelectedSensorPosition(), -2)
-        roundedTarget = round(pos * self.gearRatio, -2)
+        roundedTarget = round(pos, -2)
         minTarget = roundedTarget - range
         maxTarget = roundedTarget + range
         wpilib.SmartDashboard.putNumber("test", roundedMotorPos)
@@ -91,11 +92,11 @@ class ArmMotor:
     
     def toPos(self, pos: int):
         """Moves the motor to a postition."""
-        wpilib.SmartDashboard.putNumber(self.name + ' Motor Target', pos * self.gearRatio)
+        wpilib.SmartDashboard.putNumber(self.name + ' Motor Target', pos)
         if self.motorID == 5: 
-            self.moveToPos(pos=pos * self.gearRatio, angle=self.getCurrentAngle(), aRBFF=False)
+            self.moveToPos(pos=pos, angle=self.getCurrentAngle(), aRBFF=False)
         else:
-            self.moveToPos(pos=pos * self.gearRatio, angle=self.getCurrentAngle())
+            self.moveToPos(pos=pos, angle=self.getCurrentAngle())
 
         wpilib.SmartDashboard.putNumber(self.name + ' Motor Pos', self.motor.getSelectedSensorPosition())
     
@@ -142,12 +143,20 @@ class Arm(commands2.SubsystemBase):
         self.globalTopAngle = 0
 
         self.motorList = [self.baseMotor, self.midMotor, self.topMotor, self.grabberMotor]
+
+        self.isInCubePlace = False
         
     def updateGlobalAngles(self):
 
         self.globalBaseAngle = self.baseMotor.getCurrentAngle()
         self.globalMidAngle = self.globalBaseAngle + self.midMotor.getCurrentAngle()
         self.globalTopAngle = self.globalMidAngle + self.topMotor.getCurrentAngle()
+
+    def setIsInCubePlace(self, isInCube: bool):
+        self.isInCubePlace = isInCube
+
+    def getIsInCubePlace(self) -> bool:
+        return self.isInCubePlace
 
     def keepArmsAtZero(self):
         self.baseMotor.keepAtZero()
