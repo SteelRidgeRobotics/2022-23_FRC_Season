@@ -25,7 +25,7 @@ Try to finish feature branches in ~1 week maximum to avoid this.
 ### [theLab](theLab)
 As of **5/11/2023** we now have a folder for feature testing, and non-robot specific code. This includes:
 - [Guitar Palpatine](theLab/Guitar_Palpatine2023): Testing with Palpatine for the GuitarHero Controller
-- [Inverse_Kinematics][(theLab/Inverse Kinematics)](https://github.com/SteelRidgeRobotics/2022-23_FRC_Season/tree/main/theLab/Inverse%20Kinematics): Various inverse kinematic code that we were testing for the season
+- [Inverse Kinematics](theLab/Inverse_Kinematics_Folder): Various inverse kinematic code that we were testing for the season
 - [Name_In_Progress_Magic](theLab/Name_In_Progress_Magic): The competition robot in the Magic Bot framework (not to be finished, use as reference only)
 - [PID_Tuning_Code](theLab/PID_Tuning_Code): A modified version of the [PID tuning code made in the 2022 season](https://github.com/SteelRidgeRobotics/2021-2022_FRC_Season/tree/main/PID_Tuning_Code)
 - [PathWeaver2023](theLab/PathWeaver2023): Path Weaver code that was started on, but did not make it Mr.Steeltastic
