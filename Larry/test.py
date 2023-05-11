@@ -162,7 +162,7 @@ def giveRevCompensation(currentAngle, direction):
 
     if direction == 0:
         print("direction is 0")
-
+        
         ## current angle is also 0
         if sign(currentAngle) == 0:
 
