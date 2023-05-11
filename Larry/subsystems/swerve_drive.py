@@ -25,7 +25,7 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightRearSpeed = ctre.TalonFX(constants.krightRearSpeedID)
 
         # fix inverse
-        self.leftFrontSpeed.setInverted(False)
+        self.leftFrontSpeed.setInverted(True)
         self.leftRearSpeed.setInverted(False)
 
         self.rightFrontSpeed.setInverted(True)
@@ -60,8 +60,7 @@ class SwerveDrive(commands2.SubsystemBase):
             magnitude = -1.0
 
         # find current angle
-        currentAngle = conversions.convertTalonFXUnitsToDegrees(module.directionMotor.getSelectedSensorPosition())
-        currentAngle /= constants.ksteeringGearRatio
+        currentAngle = conversions.convertTalonFXUnitsToDegrees(module.directionMotor.getSelectedSensorPosition()/constants.ksteeringGearRatio)
         """
         # see if the abs value is greater than 180
         if math.fabs(direction) >= 180.0:
@@ -71,14 +70,25 @@ class SwerveDrive(commands2.SubsystemBase):
             # find the abs value of the opposite angle
             opposAngle = math.fabs(direction) + 180.0
         """
-
-        if direction <= 0:
+        
+        if direction < 0:
             opposAngle = direction + 180
-        else:
+            negAngle = 360 + direction
+        elif direction > 0:
             opposAngle = direction - 180
+            negAngle = direction - 360
+            
+        else:
+            if conversions.sign(direction) == -1:
+                opposAngle = -180
+                negAngle = 0
+            else:
+                opposAngle = 180
+                negAngle = 0
+
         # print some stats for debugging
-        wpilib.SmartDashboard.putNumber(" Original Angle -", direction)
-        wpilib.SmartDashboard.putNumber(" Abs Opposit Angle -", opposAngle)
+        wpilib.SmartDashboard.putNumber(" Abs Opposite Angle -", opposAngle)
+        wpilib.SmartDashboard.putNumber(" Neg Angle -", negAngle)
         # check if the joystick is in use
         if magnitude != 0.0:
             """
@@ -94,17 +104,36 @@ class SwerveDrive(commands2.SubsystemBase):
                     module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle) * constants.ksteeringGearRatio)
                     module.move(-magnitude)
             """
-            # if the original angle is closer
-            if math.fabs(currentAngle - direction) <= math.fabs(currentAngle - opposAngle):
+        
+            """
+            # if negAngle is closer
+            if math.fabs(currentAngle - direction) >= math.fabs(currentAngle - negAngle):
+                module.turn(conversions.convertDegreesToTalonFXUnits(negAngle + rev) * constants.ksteeringGearRatio)
+                wpilib.SmartDashboard.putNumber("1", math.fabs(currentAngle - direction))
+                wpilib.SmartDashboard.putNumber("-", math.fabs(currentAngle - negAngle))
+                wpilib.SmartDashboard.putBoolean("Using - ANGLE: ", True)
+            # if the original angle is closer   
+            elif math.fabs(currentAngle - direction) <= math.fabs(currentAngle - opposAngle):
                 # turn to the original angle
-                module.turn(self.units * constants.ksteeringGearRatio)
+                module.turn(conversions.convertDegreesToTalonFXUnits(direction + rev) * constants.ksteeringGearRatio)
                 # move in the normal way
                 module.move(magnitude)
+                wpilib.SmartDashboard.putBoolean("Using - ANGLE: ", False)
             else:  # the opposite angle is closer
                 # turn to the other angle
-                module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle) * constants.ksteeringGearRatio)
+                module.turn(conversions.convertDegreesToTalonFXUnits(opposAngle + rev) * constants.ksteeringGearRatio)
                 # move in the opposite direction
                 module.move(-magnitude)
+                wpilib.SmartDashboard.putBoolean("Using - ANGLE: ", False)
+            """
+            module.turn(constants.ksteeringGearRatio * conversions.convertDegreesToTalonFXUnits(conversions.getclosest(currentAngle, direction, magnitude)[0]))
+            module.move(conversions.getclosest(currentAngle, direction, magnitude)[1])
+
+            wpilib.SmartDashboard.putNumber(" Wanted Angle -", direction)
+            wpilib.SmartDashboard.putNumber("RevComp", conversions.giveRevCompensation(currentAngle, direction))
+            wpilib.SmartDashboard.putNumber("REVOLUTIONS", conversions.getRevolutions(currentAngle))
+            wpilib.SmartDashboard.putNumber("Given Angle", conversions.getclosest(currentAngle, direction, magnitude)[0])
+            wpilib.SmartDashboard.putNumber("Current Angle", currentAngle)
 
     def translate(self, direction: float, magnitude: float):
         self.turnWheel(self.leftFrontSwerveModule, direction, magnitude)
@@ -139,18 +168,6 @@ class SwerveDrive(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber(" RF Speed ", self.rightFrontSwerveModule.getVelocity())
         wpilib.SmartDashboard.putNumber(" RR Speed ", self.rightRearSwerveModule.getVelocity())
 
-        wpilib.SmartDashboard.putNumber(" PDP Channel 0", self.PDP.getCurrent(0))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 1", self.PDP.getCurrent(1))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 2", self.PDP.getCurrent(2))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 3", self.PDP.getCurrent(3))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 4", self.PDP.getCurrent(4))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 5", self.PDP.getCurrent(5))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 6", self.PDP.getCurrent(6))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 7", self.PDP.getCurrent(7))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 8", self.PDP.getCurrent(8))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 9", self.PDP.getCurrent(9))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 10", self.PDP.getCurrent(10))
-        wpilib.SmartDashboard.putNumber(" PDP Channel 11", self.PDP.getCurrent(11))
 
     def getGyroAngle(self) -> float:
         return self.gyro.getAngle()
