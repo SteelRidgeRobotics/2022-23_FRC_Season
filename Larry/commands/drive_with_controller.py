@@ -42,7 +42,9 @@ class DriveWithController(commands2.CommandBase):
             else:
                 # no rotation wanted
                 self.drive.translate(self.angle, self.magnitude)
-                """
+            """
+            
+
 
         self.drive.showWheelStats()
         wpilib.SmartDashboard.putNumber(" Turn Power -", conversions.deadband(self.rightx(), constants.kdeadband))

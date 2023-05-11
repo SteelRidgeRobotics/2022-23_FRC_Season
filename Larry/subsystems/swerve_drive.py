@@ -25,7 +25,7 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightRearSpeed = ctre.TalonFX(constants.krightRearSpeedID)
 
         # fix inverse
-        self.leftFrontSpeed.setInverted(True)
+        self.leftFrontSpeed.setInverted(False)
         self.leftRearSpeed.setInverted(False)
 
         self.rightFrontSpeed.setInverted(True)
