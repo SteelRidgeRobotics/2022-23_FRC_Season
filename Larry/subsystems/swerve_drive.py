@@ -217,7 +217,7 @@ class SwerveDrive(commands2.SubsystemBase):
         # make wheels turn and spin at the speeds and angles calculated above
         self.turnWheel(self.leftFrontSwerveModule, flangle, flspeed)
         self.turnWheel(self.leftRearSwerveModule, rlangle, rlspeed)
-        self.turnWheel(self.rightFrontSwerveModule, frspeed, frspeed)
+        self.turnWheel(self.rightFrontSwerveModule, frangle, frspeed)
         self.turnWheel(self.rightRearSwerveModule, rrangle, rrspeed)
 
     def reset(self):
