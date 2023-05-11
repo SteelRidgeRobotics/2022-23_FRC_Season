@@ -22,6 +22,7 @@ To avoid Merge Pain™, *push your branch into main ASAP*. If you branch off mai
 Try to finish feature branches in ~1 week maximum to avoid this.
 
 ## theLab
+### [theLab](theLab)
 As of **5/11/2023** we now have a folder for feature testing, and non-robot specific code. This includes:
 - [Guitar Palpatine](theLab/Guitar_Palpatine2023): Testing with Palpatine for the GuitarHero Controller
 - [Inverse Kinematics](theLab/Inverse Kinematics): Various inverse kinematic code that we were testing for the season
