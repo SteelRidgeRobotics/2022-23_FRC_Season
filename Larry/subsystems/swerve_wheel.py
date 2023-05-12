@@ -6,10 +6,11 @@ from constants import *
 
 
 class SwerveWheel():
-    def __init__(self, directionMotor: ctre.TalonFX, speedMotor: ctre.TalonFX) -> None:
+    def __init__(self, directionMotor: ctre.TalonFX, speedMotor: ctre.TalonFX, CANcoder: ctre.CANCoder) -> None:
         # super().__init__()
         self.directionMotor = directionMotor
         self.speedMotor = speedMotor
+        self.CANcoder = CANcoder
 
         self.directionMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, ktimeoutMs)
 
@@ -72,6 +73,7 @@ class SwerveWheel():
 
     def getCurrentAngle(self):
         return convertTalonFXUnitsToDegrees(self.directionMotor.getSelectedSensorPosition())
+        # return self.CANcoder.getAbsolutePosition()
 
     def getVelocity(self):
         return self.speedMotor.getSelectedSensorVelocity()

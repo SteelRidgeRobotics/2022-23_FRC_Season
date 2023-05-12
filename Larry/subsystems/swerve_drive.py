@@ -24,8 +24,26 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightRearDirection = ctre.TalonFX(constants.krightRearDirectionID)
         self.rightRearSpeed = ctre.TalonFX(constants.krightRearSpeedID)
 
+        # set to default so we set everything in the code
+        self.leftFrontSpeed.configFactoryDefault()
+        self.leftRearSpeed.configFactoryDefault()
+
+        self.rightFrontSpeed.configFactoryDefault()
+        self.rightRearSpeed.configFactoryDefault()
+
+        self.leftFrontDirection.configFactoryDefault()
+        self.leftRearDirection.configFactoryDefault()
+
+        self.rightFrontDirection.configFactoryDefault()
+        self.rightRearDirection.configFactoryDefault()
+        # init CAN coders
+        self.flCANcoder = ctre.CANCoder(constants.kflCANcoderID, "")
+        self.rlCANcoder = ctre.CANCoder(constants.krlCANcoderID, "")
+        self.frCANcoder = ctre.CANCoder(constants.kfrCANcoderID, "")
+        self.rrCANcoder = ctre.CANCoder(constants.krrCANcoderID, "")
+
         # fix inverse
-        self.leftFrontSpeed.setInverted(True)
+        self.leftFrontSpeed.setInverted(False)
         self.leftRearSpeed.setInverted(False)
 
         self.rightFrontSpeed.setInverted(True)
@@ -38,11 +56,11 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightRearDirection.setInverted(False)
 
         # init swerve modules
-        self.leftFrontSwerveModule = SwerveWheel(self.leftFrontDirection, self.leftFrontSpeed)
-        self.leftRearSwerveModule = SwerveWheel(self.leftRearDirection, self.leftRearSpeed)
+        self.leftFrontSwerveModule = SwerveWheel(self.leftFrontDirection, self.leftFrontSpeed, self.flCANcoder)
+        self.leftRearSwerveModule = SwerveWheel(self.leftRearDirection, self.leftRearSpeed, self.rlCANcoder)
 
-        self.rightFrontSwerveModule = SwerveWheel(self.rightFrontDirection, self.rightFrontSpeed)
-        self.rightRearSwerveModule = SwerveWheel(self.rightRearDirection, self.rightRearSpeed)
+        self.rightFrontSwerveModule = SwerveWheel(self.rightFrontDirection, self.rightFrontSpeed, self.frCANcoder)
+        self.rightRearSwerveModule = SwerveWheel(self.rightRearDirection, self.rightRearSpeed, self.rrCANcoder)
 
         self.gyro = wpilib.ADIS16470_IMU()
         self.gyro.CalibrationTime(2)

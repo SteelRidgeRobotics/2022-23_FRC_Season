@@ -14,6 +14,12 @@ krightRearDirectionID = 7
 kdriverControllerPort = 0
 kdeadband = 0.15
 
+# CAN coders
+kflCANcoderID = 10
+krlCANcoderID = 11
+kfrCANcoderID = 12
+krrCANcoderID = 13
+
 # Encoders
 ktimeoutMs = 10
 kF = 0.05282272  # Feed forward
