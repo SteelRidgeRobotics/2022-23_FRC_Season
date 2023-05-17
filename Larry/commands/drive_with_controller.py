@@ -18,7 +18,10 @@ class DriveWithController(commands2.CommandBase):
         self.rightx = rightx
         self.addRequirements([self.drive])
         self.drive.reset()
-
+    """
+    def initialize(self) -> None:
+        self.drive.flushWheels()
+    """
     def execute(self) -> None:
         self.angle = conversions.convertJoystickInputToDegrees(conversions.deadband(self.x(), constants.kdeadband),
                                                                conversions.deadband(self.y(), constants.kdeadband))

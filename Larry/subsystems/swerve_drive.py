@@ -36,6 +36,7 @@ class SwerveDrive(commands2.SubsystemBase):
 
         self.rightFrontDirection.configFactoryDefault()
         self.rightRearDirection.configFactoryDefault()
+
         # init CAN coders
         self.flCANcoder = ctre.CANCoder(constants.kflCANcoderID, "")
         self.rlCANcoder = ctre.CANCoder(constants.krlCANcoderID, "")
@@ -62,6 +63,14 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightFrontSwerveModule = SwerveWheel(self.rightFrontDirection, self.rightFrontSpeed, self.frCANcoder)
         self.rightRearSwerveModule = SwerveWheel(self.rightRearDirection, self.rightRearSpeed, self.rrCANcoder)
 
+        # getting offsets for movement while the robot was off
+        """
+        self.leftFrontDirection.configIntegratedSensorOffset(self.leftFrontSwerveModule.getAbsAngle())
+        self.leftRearDirection.configIntegratedSensorOffset(self.leftRearSwerveModule.getAbsAngle())
+
+        self.rightFrontDirection.configIntegratedSensorOffset(self.rightFrontSwerveModule.getAbsAngle())
+        self.rightRearDirection.configIntegratedSensorOffset(self.rightRearSwerveModule.getAbsAngle())
+        """
         self.gyro = wpilib.ADIS16470_IMU()
         self.gyro.CalibrationTime(2)
         if wpilib.RobotBase.isReal():
@@ -79,6 +88,7 @@ class SwerveDrive(commands2.SubsystemBase):
 
         # find current angle
         currentAngle = conversions.convertTalonFXUnitsToDegrees(module.directionMotor.getSelectedSensorPosition()/constants.ksteeringGearRatio)
+        # currentAngle = module.getCurrentAngle()
         """
         # see if the abs value is greater than 180
         if math.fabs(direction) >= 180.0:
@@ -253,3 +263,4 @@ class SwerveDrive(commands2.SubsystemBase):
 
         self.rightRearDirection.setSelectedSensorPosition(0.0, constants.kPIDLoopIdx, constants.ktimeoutMs)
         self.rightRearSpeed.setSelectedSensorPosition(0.0, constants.kPIDLoopIdx, constants.ktimeoutMs)
+

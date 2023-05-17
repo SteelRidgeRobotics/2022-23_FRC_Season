@@ -49,7 +49,7 @@ class SwerveWheel():
         # wpilib.SmartDashboard.putNumber(" Sensor Position -", self.directionMotor.getSelectedSensorPosition())
         self.notTurning = True
 
-    # this is are testing turn method
+    # this is our testing turn method
     def turn(self, set_point: float):
         self.notTurning = False
         current_pos = self.directionMotor.getSelectedSensorPosition()
@@ -72,8 +72,11 @@ class SwerveWheel():
         self.directionMotor.setNeutralMode(ctre.NeutralMode.Coast)
 
     def getCurrentAngle(self):
-        return convertTalonFXUnitsToDegrees(self.directionMotor.getSelectedSensorPosition())
+        return convertTalonFXUnitsToDegrees(self.directionMotor.getSelectedSensorPosition()) + self.getAbsAngle()
         # return self.CANcoder.getAbsolutePosition()
+
+    def getAbsAngle(self):
+        return self.CANcoder.getAbsolutePosition()
 
     def getVelocity(self):
         return self.speedMotor.getSelectedSensorVelocity()
@@ -83,6 +86,7 @@ class SwerveWheel():
         wpilib.SmartDashboard.putNumber(" I -", kI)
         wpilib.SmartDashboard.putNumber(" D -", kD)
         wpilib.SmartDashboard.putNumber(" F -", kF)
+        wpilib.SmartDashboard.putNumber(" CAN - ", self.getAbsAngle())
         # wpilib.SmartDashboard.putNumber(" Sensor Position -", self.directionMotor.getSelectedSensorPosition())
         # wpilib.SmartDashboard.putNumber(" Sensor Velocity -", self.directionMotor.getSelectedSensorVelocity())
         # wpilib.SmartDashboard.putBoolean(" Is Not Moving? -", self.isNotinMotion())
