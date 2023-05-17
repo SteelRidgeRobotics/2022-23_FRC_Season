@@ -3,7 +3,7 @@ import wpilib
 from robotcontainer import RobotContainer
 from subsystems.vision import cameraLaunch
 
-class Steeltastic(commands2.TimedCommandRobot):
+class MrSteeltastic(commands2.TimedCommandRobot):
 
     def robotInit(self):
 
@@ -28,7 +28,6 @@ class Steeltastic(commands2.TimedCommandRobot):
 
         if self.autoCommand:
             self.autoCommand.cancel()
-        wpilib.SmartDashboard.putBoolean("A Pressed? ", self.container.driverController.getAButton())
 
     def teleopPeriodic(self):
 
@@ -41,4 +40,4 @@ class Steeltastic(commands2.TimedCommandRobot):
 
 
 if __name__ == "__main__":
-    wpilib.run(Steeltastic)
+    wpilib.run(MrSteeltastic)
