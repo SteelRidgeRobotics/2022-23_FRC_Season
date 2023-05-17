@@ -6,7 +6,7 @@ import constants
 from commands.joystickDrive import JoystickDrive
 from commands.autoDock import StationCorrectionMobility
 from commands.timedDrive import TimedDrive
-from subsystems.arm import Arm
+from subsystems.arm import Arm, TickArm
 from subsystems.drivetrain import Drivetrain
 from commands.autoDock import StationCorrection
 from commands.setGrabber import SetGrabber
@@ -43,7 +43,8 @@ class RobotContainer:
                                                    lambda: self.driverController.getRightX(),
                                                    lambda: self.driverController.getLeftBumper(),
                                                    lambda: self.driverController.getRightBumper(),
-                                                   lambda: self.driverController.getAButtonReleased()))
+                                                   lambda: self.driverController.getAButtonReleased())
+                                                   .alongWith(TickArm(self.arm)))
         if constants.USINGGUITARCONTROLLER:
             JoystickButton(self.functionsController, Guitar.Button.kRed).whenPressed(MoveCubePickup(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kBlue).whenPressed(SetGrabber(self.arm))
