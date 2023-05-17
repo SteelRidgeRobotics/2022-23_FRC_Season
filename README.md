@@ -5,18 +5,26 @@ This includes the following robot code:
 - [Larry](Larry), our first swerve drive robot
 - [Mr. Steeltastic](Mr_Steeltastic), our official robot for the season
 - [Palpatine](Palpatine_2022), our simple testing robot
-- and [Guitar Palpatine](Guitar_Palpatine2023), which is our first use of the guitar controller
+- and [Guitar Palpatine](theLab/Guitar_Palpatine2023), which is our first use of the guitar controller
 
-## Important Files (for future use)
-- [guitar.py](Guitar_Palpatine2023/guitar.py): The file for the Guitar Controller. See Guitar Palpatine's [drive_by_guitar.py](Guitar_Palpatine2023/commands/drive_by_guitar) and [robotcontainer.py](Guitar_Palpatine2023/robotcontainer.py) for an example.
+### Important Files (for future use)
+- [guitar.py](theLab/Guitar_Palpatine2023/guitar.py): The file for the Guitar Controller. See Guitar Palpatine's [drive_by_guitar.py](theLab/Guitar_Palpatine2023/commands/drive_by_guitar) and [robotcontainer.py](theLab/Guitar_Palpatine2023/robotcontainer.py) for an example.
 
 <sub>Pickle_Face5 (Caden Dalley) takes full credit for the guitar idea   -Pickle_Face5</sub>
 
 # Programming Convention
-We use (as of 4/20/23) [Trunk Based Development](https://trunkbaseddevelopment.com/). Look at the linked website for more information.
+We use (as of 4/20/2023) [Trunk Based Development](https://trunkbaseddevelopment.com/). Look at the linked website for more information.
 
 Basically, **don't commit directly to the main branch**. Instead, create a new branch (known as a "feature branch") and commit changes into that branch. Once your project/feature is finished, submit a pull request to push it into the main branch.
 
 To avoid Merge Pain™, *push your branch into main ASAP*. If you branch off main and make a bunch of changes over a month and try to submit a pull request, it will break ***everything***.
 
 Try to finish feature branches in ~1 week maximum to avoid this.
+
+# [The Lab](theLab)
+We now (as of 5/11/2023) have a folder for feature testing and non-robot specific code. It includes:
+- [Guitar Palpatine](theLab/Guitar_Palpatine2023): Testing with Palpatine using the GuitarHero Controller
+- [Inverse Kinematics](theLab/Inverse_Kinematics_Folder): Various inverse kinematic code that we were testing for the season
+- [Name_In_Progress_Magic](theLab/Name_In_Progress_Magic): A competition robot in the Magic Bot framework (not to be finished, use as reference only)
+- [PID_Tuning_Code](theLab/PID_Tuning_Code): A modified version of the [PID tuning code made in the 2022 season](https://github.com/SteelRidgeRobotics/2021-2022_FRC_Season/tree/main/PID_Tuning_Code)
+- and [PathWeaver2023](theLab/PathWeaver2023): Path Weaver code that was started on, but did not make it onto Mr. Steeltastic
