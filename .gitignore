@@ -1,4 +1,7 @@
 **/__pycache__
 /ArmDemo/
 /.idea/
-**/.*
+**/simgui-ds.json
+**/simgui-window.json
+**/simgui.json
+**/networktables.json
