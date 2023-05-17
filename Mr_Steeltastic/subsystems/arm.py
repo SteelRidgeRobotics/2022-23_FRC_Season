@@ -67,6 +67,7 @@ class ArmMotor(commands2.SubsystemBase):
             feed_forward = self.holdPercentage * math.cos(math.radians(angle))
             self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos, 
                         ctre.DemandType.ArbitraryFeedForward, feed_forward)
+            
         else:
             self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos)
 
@@ -96,7 +97,7 @@ class ArmMotor(commands2.SubsystemBase):
         if self.motorID == 5: 
             self.moveToPos(pos=pos, angle=self.getCurrentAngle(), aRBFF=False)
         else:
-            self.moveToPos(pos=pos, angle=self.getCurrentAngle())
+            self.moveToPos(pos=pos, angle=self.getCurrentAngle(), aRBFF=True)
 
         wpilib.SmartDashboard.putNumber(self.name + ' Motor Pos', self.motor.getSelectedSensorPosition())
     

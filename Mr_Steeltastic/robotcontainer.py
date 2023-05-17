@@ -47,7 +47,7 @@ class RobotContainer:
         if constants.USINGGUITARCONTROLLER:
             JoystickButton(self.functionsController, Guitar.Button.kRed).whenPressed(MoveCubePickup(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kBlue).whenPressed(SetGrabber(self.arm))
-            JoystickButton(self.functionsController, Guitar.Button.kYellow).whenPressed(MoveBackToHome(self.arm, self.arm.isInCubePlace))
+            JoystickButton(self.functionsController, Guitar.Button.kYellow).whenPressed(MoveBackToHome(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kStar).whenPressed(MoveToOrigin(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kOrange).whenPressed(PlaceCubeMid(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kVol).whenPressed(ToggleArmCoast(self.arm))

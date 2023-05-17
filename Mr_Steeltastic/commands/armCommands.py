@@ -139,7 +139,7 @@ class SetIsInCubePose(commands2.CommandBase):
 
     
     def end(self, interrupted):
-        wpilib.SmartDashboard.putBoolean("Cube Place?", self.arm.isInCubePlace)
+        wpilib.SmartDashboard.putBoolean("Cube Place?", self.arm.getIsInCubePlace())
         
     def isFinished(self):
         """
@@ -190,22 +190,12 @@ class MoveToOrigin(commands2.SequentialCommandGroup):
         )
 
 class MoveBackToHome(commands2.SequentialCommandGroup):
-    def __init__(self, arm: Arm, isInCubePlace=False):
+    def __init__(self, arm: Arm):
         super().__init__()
-        if isInCubePlace: # TODO: Get MoveBackToHome to move top motor first when moving back from CubePlaceMid
-            wpilib.SmartDashboard.putBoolean("homeTest", True)
-            self.addCommands(
-                SetPosition(arm.topMotor, 0),
-                SetPositionBaseMid(arm, 0, -30340)
-            )
-        else:
-            self.addCommands(
-                SetPositionAll(arm, 0, -30340, 0)
-                #SetPosition(arm.topMotor, 0),
-                #SetPositionBaseMid(arm, 0, -30340)
-            )
-            wpilib.SmartDashboard.putBoolean("homeTest", False)
-        
+        self.addCommands(
+            SetPositionAll(arm, 0, -30340, 0)
+            #SetPosition(arm.topMotor, 0).alongWith(SetPositionBaseMid(arm, 0, -30340))
+        )
         
 class PlaceCubeMid(commands2.SequentialCommandGroup):
     def __init__(self, arm: Arm):
@@ -213,7 +203,8 @@ class PlaceCubeMid(commands2.SequentialCommandGroup):
         self.addCommands(
             MoveBackToHome(arm),
             SetPositionMidTop(arm, -140912, 5115),
-            SetPosition(arm.baseMotor, -4964)
+            SetPosition(arm.baseMotor, -4964),
+            SetIsInCubePose(arm, True)
         )
 
 class MoveCubePickup(commands2.SequentialCommandGroup):
