@@ -124,29 +124,6 @@ class SetPositionCubePickup(commands2.CommandBase):
         """
         return self.baseMotorDone and self.midMotorDone and self.topMotorDone
     
-class SetIsInCubePose(commands2.CommandBase):
-    def __init__(self, arm: Arm, new_var: bool):
-        super().__init__()
-        self.arm = arm
-        self.new_var = new_var
-
-
-    def initialize(self) -> None:
-        self.arm.setIsInCubePlace(self.new_var)
-
-    def execute(self):
-        pass
-
-    
-    def end(self, interrupted):
-        wpilib.SmartDashboard.putBoolean("Cube Place?", self.arm.getIsInCubePlace())
-        
-    def isFinished(self):
-        """
-        Return whether or not the command is finished.
-        """
-        return True
-    
 """
 COMMAND GROUPS
 """
@@ -204,7 +181,6 @@ class PlaceCubeMid(commands2.SequentialCommandGroup):
             MoveBackToHome(arm),
             SetPositionMidTop(arm, -140912, 5115),
             SetPosition(arm.baseMotor, -4964),
-            SetIsInCubePose(arm, True)
         )
 
 class MoveCubePickup(commands2.SequentialCommandGroup):
