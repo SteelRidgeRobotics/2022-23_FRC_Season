@@ -20,8 +20,5 @@ class SetGrabber(commands2.CommandBase):
         wpilib.SmartDashboard.putBoolean("Grabber", self.arm.grabberOpen)
         # wpilib.SmartDashboard.putValue("getSolenoid", self.arm.grabberSolenoid.get())
 
-    # def end(self, interrupted: bool) -> None:
-    #    pass
-
     def isFinished(self) -> None:
         return self.isDone
