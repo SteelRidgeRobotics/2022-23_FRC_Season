@@ -36,6 +36,7 @@ class ArmMotor(commands2.SubsystemBase):
         self.motor.configSupplyCurrentLimit(currLimitConfigs=ctre.SupplyCurrentLimitConfiguration(True, 40.0, 30.0, 2.0))
         self.motor.enableVoltageCompensation(True)
         self.motor.configVoltageCompSaturation(11.8)
+        self.motor.setInverted(False)
 
         self.name = name
         self.currentTarget = 0
@@ -49,9 +50,11 @@ class ArmMotor(commands2.SubsystemBase):
         aRBFF = kwargs.get("aRBFF", True)
 
         if aRBFF:
-            feed_forward = self.holdPercentage * math.cos(math.radians(angle))
+            feed_forward = self.holdPercentage * math.cos(math.radians(pos * 360/2048))
+            wpilib.SmartDashboard.putNumber(f"FF {self.name}", feed_forward)
             self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos, 
-                        ctre.DemandType.ArbitraryFeedForward, feed_forward)
+                ctre.DemandType.ArbitraryFeedForward, feed_forward)
+            
             
         else:
             self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos)
@@ -74,7 +77,7 @@ class ArmMotor(commands2.SubsystemBase):
         return minTarget <= roundedMotorPos <= maxTarget
     
     def toPos(self, pos: int):
-        """Moves the motor to a postition."""
+        """Moves the motor to a position."""
         if self.motorID == 5: 
             self.moveToPos(pos=pos, angle=self.getCurrentAngle(), aRBFF=False)
         else:

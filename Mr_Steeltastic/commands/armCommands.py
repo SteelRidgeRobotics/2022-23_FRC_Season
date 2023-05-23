@@ -89,7 +89,7 @@ class SetPositionCubePickup(commands2.CommandBase):
     def execute(self):
         wpilib.SmartDashboard.putNumber("Timer", self.timer.get())
 
-        if not self.arm.topMotor.isMotorPosInRange(self.topAngle/constants.TOPRATIO, range=8750):
+        if not self.arm.topMotor.isMotorPosInRange(self.topAngle/constants.TOPRATIO):
             if self.timer.get() >= 3:
                 self.arm.motorToPos(self.arm.topMotor, self.topAngle/constants.TOPRATIO)
         else:
@@ -180,7 +180,7 @@ class PlaceCubeMid(commands2.SequentialCommandGroup):
         self.addCommands(
             MoveBackToHome(arm),
             SetPositionMidTop(arm, -140912, 5115),
-            SetPosition(arm.baseMotor, -4964),
+            SetPosition(arm.baseMotor, -4964)
         )
 
 class MoveCubePickup(commands2.SequentialCommandGroup):
