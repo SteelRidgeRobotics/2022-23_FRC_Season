@@ -180,7 +180,9 @@ class PlaceCubeMid(commands2.SequentialCommandGroup):
         self.addCommands(
             MoveBackToHome(arm),
             SetPositionMidTop(arm, -140912, 5115),
-            SetPosition(arm.baseMotor, -4964)
+            SetPosition(arm.baseMotor, -4964),
+            commands2.WaitCommand(0.5),
+            SetPosition(arm.topMotor, 5115)
         )
 
 class MoveCubePickup(commands2.SequentialCommandGroup):
