@@ -9,8 +9,15 @@ from subsystems.swerve_drive import SwerveDrive
 
 
 class DriveWithController(commands2.CommandBase):
-    def __init__(self, swerveDrive: SwerveDrive, x: typing.Callable[[], float], y: typing.Callable[[], float],
+
+    
+    def __init__(self, 
+                 swerveDrive: SwerveDrive, 
+                 x: typing.Callable[[], float], 
+                 y: typing.Callable[[], float],
                  rightx: typing.Callable[[], float]) -> None:
+        
+
         super().__init__()
         self.drive = swerveDrive
         self.x = x
@@ -23,10 +30,14 @@ class DriveWithController(commands2.CommandBase):
         self.drive.flushWheels()
     """
     def execute(self) -> None:
-        self.angle = conversions.convertJoystickInputToDegrees(conversions.deadband(self.x(), constants.kdeadband),
-                                                               conversions.deadband(self.y(), constants.kdeadband))
-        self.magnitude = math.hypot(conversions.deadband(self.x(), constants.kdeadband),
-                                    conversions.deadband(self.y(), constants.kdeadband))
+
+        self.angle = conversions.convertJoystickInputToDegrees(
+            conversions.deadband(self.x(), constants.kdeadband),
+            conversions.deadband(self.y(), constants.kdeadband))
+        
+        self.magnitude = math.hypot(
+            conversions.deadband(self.x(), constants.kdeadband),
+            conversions.deadband(self.y(), constants.kdeadband))
         # self.magnitude *= 0.5
         # self.angle -= self.drive.getGyroAngle()
 
@@ -35,7 +46,8 @@ class DriveWithController(commands2.CommandBase):
 
         if self.magnitude == 0.0:
             # only rotation
-            self.drive.turnInPlace(conversions.deadband(self.rightx(), constants.kdeadband))
+            self.drive.turnInPlace(conversions.deadband(self.rightx(), 
+                                                        constants.kdeadband))
         else:
             self.drive.translate(self.angle, self.magnitude)
             """
@@ -48,11 +60,20 @@ class DriveWithController(commands2.CommandBase):
                 """
 
         self.drive.showWheelStats()
-        wpilib.SmartDashboard.putNumber(" Turn Power -", conversions.deadband(self.rightx(), constants.kdeadband))
+
+        wpilib.SmartDashboard.putNumber(
+            " Turn Power -", conversions.deadband(self.rightx(), 
+                                                  constants.kdeadband))
+        
         wpilib.SmartDashboard.putNumber(" Angle -", self.angle)
         wpilib.SmartDashboard.putNumber(" Magnitude -", self.magnitude)
-        wpilib.SmartDashboard.putNumber(" X -", conversions.deadband(self.x(), constants.kdeadband))
-        wpilib.SmartDashboard.putNumber(" Y -", conversions.deadband(self.y(), constants.kdeadband))
+
+        wpilib.SmartDashboard.putNumber(
+            " X -", conversions.deadband(self.x(), constants.kdeadband))
+        
+        wpilib.SmartDashboard.putNumber(
+            " Y -", conversions.deadband(self.y(), constants.kdeadband))
+        
         wpilib.SmartDashboard.putNumber(" Gyro -", self.drive.getGyroAngle())
 
     def end(self, interrupted: bool) -> None:
