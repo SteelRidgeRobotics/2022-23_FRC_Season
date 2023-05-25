@@ -6,13 +6,20 @@ from constants import *
 
 
 class SwerveWheel():
-    def __init__(self, directionMotor: ctre.TalonFX, speedMotor: ctre.TalonFX, CANcoder: ctre.CANCoder) -> None:
+
+
+    def __init__(self, directionMotor: ctre.TalonFX, 
+                 speedMotor: ctre.TalonFX, 
+                 CANcoder: ctre.CANCoder) -> None:
+        
+
         # super().__init__()
         self.directionMotor = directionMotor
         self.speedMotor = speedMotor
         self.CANcoder = CANcoder
 
-        self.directionMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, ktimeoutMs)
+        self.directionMotor.configSelectedFeedbackSensor(
+            ctre.FeedbackDevice.IntegratedSensor, 0, ktimeoutMs)
 
         # self.directionMotor.setSelectedSensorPosition(0.0, 0, ktimeoutMs)
 
@@ -40,20 +47,23 @@ class SwerveWheel():
 
         self.directionMotor.setNeutralMode(ctre.NeutralMode.Brake)
 
-        self.directionMotor.setSelectedSensorPosition(0.0, kPIDLoopIdx, ktimeoutMs)
+        self.directionMotor.setSelectedSensorPosition(0.0, kPIDLoopIdx, 
+                                                      ktimeoutMs)
 
         wpilib.SmartDashboard.putNumber(" P -", kP)
         wpilib.SmartDashboard.putNumber(" I -", kI)
         wpilib.SmartDashboard.putNumber(" D -", kD)
         wpilib.SmartDashboard.putNumber(" F -", kF)
-        # wpilib.SmartDashboard.putNumber(" Sensor Position -", self.directionMotor.getSelectedSensorPosition())
+        # wpilib.SmartDashboard.putNumber(" Sensor Position -", 
+        # self.directionMotor.getSelectedSensorPosition())
         self.notTurning = True
 
     # this is our testing turn method
     def turn(self, set_point: float):
         self.notTurning = False
         current_pos = self.directionMotor.getSelectedSensorPosition()
-        self.directionMotor.set(ctre.TalonFXControlMode.MotionMagic, int(set_point))
+        self.directionMotor.set(ctre.TalonFXControlMode.MotionMagic, 
+                                int(set_point))
 
     def isNotinMotion(self) -> bool:
 
@@ -64,32 +74,45 @@ class SwerveWheel():
         return self.notTurning
 
     def move(self, joystick_input: float):
-        self.speedMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.1 * joystick_input)
+
+        self.speedMotor.set(ctre.TalonFXControlMode.PercentOutput, 
+                            0.1 * joystick_input)
 
     def stopAllMotors(self):
+
         self.directionMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.0)
         self.speedMotor.set(ctre.TalonFXControlMode.PercentOutput, 0.0)
         self.directionMotor.setNeutralMode(ctre.NeutralMode.Coast)
 
     def getCurrentAngle(self):
-        return convertTalonFXUnitsToDegrees(self.directionMotor.getSelectedSensorPosition()) + self.getAbsAngle()
+
+        return convertTalonFXUnitsToDegrees(
+            (self.directionMotor.getSelectedSensorPosition()) 
+            + self.getAbsAngle())
         # return self.CANcoder.getAbsolutePosition()
 
     def getAbsAngle(self):
-        return self.CANcoder.getAbsolutePosition()
+
+        return round(flipCANangle(self.CANcoder.getAbsolutePosition()), 0)
 
     def getVelocity(self):
+
         return self.speedMotor.getSelectedSensorVelocity()
 
     def showStats(self):
+
         wpilib.SmartDashboard.putNumber(" P -", kP)
         wpilib.SmartDashboard.putNumber(" I -", kI)
         wpilib.SmartDashboard.putNumber(" D -", kD)
         wpilib.SmartDashboard.putNumber(" F -", kF)
         wpilib.SmartDashboard.putNumber(" CAN - ", self.getAbsAngle())
-        # wpilib.SmartDashboard.putNumber(" Sensor Position -", self.directionMotor.getSelectedSensorPosition())
-        # wpilib.SmartDashboard.putNumber(" Sensor Velocity -", self.directionMotor.getSelectedSensorVelocity())
-        # wpilib.SmartDashboard.putBoolean(" Is Not Moving? -", self.isNotinMotion())
+        
+        # wpilib.SmartDashboard.putNumber(" Sensor Position -", 
+        # self.directionMotor.getSelectedSensorPosition())
+        # wpilib.SmartDashboard.putNumber(" Sensor Velocity -", 
+        # self.directionMotor.getSelectedSensorVelocity())
+        # wpilib.SmartDashboard.putBoolean(" Is Not Moving? -", 
+        # self.isNotinMotion())
 
         """
         # This allows us to change the values for the PIDF Controller

@@ -3,7 +3,6 @@ import wpilib
 
 from robotcontainer import RobotContainer
 
-
 # vision setup
 
 class MyRobot(commands2.TimedCommandRobot):

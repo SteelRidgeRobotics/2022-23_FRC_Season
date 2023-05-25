@@ -11,11 +11,10 @@ def talonGetRevolutions(pos) -> int:
 
 def convertTalonFXUnitsToDegrees(num: float) -> float:
     num *= (360 / 2048)
-    #num = (num % 360) if sign(num) == 1 or sign(num) == 0 else -(math.fabs(num) % 360) 
     return num
 
 def getRevolutions(num: float) -> int:
-    num =  (num - num % 360) if sign(num) == 1 or sign(num) == 0 else (num + math.fabs(num) % 360)
+    num =  (num - num % 360) if (sign(num) == 1 or sign(num) == 0) else (num + math.fabs(num) % 360)
     return num/360
 
 def roundToNearestRev(num):
@@ -25,6 +24,9 @@ def roundToNearestRev(num):
     else:
         val = num - (val)
     return val
+
+def flipCANangle(val):
+    return 360 - val
 
 def giveRevCompensation(currentAngle, direction):
     """
@@ -41,16 +43,18 @@ def giveRevCompensation(currentAngle, direction):
         revCompensation = roundToNearestRev(originalAngle)
     
     ## step down
-    elif math.fabs(360 + currentAngle - direction) <= math.fabs(direction): ## (36)1 => 350
+    elif math.fabs(360 + currentAngle - direction) <= math.fabs(direction): 
 
         revCompensation = curRev - 360
 
     ## if it is closer not to add revCompensation
-    elif math.fabs(currentAngle - direction) < math.fabs(curRev - (direction + curRev)):
+    elif (math.fabs(currentAngle - direction) 
+          < math.fabs(curRev - (direction + curRev))):
 
         revCompensation = curRev
 
-    elif math.fabs(curRev - (direction + curRev)) <= math.fabs(curRev - direction):
+    elif (math.fabs(curRev - (direction + curRev)) 
+          <= math.fabs(curRev - direction)):
 
         revCompensation = (revCompensation + 1) * 360
 
@@ -86,11 +90,13 @@ def getclosest(currentAngle, direction, magnitude):
             opposAngle = 180
             negAngle = 0
 
-    if math.fabs(currentAngle - direction) >= math.fabs(currentAngle - negAngle):
+    if (math.fabs(currentAngle - direction) 
+        >= math.fabs(currentAngle - negAngle)):
 
         return (negAngle + rev), magnitude
 
-    elif math.fabs(currentAngle - direction) <= math.fabs(currentAngle - opposAngle):
+    elif (math.fabs(currentAngle - direction) 
+          <= math.fabs(currentAngle - opposAngle)):
 
         return (direction + rev), magnitude
 
@@ -109,24 +115,34 @@ def sign(num) -> int:
         # zero
         return 0
 
-
+# this allows us to use the x and y values on the joystick and convert it 
+# into degrees
 def convertJoystickInputToDegrees(x: float,
-                                  y: float):  # this allows us to use the x and y values on the joystick and convert it into degrees
+                                  y: float):  
     if sign(x) == -1:
+        # this will make sure that it gives us a number between 0 and 360
         return float(
-            math.degrees(math.atan2(x, -y)) + 360.0)  # this will make sure that it gives us a number between 0 and 360
+            math.degrees(math.atan2(x, -y)) + 360.0)  
     else:
+        # This makes sure that if we get 360.0 degrees, it will be zero
         if float(math.degrees(
-                math.atan2(x, -y))) == 360.0:  # This makes sure that if we get 360.0 degrees, it will be zero
+                math.atan2(x, -y))) == 360.0:  
             return 0.0
         else:
+            # the degrees, the joystick up is zero and the values 
+            # increase clock-wise
             return float(math.degrees(
-                math.atan2(x, -y)))  # the degrees, the joystick up is zero and the values increase clock-wise
+                math.atan2(x, -y)))  
 
 
 def deadband(value: float, band: float):
+    """
+    value is the value we want to deadband
+    the band is the abs value the value can not be less than
+    """
     # this makes sure that joystick drifting is not an issue.
-    # It takes the small values and forces it to be zero if smaller than the band value
+    # It takes the small values and forces it to be zero if smaller than the 
+    # band value
     if math.fabs(value) <= band:
         return 0
     else:

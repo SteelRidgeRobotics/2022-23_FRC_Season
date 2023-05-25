@@ -34,13 +34,31 @@ class RobotContainer:
         self.configureButtonBindings()
 
         self.swerveDrive.setDefaultCommand(
-            DriveWithController(self.swerveDrive, lambda: self.driverController.getLeftX(),
-                                lambda: self.driverController.getLeftY(), lambda: self.driverController.getRightX()))
-        # self.swerveDrive.setDefaultCommand(Translate(self.swerveDrive,  lambda: self.driverController.getLeftX(), lambda: self.driverController.getLeftY()))
-        # self.swerveDrive.setDefaultCommand(MoveInPlace(self.swerveDrive, lambda: self.driverController.getRightX()))
-        # self.swerveDrive.setDefaultCommand(DriveSingleModule(self.swerveDrive,  lambda: self.driverController.getLeftX(), lambda: self.driverController.getLeftY()))
-        # self.swerveDrive.setDefaultCommand(TurnToSpecificPoint(self.swerveDrive,  lambda: self.driverController.getLeftX(), lambda: self.driverController.getLeftY()))
-        # self.swerveDrive.setDefaultCommand(Joysticks(self.swerveDrive, lambda: self.driverController.getLeftX(), lambda: self.driverController.getLeftY(), lambda: self.driverController.getRightX(), lambda: self.driverController.getRightY()))
+            DriveWithController(self.swerveDrive, 
+                                lambda: self.driverController.getLeftX(),
+                                lambda: self.driverController.getLeftY(), 
+                                lambda: self.driverController.getRightX()))
+        # self.swerveDrive.setDefaultCommand(
+        #   Translate(self.swerveDrive,  
+        #   lambda: self.driverController.getLeftX(), 
+        #   lambda: self.driverController.getLeftY()))
+        # self.swerveDrive.setDefaultCommand(
+        #   MoveInPlace(self.swerveDrive, 
+        #   lambda: self.driverController.getRightX()))
+        # self.swerveDrive.setDefaultCommand(
+        #   DriveSingleModule(self.swerveDrive,  
+        #   lambda: self.driverController.getLeftX(), 
+        #   lambda: self.driverController.getLeftY()))
+        # self.swerveDrive.setDefaultCommand(
+        #   TurnToSpecificPoint(self.swerveDrive,  
+        #   lambda: self.driverController.getLeftX(), 
+        #   lambda: self.driverController.getLeftY()))
+        # self.swerveDrive.setDefaultCommand(
+        #   Joysticks(self.swerveDrive, 
+        #   lambda: self.driverController.getLeftX(), 
+        #   lambda: self.driverController.getLeftY(), 
+        #   lambda: self.driverController.getRightX(), 
+        #   lambda: self.driverController.getRightY()))
 
     def configureButtonBindings(self):
         """This is where our trigger bindings for commands go"""
