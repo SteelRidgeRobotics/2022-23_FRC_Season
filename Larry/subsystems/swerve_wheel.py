@@ -76,7 +76,7 @@ class SwerveWheel():
     def move(self, joystick_input: float):
 
         self.speedMotor.set(ctre.TalonFXControlMode.PercentOutput, 
-                            0.1 * joystick_input)
+                            joystick_input)
 
     def stopAllMotors(self):
 
@@ -92,8 +92,8 @@ class SwerveWheel():
         # return self.CANcoder.getAbsolutePosition()
 
     def getAbsAngle(self):
-
-        return round(flipCANangle(self.CANcoder.getAbsolutePosition()), 0)
+            
+            return self.CANcoder.getAbsolutePosition()
 
     def getVelocity(self):
 
@@ -106,7 +106,7 @@ class SwerveWheel():
         wpilib.SmartDashboard.putNumber(" D -", kD)
         wpilib.SmartDashboard.putNumber(" F -", kF)
         wpilib.SmartDashboard.putNumber(" CAN - ", self.getAbsAngle())
-        
+
         # wpilib.SmartDashboard.putNumber(" Sensor Position -", 
         # self.directionMotor.getSelectedSensorPosition())
         # wpilib.SmartDashboard.putNumber(" Sensor Velocity -", 

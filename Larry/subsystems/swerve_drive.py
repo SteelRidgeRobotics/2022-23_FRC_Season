@@ -9,7 +9,11 @@ from subsystems.swerve_wheel import SwerveWheel
 
 
 class SwerveDrive(commands2.SubsystemBase):
+
+
     def __init__(self) -> None:
+
+
         super().__init__()
         # init motors
         self.leftFrontDirection = ctre.TalonFX(constants.kleftFrontDirectionID)
@@ -86,8 +90,7 @@ class SwerveDrive(commands2.SubsystemBase):
         if wpilib.RobotBase.isReal():
             self.gyro.setYawAxis(wpilib.ADIS16470_IMU.IMUAxis.kX)
         
-        self.PDP = wpilib.PowerDistribution(
-            (0, wpilib.PowerDistribution.ModuleType.kCTRE))
+        # self.PDP = wpilib.PowerDistribution((0, wpilib.PowerDistribution.ModuleType.kCTRE))
 
     def turnWheel(self, module: SwerveWheel, direction: float, 
                   magnitude: float):
@@ -150,9 +153,9 @@ class SwerveDrive(commands2.SubsystemBase):
             ## put stats to smart dashboard
             wpilib.SmartDashboard.putNumber(" Wanted Angle -", direction)
 
-            wpilib.SmartDashboard.putNumber("RevComp", 
-                                            conversions.giveRevCompensation(
-                                                (currentAngle, direction)))
+            wpilib.SmartDashboard.putNumber(
+                "RevComp", conversions.giveRevCompensation(currentAngle, 
+                                                           direction))
             
             wpilib.SmartDashboard.putNumber("REVOLUTIONS", 
                                             conversions.getRevolutions(
@@ -160,8 +163,8 @@ class SwerveDrive(commands2.SubsystemBase):
             
             wpilib.SmartDashboard.putNumber("Given Angle", 
                                             conversions.getclosest(
-                                                (currentAngle, 
-                                                 direction, magnitude)[0]))
+                                                currentAngle, 
+                                                direction, magnitude)[0])
             
             wpilib.SmartDashboard.putNumber("Current Angle", currentAngle)
 
@@ -225,8 +228,8 @@ class SwerveDrive(commands2.SubsystemBase):
                            - self.rightFrontSwerveModule.getAbsAngle()))
         
         wpilib.SmartDashboard.putNumber(
-            " RR ERROR ", (self.leftFrontSwerveModule.getAbsAngle() 
-                           - self.rightRearSwerveModule.getAbsAngle()))
+            " LR ERROR ", (self.leftFrontSwerveModule.getAbsAngle() 
+                           - self.leftRearSwerveModule.getAbsAngle()))
 
     def getGyroAngle(self) -> float:
 

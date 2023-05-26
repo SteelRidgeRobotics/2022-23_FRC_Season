@@ -10,7 +10,7 @@ from subsystems.swerve_drive import SwerveDrive
 
 class DriveWithController(commands2.CommandBase):
 
-    
+
     def __init__(self, 
                  swerveDrive: SwerveDrive, 
                  x: typing.Callable[[], float], 
@@ -58,6 +58,11 @@ class DriveWithController(commands2.CommandBase):
                 # no rotation wanted
                 self.drive.translate(self.angle, self.magnitude)
                 """
+
+        if (self.magnitude == 0 
+            and conversions.deadband(self.rightx(), constants.kdeadband)
+            == 0):
+            self.drive.stopAllMotors()
 
         self.drive.showWheelStats()
 

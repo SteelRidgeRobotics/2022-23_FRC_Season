@@ -12,7 +12,7 @@ krightFrontDirectionID = 6
 krightRearDirectionID = 7
 
 kdriverControllerPort = 0
-kdeadband = 0.15
+kdeadband = 0.05
 
 # CAN coders
 kflCANcoderID = 10
