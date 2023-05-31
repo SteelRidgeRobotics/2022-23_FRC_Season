@@ -15,7 +15,7 @@ class ArmMotor(commands2.SubsystemBase):
     """
     def __init__(self, motorID: int, holdPercentage: float, feedForward: float, 
                  armP: float, armD: float, cruiseVel: float, accel: float, 
-                 gearRatio: float, offset: float, name: str):
+                 gearRatio: float, offset: float, name: str, maxHorizontal: int):
         super().__init__()
 
         self.motor = ctre.TalonFX(motorID)
@@ -23,6 +23,7 @@ class ArmMotor(commands2.SubsystemBase):
         # self.encoder = ctre.CANCoder(encoderID) :(
         self.holdPercentage = holdPercentage
         self.gearRatio = gearRatio
+        self.maxHorizontal = maxHorizontal
         
         self.motor.setNeutralMode(ctre.NeutralMode.Brake)
         self.motor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor)
@@ -36,6 +37,7 @@ class ArmMotor(commands2.SubsystemBase):
         self.motor.configSupplyCurrentLimit(currLimitConfigs=ctre.SupplyCurrentLimitConfiguration(True, 40.0, 30.0, 2.0))
         self.motor.enableVoltageCompensation(True)
         self.motor.configVoltageCompSaturation(11.8)
+        self.motor.setInverted(False)
 
         self.name = name
         self.currentTarget = 0
@@ -47,14 +49,6 @@ class ArmMotor(commands2.SubsystemBase):
         pos = kwargs.get("pos", self.motor.getSelectedSensorPosition())
         angle = kwargs.get("angle", self.getCurrentAngle())
         aRBFF = kwargs.get("aRBFF", True)
-
-        if aRBFF:
-            feed_forward = self.holdPercentage * math.cos(math.radians(angle))
-            self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos, 
-                        ctre.DemandType.ArbitraryFeedForward, feed_forward)
-            
-        else:
-            self.motor.set(ctre.TalonFXControlMode.MotionMagic, pos)
 
         self.currentTarget = pos
 
@@ -74,7 +68,7 @@ class ArmMotor(commands2.SubsystemBase):
         return minTarget <= roundedMotorPos <= maxTarget
     
     def toPos(self, pos: int):
-        """Moves the motor to a postition."""
+        """Moves the motor to a position."""
         if self.motorID == 5: 
             self.moveToPos(pos=pos, angle=self.getCurrentAngle(), aRBFF=False)
         else:
@@ -91,22 +85,22 @@ class Arm(commands2.SubsystemBase):
         self.baseMotor = ArmMotor(constants.ARMBASEPORT, constants.ARMBASEHOLDPERCENT, constants.ARMBASEF, 
                                   constants.ARMBASEP, constants.ARMBASED, 
                                   constants.ARMBASECRUISEVEL, constants.ARMBASEACCEL, 
-                                  constants.BASERATIO, 110432, "Base")
+                                  constants.BASERATIO, 110432, "Base", 0)
         
         self.midMotor = ArmMotor(constants.ARMMIDPORT, constants.ARMMIDHOLDPERCENT, constants.ARMMIDF, 
                                  constants.ARMMIDP, constants.ARMMIDD, 
                                  constants.ARMMIDCRUISEVEL, constants.ARMMIDACCEL, 
-                                 constants.MIDDLERATIO, -91211, "Mid")
+                                 constants.MIDDLERATIO, -91211, "Mid", -15978)
         
         self.topMotor = ArmMotor(constants.ARMTOPPORT, constants.ARMTOPHOLDPERCENT, constants.ARMTOPF, 
                                  constants.ARMTOPP, constants.ARMTOPD, 
                                  constants.ARMTOPCRUISEVEL, constants.ARMTOPACCEL, 
-                                 constants.TOPRATIO, 4362, "Top")
+                                 constants.TOPRATIO, 4362, "Top", 4138)
         
         self.grabberMotor = ArmMotor(constants.ARMGRABBERPORT, constants.ARMGRABBERHOLDPERCENT, constants.ARMGRABBERF, 
                                      constants.ARMGRABBERP, constants.ARMGRABBERD, 
                                      constants.ARMGRABBERCRUISEVEL, constants.ARMGRABBERACCEL, 
-                                     constants.GRABBERRATIO, 0, "Grabber")
+                                     constants.GRABBERRATIO, 0, "Grabber", 0)
         
         self.grabberSolenoid = wpilib.DoubleSolenoid(constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
 
@@ -190,48 +184,45 @@ class TickArm(commands2.CommandBase):
         super().__init__()
 
         self.arm = arm
+        self.run = True
 
     def initialize(self) -> None:
         for i in range(len(self.arm.motorList)):
             motor = self.arm.motorList[i]
             wpilib.SmartDashboard.putNumber(f"{motor.name} Pos", 0)
             wpilib.SmartDashboard.putNumber(f"{motor.name} Target", 0)
-            wpilib.SmartDashboard.putBoolean(f"{motor.name} Inverted", False)
-
-        
 
     def execute(self) -> None:
-<<<<<<< Updated upstream
-=======
         if not self.run:
-            self.run = True # Has the command execute ever other tick, prevents the arm from shaking too much from constantly changing the Arb. FF value.
+            self.run = True
             return
->>>>>>> Stashed changes
         for i in range(len(self.arm.motorList)):
             motor = self.arm.motorList[i]
-            wpilib.SmartDashboard.putNumber(f"{motor.name} Pos", motor.motor.getSelectedSensorPosition())
+            current_pos = motor.motor.getSelectedSensorPosition()
+            wpilib.SmartDashboard.putNumber(f"{motor.name} Pos", current_pos)
+            current_target = motor.getCurrentTarget()
             wpilib.SmartDashboard.putNumber(f"{motor.name} Target", motor.getCurrentTarget())
 
-<<<<<<< Updated upstream
-=======
             # Update Arbitrary Feed Forward
             ticksPerDegree = (2048/360) * motor.gearRatio
             degrees = (current_pos - motor.maxHorizontal) / ticksPerDegree
             cosineScalar = math.cos(math.radians(degrees))
+            
 
-            arbitrary_feedforward = round(motor.holdPercentage * cosineScalar, 3)
+            # Reverse the feed forward for the top motor when the mid motor is flipped over (mainly for cube place mid)
+            if motor.motorID == constants.ARMTOPPORT and self.arm.midMotor.motor.getSelectedSensorPosition() < -81630: # -81630 is the mid motor straight upwards
+                    arbitrary_feedforward = round((motor.holdPercentage * -1) * cosineScalar, 3)
+            else:
+                arbitrary_feedforward = round(motor.holdPercentage * cosineScalar, 3)
 
-            # Set target pos + arb. FF
-            if motor.motorID != constants.ARMBASEPORT:
-                motor.motor.set(ctre.TalonFXControlMode.MotionMagic, current_target, ctre.DemandType.ArbitraryFeedForward, arbitrary_feedforward)
-            elif motor.motorID == constants.ARMBASEPORT:
+            if motor.motorID == constants.ARMBASEPORT:
                 motor.motor.set(ctre.TalonFXControlMode.MotionMagic, current_target)
+            else:
+                motor.motor.set(ctre.TalonFXControlMode.MotionMagic, current_target, ctre.DemandType.ArbitraryFeedForward, arbitrary_feedforward)
+                wpilib.SmartDashboard.putNumber(f"FF {motor.name}", arbitrary_feedforward)
 
-            wpilib.SmartDashboard.putNumber(f"FF {motor.name}", arbitrary_feedforward)
-            wpilib.SmartDashboard.putBoolean(f"{motor.name} Inverted", motor.motor.getInverted())
-
->>>>>>> Stashed changes
         self.arm.updateGlobalAngles()
+        self.run = False
 
     def isFinished(self) -> bool:
         return False
