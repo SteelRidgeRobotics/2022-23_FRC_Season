@@ -49,6 +49,48 @@ class SetPosition(commands2.CommandBase):
         """
         return self.done
     
+class InvertSafelyThenSetPos(commands2.CommandBase):
+    """
+    Sets the motor pos to 0, inverts it, then sets the correct position.
+
+    THE POSITION YOU PASS IN IS INVERTED IN THE INIT. IT SHOULD NOT BE NEGATIVE.
+    """
+    def __init__(self, motor: ArmMotor, invert: bool, pos: int) -> None:
+        super().__init__()
+
+        self.motor = motor
+        self.invert = invert
+        self.pos = pos
+        self.done = False
+
+        self.has_inverted = False
+
+    def initialize(self) -> None:
+        self.done = False
+
+        self.has_inverted = False
+
+        self.motor.moveToPos(pos=0)
+
+    def execute(self) -> None:
+        if self.motor.motor.getInverted() == self.invert and not self.has_inverted:
+            self.done = True
+
+
+        if self.motor.isMotorPosInRange(0) and not self.has_inverted:
+            self.motor.motor.setInverted(self.invert)
+            self.motor.moveToPos(pos=-self.pos)
+            self.has_inverted = True
+
+        if self.motor.isMotorPosInRange(self.pos) and self.has_inverted:
+            self.done = True
+
+    def end(self, interrupted) -> None:
+        self.motor.toPos(-self.pos)
+
+    def isFinished(self):
+        return self.done
+
 class SetPositionCubePickup(commands2.CommandBase):
     """
     Moves the base motor into the given position.
@@ -170,8 +212,8 @@ class MoveBackToHome(commands2.SequentialCommandGroup):
     def __init__(self, arm: Arm):
         super().__init__()
         self.addCommands(
+            InvertSafelyThenSetPos(arm.topMotor, False, 0),
             SetPositionAll(arm, 0, -30340, 0)
-            #SetPosition(arm.topMotor, 0).alongWith(SetPositionBaseMid(arm, 0, -30340))
         )
         
 class PlaceCubeMid(commands2.SequentialCommandGroup):
@@ -179,8 +221,13 @@ class PlaceCubeMid(commands2.SequentialCommandGroup):
         super().__init__()
         self.addCommands(
             MoveBackToHome(arm),
-            SetPositionMidTop(arm, -140912, 5115),
+            SetPosition(arm.midMotor, -110912),
             SetPosition(arm.baseMotor, -4964),
+<<<<<<< Updated upstream
+=======
+            commands2.WaitCommand(0.5),
+            InvertSafelyThenSetPos(arm.topMotor, True, 5115)
+>>>>>>> Stashed changes
         )
 
 class MoveCubePickup(commands2.SequentialCommandGroup):

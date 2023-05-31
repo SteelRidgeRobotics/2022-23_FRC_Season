@@ -196,13 +196,41 @@ class TickArm(commands2.CommandBase):
             motor = self.arm.motorList[i]
             wpilib.SmartDashboard.putNumber(f"{motor.name} Pos", 0)
             wpilib.SmartDashboard.putNumber(f"{motor.name} Target", 0)
+            wpilib.SmartDashboard.putBoolean(f"{motor.name} Inverted", False)
+
+        
 
     def execute(self) -> None:
+<<<<<<< Updated upstream
+=======
+        if not self.run:
+            self.run = True # Has the command execute ever other tick, prevents the arm from shaking too much from constantly changing the Arb. FF value.
+            return
+>>>>>>> Stashed changes
         for i in range(len(self.arm.motorList)):
             motor = self.arm.motorList[i]
             wpilib.SmartDashboard.putNumber(f"{motor.name} Pos", motor.motor.getSelectedSensorPosition())
             wpilib.SmartDashboard.putNumber(f"{motor.name} Target", motor.getCurrentTarget())
 
+<<<<<<< Updated upstream
+=======
+            # Update Arbitrary Feed Forward
+            ticksPerDegree = (2048/360) * motor.gearRatio
+            degrees = (current_pos - motor.maxHorizontal) / ticksPerDegree
+            cosineScalar = math.cos(math.radians(degrees))
+
+            arbitrary_feedforward = round(motor.holdPercentage * cosineScalar, 3)
+
+            # Set target pos + arb. FF
+            if motor.motorID != constants.ARMBASEPORT:
+                motor.motor.set(ctre.TalonFXControlMode.MotionMagic, current_target, ctre.DemandType.ArbitraryFeedForward, arbitrary_feedforward)
+            elif motor.motorID == constants.ARMBASEPORT:
+                motor.motor.set(ctre.TalonFXControlMode.MotionMagic, current_target)
+
+            wpilib.SmartDashboard.putNumber(f"FF {motor.name}", arbitrary_feedforward)
+            wpilib.SmartDashboard.putBoolean(f"{motor.name} Inverted", motor.motor.getInverted())
+
+>>>>>>> Stashed changes
         self.arm.updateGlobalAngles()
 
     def isFinished(self) -> bool:
