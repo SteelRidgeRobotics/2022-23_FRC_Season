@@ -223,11 +223,8 @@ class PlaceCubeMid(commands2.SequentialCommandGroup):
             MoveBackToHome(arm),
             SetPosition(arm.midMotor, -110912),
             SetPosition(arm.baseMotor, -4964),
-<<<<<<< Updated upstream
-=======
             commands2.WaitCommand(0.5),
             InvertSafelyThenSetPos(arm.topMotor, True, 5115)
->>>>>>> Stashed changes
         )
 
 class MoveCubePickup(commands2.SequentialCommandGroup):
