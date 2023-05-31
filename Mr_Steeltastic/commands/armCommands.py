@@ -131,7 +131,7 @@ class SetPositionCubePickup(commands2.CommandBase):
     def execute(self):
         wpilib.SmartDashboard.putNumber("Timer", self.timer.get())
 
-        if not self.arm.topMotor.isMotorPosInRange(self.topAngle/constants.TOPRATIO, range=8750):
+        if not self.arm.topMotor.isMotorPosInRange(self.topAngle/constants.TOPRATIO):
             if self.timer.get() >= 3:
                 self.arm.motorToPos(self.arm.topMotor, self.topAngle/constants.TOPRATIO)
         else:
