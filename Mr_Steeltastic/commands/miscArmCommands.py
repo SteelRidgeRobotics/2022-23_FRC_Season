@@ -3,7 +3,6 @@ import ctre
 from subsystems.arm import Arm
 from wpilib import SmartDashboard
 
-
 class ToggleArmCoast(commands2.CommandBase):
     """
     Sets all arm motors to coast (this lets us move the arm when disabled)
@@ -40,4 +39,3 @@ class ToggleArmCoast(commands2.CommandBase):
 
     def isFinished(self) -> bool:
         return self.done
-

@@ -4,6 +4,7 @@ DRIVERCONTROLLERPORT = 0
 FUNCTIONSCONTROLLERPORT = 1
 
 USINGGUITARCONTROLLER = True # Turn this to True if using the guitar controller. Everything will explode if you don't
+TESTCOMMANDS = False # Used for the toggling coast of the motor and inverting the top motor commands
 
 FRONTLEFT = 0
 BACKLEFT = 1
