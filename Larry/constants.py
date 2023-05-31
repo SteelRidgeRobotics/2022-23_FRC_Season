@@ -20,6 +20,12 @@ krlCANcoderID = 11
 kfrCANcoderID = 12
 krrCANcoderID = 13
 
+# offsets
+kflCANoffset = 167.78320312
+krlCANoffset = 143.26171875
+kfrCANoffset = 323.52539062
+krrCANoffset = 210.9375
+
 # Encoders
 ktimeoutMs = 10
 kF = 0.05282272  # Feed forward

@@ -5,10 +5,19 @@ from robotcontainer import RobotContainer
 
 # vision setup
 
-class MyRobot(commands2.TimedCommandRobot):
+class Larry(commands2.TimedCommandRobot):
+
+
     def robotInit(self) -> None:
         # initialize robotcontainer
         self.container = RobotContainer()
+        # get initial wheel angles
+        """
+        self.lfOffset = self.container.swerveDrive.leftFrontSwerveModule.getAbsAngle()
+        self.lrOffset = self.container.swerveDrive.leftRearSwerveModule.getAbsAngle()
+        self.rfOffset = self.container.swerveDrive.rightFrontSwerveModule.getAbsAngle()
+        self.rrOffset = self.container.swerveDrive.rightRearSwerveModule.getAbsAngle()
+        """
         # autonomous
         # self.autonomousCommand = self.container.getAutonomousCommand()
         # launch camera
@@ -37,4 +46,4 @@ class MyRobot(commands2.TimedCommandRobot):
 
 
 if __name__ == "__main__":
-    wpilib.run(MyRobot)
+    wpilib.run(Larry)

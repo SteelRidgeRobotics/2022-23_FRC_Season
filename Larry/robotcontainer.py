@@ -1,9 +1,11 @@
 import wpilib
 from wpilib import XboxController
+from commands2.button import JoystickButton
 
 import constants
 # import commands
 from commands.drive_with_controller import DriveWithController
+from commands.zero_wheels import ZeroWheels
 # import subsystems
 from subsystems.swerve_drive import SwerveDrive
 
@@ -62,6 +64,9 @@ class RobotContainer:
 
     def configureButtonBindings(self):
         """This is where our trigger bindings for commands go"""
+        JoystickButton(self.driverController, 
+                       XboxController.Button.kB).whenPressed(
+            ZeroWheels(self.swerveDrive))
 
     """    
     def getAutonomousCommand(self) -> commands2.Command:

@@ -47,9 +47,9 @@ class DriveWithController(commands2.CommandBase):
         if self.magnitude == 0.0:
             # only rotation
             self.drive.turnInPlace(conversions.deadband(self.rightx(), 
-                                                        constants.kdeadband))
+                                                        constants.kdeadband) * 0.2)
         else:
-            self.drive.translate(self.angle, self.magnitude)
+            self.drive.translate(self.angle, self.magnitude * 0.2)
             """
             if self.magnitude != 0.0 and self.rightx != 0.0:
                 # checks if both joysticks are being used

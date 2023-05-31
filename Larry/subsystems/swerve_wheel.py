@@ -93,7 +93,7 @@ class SwerveWheel():
 
     def getAbsAngle(self):
             
-            return self.CANcoder.getAbsolutePosition()
+        return self.CANcoder.getAbsolutePosition()
 
     def getVelocity(self):
 

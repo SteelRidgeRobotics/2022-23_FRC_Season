@@ -47,12 +47,42 @@ class SwerveDrive(commands2.SubsystemBase):
         self.frCANcoder = ctre.CANCoder(constants.kfrCANcoderID, "")
         self.rrCANcoder = ctre.CANCoder(constants.krrCANcoderID, "")
 
+        # ensure that CAN coders will boot to abs sensor instead of 0
+        self.flCANcoder.configSensorInitializationStrategy(
+            ctre.SensorInitializationStrategy.BootToAbsolutePosition,
+            constants.ktimeoutMs)
+        
+        self.rlCANcoder.configSensorInitializationStrategy(
+            ctre.SensorInitializationStrategy.BootToAbsolutePosition,
+            constants.ktimeoutMs)
+        
+        self.frCANcoder.configSensorInitializationStrategy(
+            ctre.SensorInitializationStrategy.BootToAbsolutePosition,
+            constants.ktimeoutMs)
+        
+        self.rrCANcoder.configSensorInitializationStrategy(
+            ctre.SensorInitializationStrategy.BootToAbsolutePosition,
+            constants.ktimeoutMs)
+
+        # making CAN coders read clockwise
+        self.flCANcoder.configSensorDirection(True, constants.ktimeoutMs)
+        self.rlCANcoder.configSensorDirection(True, constants.ktimeoutMs)
+        self.frCANcoder.configSensorDirection(True, constants.ktimeoutMs)
+        self.rrCANcoder.configSensorDirection(True, constants.ktimeoutMs)
+
+        # offsets for CAN coders
+        self.flCANcoder.configMagnetOffset(constants.kflCANoffset)
+        self.rlCANcoder.configMagnetOffset(constants.krlCANoffset)
+        self.frCANcoder.configMagnetOffset(constants.kfrCANoffset)
+        self.rrCANcoder.configMagnetOffset(constants.krrCANoffset)
+
+
         # fix inverse
         self.leftFrontSpeed.setInverted(False)
         self.leftRearSpeed.setInverted(False)
 
-        self.rightFrontSpeed.setInverted(True)
-        self.rightRearSpeed.setInverted(True)
+        self.rightFrontSpeed.setInverted(False)
+        self.rightRearSpeed.setInverted(False)
 
         self.leftFrontDirection.setInverted(False)
         self.leftRearDirection.setInverted(False)
@@ -234,15 +264,27 @@ class SwerveDrive(commands2.SubsystemBase):
     def getGyroAngle(self) -> float:
 
         return self.gyro.getAngle()
+    
+    def getWheelOffsets(self):
+        # get initial wheel angles
+        self.lfOffset = self.leftFrontSwerveModule.getAbsAngle()
+        self.lrOffset = self.leftRearSwerveModule.getAbsAngle()
+        self.rfOffset = self.rightFrontSwerveModule.getAbsAngle()
+        self.rrOffset = self.rightRearSwerveModule.getAbsAngle()
 
     def flushWheels(self):
 
-        self.turnWheel(self.leftFrontSwerveModule, 0.0, 0.01)
-        self.turnWheel(self.leftRearSwerveModule, 0.0, 0.01)
-        self.turnWheel(self.rightFrontSwerveModule, 0.0, 0.01)
-        self.turnWheel(self.rightRearSwerveModule, 0.0, 0.01)
-
-        self.stopAllMotors()
+        self.turnWheel(self.leftFrontSwerveModule, 
+                       self.leftFrontSwerveModule.getAbsAngle(), 0.1)
+        
+        self.turnWheel(self.leftRearSwerveModule, 
+                       self.leftRearSwerveModule.getAbsAngle(), 0.1)
+   
+        self.turnWheel(self.leftRearSwerveModule, 
+                       self.leftRearSwerveModule.getAbsAngle(), 0.1)
+        
+        self.turnWheel(self.rightRearSwerveModule, 
+                       self.rightRearSwerveModule.getAbsAngle(), 0.1)
 
     def moveWhileSpinning(self, leftx: float, lefty: float, turnPower: float):
 
