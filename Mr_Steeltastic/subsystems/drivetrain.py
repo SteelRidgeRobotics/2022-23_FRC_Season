@@ -34,8 +34,10 @@ class Drivetrain(commands2.SubsystemBase):
         self.BRMotor.setInverted(True)
 
         # configure feedback sensors (basically give it a timeout ms of 10 rather than 0). the timeoutms will wait to see if the config is successful, and then throw an error if something goes wrong
-        self.FLMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, constants.TIMEOUTMS)
-        self.FRMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor, 0, constants.TIMEOUTMS)
+        self.FLMotor.configSelectedFeedbackSensor(
+            ctre.FeedbackDevice.IntegratedSensor, 0, constants.TIMEOUTMS)
+        self.FRMotor.configSelectedFeedbackSensor(
+            ctre.FeedbackDevice.IntegratedSensor, 0, constants.TIMEOUTMS)
 
         # nominal output (this is the minimum value these can be)
         self.FLMotor.configNominalOutputForward(0, constants.TIMEOUTMS)
@@ -56,7 +58,8 @@ class Drivetrain(commands2.SubsystemBase):
         self.BRMotor.selectProfileSlot(0, 0)
 
         # configure the P, I, and D values of our motors
-        self.FLMotor.config_kP(0, constants.MMP, constants.TIMEOUTMS)  # please change these values later (value)
+        # please change these values later (value)
+        self.FLMotor.config_kP(0, constants.MMP, constants.TIMEOUTMS)
         self.FLMotor.config_kI(0, constants.MMI, constants.TIMEOUTMS)
         self.FLMotor.config_kD(0, constants.MMD, constants.TIMEOUTMS)
         self.FLMotor.config_kF(0, constants.MMF, constants.TIMEOUTMS)
@@ -67,10 +70,14 @@ class Drivetrain(commands2.SubsystemBase):
         self.FRMotor.config_kF(0, constants.MMF, constants.TIMEOUTMS)
 
         # configure the velocity our motion profile will plateau at, as well as the acceleration on our trapezoidal profile. for more information see here: https://v5.docs.ctr-electronics.com/en/stable/ch16_ClosedLoop.html
-        self.FLMotor.configMotionCruiseVelocity(constants.CRUISEVELOCITY, constants.TIMEOUTMS)
-        self.FRMotor.configMotionCruiseVelocity(constants.CRUISEVELOCITY, constants.TIMEOUTMS)
-        self.FLMotor.configMotionAcceleration(constants.CRUISEACCEL, constants.TIMEOUTMS)
-        self.FRMotor.configMotionAcceleration(constants.CRUISEACCEL, constants.TIMEOUTMS)
+        self.FLMotor.configMotionCruiseVelocity(
+            constants.CRUISEVELOCITY, constants.TIMEOUTMS)
+        self.FRMotor.configMotionCruiseVelocity(
+            constants.CRUISEVELOCITY, constants.TIMEOUTMS)
+        self.FLMotor.configMotionAcceleration(
+            constants.CRUISEACCEL, constants.TIMEOUTMS)
+        self.FRMotor.configMotionAcceleration(
+            constants.CRUISEACCEL, constants.TIMEOUTMS)
 
         # zero the sensors
         self.FLMotor.setSelectedSensorPosition(0, 0, constants.TIMEOUTMS)
@@ -83,7 +90,8 @@ class Drivetrain(commands2.SubsystemBase):
         self.BRMotor.setNeutralMode(ctre.NeutralMode.Brake)
 
         # PIDController for balancing on the charge station
-        self.pidController = wpimath.controller.PIDController(constants.P, constants.I, constants.D)
+        self.pidController = wpimath.controller.PIDController(
+            constants.P, constants.I, constants.D)
 
         # Gyroscope to keep track of robot pitch
         self.gyro = wpilib.ADIS16470_IMU()
@@ -120,10 +128,13 @@ class Drivetrain(commands2.SubsystemBase):
         if isAuto:
 
             self.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, leftMotors)
-            self.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, rightMotors)
+            self.FRMotor.set(
+                ctre.TalonFXControlMode.PercentOutput, rightMotors)
 
         else:
-            self.FLMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(leftMotors))
-            self.FRMotor.set(ctre.TalonFXControlMode.PercentOutput, deadband(rightMotors))
+            self.FLMotor.set(
+                ctre.TalonFXControlMode.PercentOutput, deadband(leftMotors))
+            self.FRMotor.set(
+                ctre.TalonFXControlMode.PercentOutput, deadband(rightMotors))
 
         wpilib.SmartDashboard.putBoolean("Deadband?", not isAuto)

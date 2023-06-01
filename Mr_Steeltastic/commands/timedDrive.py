@@ -17,11 +17,8 @@ class TimedDrive(commands2.CommandBase):
 
     def initialize(self) -> None:
         self.startTime = wpilib.Timer.getFPGATimestamp()
-        # self.timer.reset()
 
         self.train.arcadeDrive(0.0, 0.0, True)
-
-        # wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
     def execute(self) -> None:
         self.train.arcadeDrive(-0.25, 0.0, True)

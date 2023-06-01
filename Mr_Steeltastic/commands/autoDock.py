@@ -3,6 +3,7 @@ import wpilib
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 
+
 class StationCorrection(commands2.CommandBase):
 
     def __init__(self, train: Drivetrain, arm: Arm):
@@ -17,10 +18,6 @@ class StationCorrection(commands2.CommandBase):
 
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
-        # self.startTime = wpilib.Timer.getFPGATimestamp()
-
-        # self.commandFinished = False
-
     def initialize(self):
 
         self.train.onChargeStation = False
@@ -31,11 +28,6 @@ class StationCorrection(commands2.CommandBase):
 
     def execute(self):
 
-        # if self.commandFinished:
-
-        #     self.startTime = wpilib.Timer.getFPGATimestamp()
-        #     self.commandFinished = False
-
         wpilib.SmartDashboard.putNumber("Angle", self.train.gyro.getAngle())
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
@@ -43,7 +35,8 @@ class StationCorrection(commands2.CommandBase):
 
             self.train.arcadeDrive(-0.3, 0.0, True)
 
-            wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
+            wpilib.SmartDashboard.putString(
+                "Auto Status", "Driving to Station")
 
         elif self.timer.get() <= 1:
 
@@ -52,7 +45,8 @@ class StationCorrection(commands2.CommandBase):
 
         else:
 
-            power = (self.train.pidController.calculate(self.train.gyro.getAngle(), 0.0))
+            power = (self.train.pidController.calculate(
+                self.train.gyro.getAngle(), 0.0))
 
             wpilib.SmartDashboard.putNumber("Requested Power", power)
             wpilib.SmartDashboard.putString("Auto Status", "PID Control")
@@ -69,10 +63,7 @@ class StationCorrection(commands2.CommandBase):
 
         self.arm.keepArmsAtZero()
 
-        # wpilib.SmartDashboard.putNumberArray("Time", [wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp() - self.startTime])
         wpilib.SmartDashboard.putBoolean("Running", True)
-
-        # wpilib.SmartDashboard.putNumberArray("Time", [self.startTime, wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp - self.startTime])
 
     def end(self, interrupted: bool):
 
@@ -81,7 +72,6 @@ class StationCorrection(commands2.CommandBase):
 
     def isFinished(self):
         return False
-
 
 
 class StationCorrectionMobility(commands2.CommandBase):
@@ -120,14 +110,14 @@ class StationCorrectionMobility(commands2.CommandBase):
     def execute(self):
 
         wpilib.SmartDashboard.putNumber("Angle", self.train.gyro.getAngle())
-        # wpilib.SmartDashboard.putNumber("Time", wpilib.Timer.getFPGATimestamp() - self.startTime)
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
         if self.train.gyro.getAngle() <= 12.5 and not self.train.onChargeStation and not self.train.offChargeStation:
 
             self.train.arcadeDrive(-0.35, 0.0, True)
 
-            wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
+            wpilib.SmartDashboard.putString(
+                "Auto Status", "Driving to Station")
 
         elif self.timer.get() <= 3.5:
 
@@ -147,7 +137,8 @@ class StationCorrectionMobility(commands2.CommandBase):
 
             self.train.arcadeDrive(0.35, 0.0, True)
 
-            wpilib.SmartDashboard.putString("Auto Status", "2nd Driving to Station")
+            wpilib.SmartDashboard.putString(
+                "Auto Status", "2nd Driving to Station")
 
             self.train.gyro.getAngle() - self.drift >= -7.5
 
@@ -155,7 +146,8 @@ class StationCorrectionMobility(commands2.CommandBase):
 
             self.train.onChargeStation2 = True
 
-            power = (self.train.pidController.calculate(self.train.gyro.getAngle(), 0.0))
+            power = (self.train.pidController.calculate(
+                self.train.gyro.getAngle(), 0.0))
 
             wpilib.SmartDashboard.putNumber("Requested Power", power)
             wpilib.SmartDashboard.putString("Auto Status", "PID Control")
@@ -172,14 +164,13 @@ class StationCorrectionMobility(commands2.CommandBase):
 
         self.arm.keepArmsAtZero()
 
-        # wpilib.SmartDashboard.putNumberArray("Time", [wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp() - self.startTime])
         wpilib.SmartDashboard.putBoolean("Running?", True)
-        wpilib.SmartDashboard.putBoolean("Off CS?", self.train.offChargeStation)
-        wpilib.SmartDashboard.putBoolean("On CS?", self.train.onChargeStation or self.train.onChargeStation2)
+        wpilib.SmartDashboard.putBoolean(
+            "Off CS?", self.train.offChargeStation)
+        wpilib.SmartDashboard.putBoolean(
+            "On CS?", self.train.onChargeStation or self.train.onChargeStation2)
 
         wpilib.SmartDashboard.putNumber("Gyro Drift", self.drift)
-
-        # wpilib.SmartDashboard.putNumberArray("Time", [self.startTime, wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp - self.startTime])
 
     def end(self, interrupted: bool):
 
