@@ -1,7 +1,6 @@
 import commands2
 import wpilib
 from robotcontainer import RobotContainer
-from subsystems.vision import cameraLaunch
 
 class MrSteeltastic(commands2.TimedCommandRobot):
 
@@ -9,7 +8,6 @@ class MrSteeltastic(commands2.TimedCommandRobot):
 
         self.container = RobotContainer()
         self.autoCommand = self.container.getAutonomousCommand()
-        cameraLaunch()
 
     def robotPeriodic(self):
 
@@ -30,8 +28,6 @@ class MrSteeltastic(commands2.TimedCommandRobot):
             self.autoCommand.cancel()
 
     def teleopPeriodic(self):
-
-        # wpilib.SmartDashboard.putValue("Solenoid", self.container.arm.grabberSolenoid.get())
         pass
 
     def testInit(self):

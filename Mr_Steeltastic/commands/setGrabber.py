@@ -8,17 +8,14 @@ class SetGrabber(commands2.CommandBase):
         super().__init__()
 
         self.arm = arm
-        # self.close = close
-
         self.isDone = False
 
-        self.addRequirements([self.arm])
+        self.addRequirements([self.arm.grabberMotor])
 
     def execute(self) -> None:
         self.arm.toggleGrabber()
         self.isDone = True
         wpilib.SmartDashboard.putBoolean("Grabber", self.arm.grabberOpen)
-        # wpilib.SmartDashboard.putValue("getSolenoid", self.arm.grabberSolenoid.get())
 
     def isFinished(self) -> None:
         return self.isDone

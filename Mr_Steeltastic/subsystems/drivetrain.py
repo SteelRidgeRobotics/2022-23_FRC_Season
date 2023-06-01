@@ -8,7 +8,6 @@ import wpimath.controller
 def deadband(value):
     return 0 if abs(value) < constants.DEADBAND else value
 
-
 class Drivetrain(commands2.SubsystemBase):
     """
     Class to drive the robot chassis.

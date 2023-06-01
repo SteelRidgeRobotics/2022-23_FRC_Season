@@ -17,10 +17,6 @@ class StationCorrection(commands2.CommandBase):
 
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
-        # self.startTime = wpilib.Timer.getFPGATimestamp()
-
-        # self.commandFinished = False
-
     def initialize(self):
 
         self.train.onChargeStation = False
@@ -30,11 +26,6 @@ class StationCorrection(commands2.CommandBase):
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
     def execute(self):
-
-        # if self.commandFinished:
-
-        #     self.startTime = wpilib.Timer.getFPGATimestamp()
-        #     self.commandFinished = False
 
         wpilib.SmartDashboard.putNumber("Angle", self.train.gyro.getAngle())
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
@@ -69,10 +60,7 @@ class StationCorrection(commands2.CommandBase):
 
         self.arm.keepArmsAtZero()
 
-        # wpilib.SmartDashboard.putNumberArray("Time", [wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp() - self.startTime])
         wpilib.SmartDashboard.putBoolean("Running", True)
-
-        # wpilib.SmartDashboard.putNumberArray("Time", [self.startTime, wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp - self.startTime])
 
     def end(self, interrupted: bool):
 
@@ -120,7 +108,6 @@ class StationCorrectionMobility(commands2.CommandBase):
     def execute(self):
 
         wpilib.SmartDashboard.putNumber("Angle", self.train.gyro.getAngle())
-        # wpilib.SmartDashboard.putNumber("Time", wpilib.Timer.getFPGATimestamp() - self.startTime)
         wpilib.SmartDashboard.putNumber("Time", self.timer.get())
 
         if self.train.gyro.getAngle() <= 12.5 and not self.train.onChargeStation and not self.train.offChargeStation:
@@ -172,14 +159,11 @@ class StationCorrectionMobility(commands2.CommandBase):
 
         self.arm.keepArmsAtZero()
 
-        # wpilib.SmartDashboard.putNumberArray("Time", [wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp() - self.startTime])
         wpilib.SmartDashboard.putBoolean("Running?", True)
         wpilib.SmartDashboard.putBoolean("Off CS?", self.train.offChargeStation)
         wpilib.SmartDashboard.putBoolean("On CS?", self.train.onChargeStation or self.train.onChargeStation2)
 
         wpilib.SmartDashboard.putNumber("Gyro Drift", self.drift)
-
-        # wpilib.SmartDashboard.putNumberArray("Time", [self.startTime, wpilib.Timer.getFPGATimestamp(), wpilib.Timer.getFPGATimestamp - self.startTime])
 
     def end(self, interrupted: bool):
 

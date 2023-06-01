@@ -11,7 +11,6 @@ from subsystems.drivetrain import Drivetrain
 from commands.autoDock import StationCorrection
 from commands.setGrabber import SetGrabber
 from commands.armCommands import *
-from commands.miscArmCommands import *
 from guitar import Guitar
 
 class RobotContainer:

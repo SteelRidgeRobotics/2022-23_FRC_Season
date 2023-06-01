@@ -45,20 +45,8 @@ class ArmMotor(commands2.SubsystemBase):
     def keepAtZero(self):
         self.motor.set(ctre.TalonFXControlMode.MotionMagic, 0)
 
-    def moveToPos(self, **kwargs):
-        pos = kwargs.get("pos", self.motor.getSelectedSensorPosition())
-        angle = kwargs.get("angle", self.getCurrentAngle())
-        aRBFF = kwargs.get("aRBFF", True)
-
+    def moveToPos(self, pos: int):
         self.currentTarget = pos
-
-    def getCurrentAngle(self):
-        return self.motor.getSelectedSensorPosition() * 360/2048
-    
-    def isMotorPos(self, pos: int) -> bool:
-        roundedMotorPos = round(self.motor.getSelectedSensorPosition(), -2)
-        roundedTarget = round(pos * self.gearRatio, -2)
-        return roundedMotorPos == roundedTarget
     
     def isMotorPosInRange(self, pos: int, range=325) -> bool:
         roundedMotorPos = round(self.motor.getSelectedSensorPosition(), -2)
@@ -66,13 +54,6 @@ class ArmMotor(commands2.SubsystemBase):
         minTarget = roundedTarget - range
         maxTarget = roundedTarget + range
         return minTarget <= roundedMotorPos <= maxTarget
-    
-    def toPos(self, pos: int):
-        """Moves the motor to a position."""
-        if self.motorID == 5: 
-            self.moveToPos(pos=pos, angle=self.getCurrentAngle(), aRBFF=False)
-        else:
-            self.moveToPos(pos=pos, angle=self.getCurrentAngle(), aRBFF=True)
 
     def getCurrentTarget(self) -> int:
         return self.currentTarget
@@ -107,48 +88,13 @@ class Arm(commands2.SubsystemBase):
         self.grabberOpen = False
         self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
 
-        self.globalBaseAngle = 0
-        self.globalMidAngle = 0
-        self.globalTopAngle = 0
-
         self.motorList = [self.baseMotor, self.midMotor, self.topMotor, self.grabberMotor]
-        
-    def updateGlobalAngles(self):
-        self.globalBaseAngle = self.baseMotor.getCurrentAngle()
-        self.globalMidAngle = self.globalBaseAngle + self.midMotor.getCurrentAngle()
-        self.globalTopAngle = self.globalMidAngle + self.topMotor.getCurrentAngle()
 
     def keepArmsAtZero(self):
         self.baseMotor.keepAtZero()
         self.midMotor.keepAtZero()
         self.topMotor.keepAtZero()
         self.grabberMotor.keepAtZero()
-
-    def motorToPos(self, motor: ArmMotor, pos: int):
-        """
-        Moves a single motor to a postition. If the motor is in position, returns true.
-        
-        DO NOT USE THIS!!! Instead get the single motor and call toPos()
-        """
-        motor_ratio = None
-        if motor == self.baseMotor:
-            motor_ratio = constants.BASERATIO
-            self.baseMotor.moveToPos(pos=pos * motor_ratio, angle=self.globalBaseAngle, aRBFF=False)
-        elif motor == self.midMotor:
-            motor_ratio = constants.MIDDLERATIO
-            self.midMotor.moveToPos(pos=pos * constants.MIDDLERATIO, angle=self.globalMidAngle)
-        elif motor == self.topMotor:
-            motor_ratio = constants.TOPRATIO
-            self.topMotor.moveToPos(pos=pos * constants.TOPRATIO, angle=self.globalTopAngle)
-        elif motor == self.grabberMotor:
-            motor_ratio = constants.GRABBERRATIO
-            self.grabberMotor.moveToPos(pos=pos * constants.GRABBERRATIO)
-
-    def holdAtPos(self):
-        self.baseMotor.moveToPos(pos=self.baseMotor.motor.getSelectedSensorPosition(), angle=self.globalBaseAngle, aRBFF=False)
-        self.midMotor.moveToPos(pos=self.midMotor.motor.getSelectedSensorPosition(), angle=self.globalMidAngle)
-        self.topMotor.moveToPos(pos=self.topMotor.motor.getSelectedSensorPosition(), angle=self.globalTopAngle)
-        self.grabberMotor.moveToPos(pos=self.grabberMotor.motor.getSelectedSensorPosition())
         
     def toggleGrabber(self) -> None:
         if self.grabberOpen:
@@ -158,25 +104,9 @@ class Arm(commands2.SubsystemBase):
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
 
         self.grabberOpen = not self.grabberOpen
-
-    def getGrabberState(self):
-        self.grabberSolenoid.get()
-
-    def manualBaseMotor(self, leftJoy):
-        self.baseMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, 
-                                 deadband(leftJoy))
-
-    def manualMidMotor(self, rightJoy):
-        self.midMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, 
-                                deadband(rightJoy))
-
-    def manualTopMotor(self, rightTrigger):
-        self.topMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, 
-                                deadband(rightTrigger))
-
-    def manualGrabberMotor(self, leftTrigger):
-        self.grabberMotor.motor.set(ctre.TalonFXControlMode.PercentOutput, 
-                                    deadband(leftTrigger))
+        
+    def manualMotor(self, motor: ArmMotor, am: float):
+        motor.motor.set(ctre.TalonFXControlMode.PercentOutput, am)
         
 class TickArm(commands2.CommandBase):
     
@@ -208,7 +138,6 @@ class TickArm(commands2.CommandBase):
             degrees = (current_pos - motor.maxHorizontal) / ticksPerDegree
             cosineScalar = math.cos(math.radians(degrees))
             
-
             # Reverse the feed forward for the top motor when the mid motor is flipped over (mainly for cube place mid)
             if motor.motorID == constants.ARMTOPPORT and self.arm.midMotor.motor.getSelectedSensorPosition() < -81630: # -81630 is the mid motor straight upwards
                     arbitrary_feedforward = round((motor.holdPercentage * -1) * cosineScalar, 3)
@@ -221,7 +150,6 @@ class TickArm(commands2.CommandBase):
                 motor.motor.set(ctre.TalonFXControlMode.MotionMagic, current_target, ctre.DemandType.ArbitraryFeedForward, arbitrary_feedforward)
                 wpilib.SmartDashboard.putNumber(f"FF {motor.name}", arbitrary_feedforward)
 
-        self.arm.updateGlobalAngles()
         self.run = False
 
     def isFinished(self) -> bool:
@@ -229,5 +157,3 @@ class TickArm(commands2.CommandBase):
 
     def end(self, interrupted: bool) -> None:
         pass
-
-    
