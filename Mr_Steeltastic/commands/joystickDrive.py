@@ -28,7 +28,8 @@ class JoystickDrive(commands2.CommandBase):
         self.leftBumper = self.leftBumperFunc()
         self.rightBumper = self.rightBumperFunc()
 
-        wpilib.SmartDashboard.putNumberArray("LRJoy", [self.left, self.leftBumper, self.right, self.rightBumper])
+        wpilib.SmartDashboard.putNumberArray(
+            "LRJoy", [self.left, self.leftBumper, self.right, self.rightBumper])
 
         if self.buttonAFunc():
             self.placeMode = not self.placeMode
@@ -43,7 +44,8 @@ class JoystickDrive(commands2.CommandBase):
 
         self.train.arcadeDrive(self.left, self.right, False)
 
-        wpilib.SmartDashboard.putNumber("Gyro Angle", self.train.gyro.getAngle())
+        wpilib.SmartDashboard.putNumber(
+            "Gyro Angle", self.train.gyro.getAngle())
 
         wpilib.SmartDashboard.putBoolean("PlaceMode?", self.placeMode)
         wpilib.SmartDashboard.putNumber("Left Joy", float(self.left))

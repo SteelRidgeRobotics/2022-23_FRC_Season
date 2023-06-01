@@ -2,6 +2,7 @@ import commands2
 import wpilib
 from subsystems.arm import Arm
 
+
 class SetGrabber(commands2.CommandBase):
 
     def __init__(self, arm: Arm) -> None:

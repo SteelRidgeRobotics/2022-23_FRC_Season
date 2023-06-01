@@ -3,6 +3,7 @@ import wpilib
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 
+
 class StationCorrection(commands2.CommandBase):
 
     def __init__(self, train: Drivetrain, arm: Arm):
@@ -34,7 +35,8 @@ class StationCorrection(commands2.CommandBase):
 
             self.train.arcadeDrive(-0.3, 0.0, True)
 
-            wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
+            wpilib.SmartDashboard.putString(
+                "Auto Status", "Driving to Station")
 
         elif self.timer.get() <= 1:
 
@@ -43,7 +45,8 @@ class StationCorrection(commands2.CommandBase):
 
         else:
 
-            power = (self.train.pidController.calculate(self.train.gyro.getAngle(), 0.0))
+            power = (self.train.pidController.calculate(
+                self.train.gyro.getAngle(), 0.0))
 
             wpilib.SmartDashboard.putNumber("Requested Power", power)
             wpilib.SmartDashboard.putString("Auto Status", "PID Control")
@@ -69,7 +72,6 @@ class StationCorrection(commands2.CommandBase):
 
     def isFinished(self):
         return False
-
 
 
 class StationCorrectionMobility(commands2.CommandBase):
@@ -114,7 +116,8 @@ class StationCorrectionMobility(commands2.CommandBase):
 
             self.train.arcadeDrive(-0.35, 0.0, True)
 
-            wpilib.SmartDashboard.putString("Auto Status", "Driving to Station")
+            wpilib.SmartDashboard.putString(
+                "Auto Status", "Driving to Station")
 
         elif self.timer.get() <= 3.5:
 
@@ -134,7 +137,8 @@ class StationCorrectionMobility(commands2.CommandBase):
 
             self.train.arcadeDrive(0.35, 0.0, True)
 
-            wpilib.SmartDashboard.putString("Auto Status", "2nd Driving to Station")
+            wpilib.SmartDashboard.putString(
+                "Auto Status", "2nd Driving to Station")
 
             self.train.gyro.getAngle() - self.drift >= -7.5
 
@@ -142,7 +146,8 @@ class StationCorrectionMobility(commands2.CommandBase):
 
             self.train.onChargeStation2 = True
 
-            power = (self.train.pidController.calculate(self.train.gyro.getAngle(), 0.0))
+            power = (self.train.pidController.calculate(
+                self.train.gyro.getAngle(), 0.0))
 
             wpilib.SmartDashboard.putNumber("Requested Power", power)
             wpilib.SmartDashboard.putString("Auto Status", "PID Control")
@@ -160,8 +165,10 @@ class StationCorrectionMobility(commands2.CommandBase):
         self.arm.keepArmsAtZero()
 
         wpilib.SmartDashboard.putBoolean("Running?", True)
-        wpilib.SmartDashboard.putBoolean("Off CS?", self.train.offChargeStation)
-        wpilib.SmartDashboard.putBoolean("On CS?", self.train.onChargeStation or self.train.onChargeStation2)
+        wpilib.SmartDashboard.putBoolean(
+            "Off CS?", self.train.offChargeStation)
+        wpilib.SmartDashboard.putBoolean(
+            "On CS?", self.train.onChargeStation or self.train.onChargeStation2)
 
         wpilib.SmartDashboard.putNumber("Gyro Drift", self.drift)
 
