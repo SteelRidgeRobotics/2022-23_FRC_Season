@@ -108,6 +108,10 @@ class SwerveDrive(commands2.SubsystemBase):
                                                  self.rrCANcoder)
 
         # getting offsets for movement while the robot was off
+        self.lfOffset = 0
+        self.lrOffset = 0
+        self.rfOffset = 0
+        self.rrOffset = 0
         """
         self.leftFrontDirection.configIntegratedSensorOffset(self.leftFrontSwerveModule.getAbsAngle())
         self.leftRearDirection.configIntegratedSensorOffset(self.leftRearSwerveModule.getAbsAngle())
@@ -202,10 +206,10 @@ class SwerveDrive(commands2.SubsystemBase):
         """
         move the robot without changing orientation
         """
-        self.turnWheel(self.leftFrontSwerveModule, direction, magnitude)
-        self.turnWheel(self.leftRearSwerveModule, direction, magnitude)
-        self.turnWheel(self.rightFrontSwerveModule, direction, magnitude)
-        self.turnWheel(self.rightRearSwerveModule, direction, magnitude)
+        self.turnWheel(self.leftFrontSwerveModule - self.lfOffset, direction, magnitude)
+        self.turnWheel(self.leftRearSwerveModule - self.lrOffset, direction, magnitude)
+        self.turnWheel(self.rightFrontSwerveModule - self.rfOffset, direction, magnitude)
+        self.turnWheel(self.rightRearSwerveModule - self.rrOffset, direction, magnitude)
 
     def turnInPlace(self, turnPower: float):
         """
