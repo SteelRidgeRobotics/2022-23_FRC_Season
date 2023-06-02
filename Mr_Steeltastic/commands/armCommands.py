@@ -18,7 +18,7 @@ class SetPosition(commands2.CommandBase):
         self.done = False
 
         wpilib.SmartDashboard.putBoolean(
-            "Moving " + self.motor.name + "?", False)
+            "Moving " + self.motor.name, False)
 
     def initialize(self) -> None:
         self.done = False
@@ -26,9 +26,9 @@ class SetPosition(commands2.CommandBase):
 
         self.motor.moveToPos(self.pos)
 
-        wpilib.SmartDashboard.putBoolean(f"Moving {self.motor.name}?", True)
+        wpilib.SmartDashboard.putBoolean(f"Moving {self.motor.name}", True)
         wpilib.SmartDashboard.putString(
-            "Current Command", f"Position{self.motor.name}")
+            "Current Command", f"SetPosition {self.motor.name}")
 
     def execute(self):
         if not self.motor.isMotorPosInRange(self.pos):
@@ -39,7 +39,7 @@ class SetPosition(commands2.CommandBase):
             self.done = True
 
     def end(self, interrupted):
-        wpilib.SmartDashboard.putBoolean(f"Moving {self.motor.name}?", False)
+        wpilib.SmartDashboard.putBoolean(f"Moving {self.motor.name}", False)
         wpilib.SmartDashboard.putString("Current Command", "None")
         self.timer.stop()
         self.timer.reset()
