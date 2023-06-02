@@ -163,8 +163,6 @@ class TickArm(commands2.CommandBase):
             else:
                 motor.motor.set(ctre.TalonFXControlMode.MotionMagic, current_target,
                                 ctre.DemandType.ArbitraryFeedForward, arbitrary_feedforward)
-                wpilib.SmartDashboard.putNumber(
-                    f"FF {motor.name}", arbitrary_feedforward)
 
         self.run = False
 
