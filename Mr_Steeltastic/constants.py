@@ -6,7 +6,10 @@ FUNCTIONSCONTROLLERPORT = 1
 # Turn this to True if using the guitar controller. Everything will explode if you don't
 USINGGUITARCONTROLLER = True
 # Used for the toggling coast of the motor and inverting the top motor commands
-TESTCOMMANDS = False
+TESTCOMMANDS = True
+# Fun commands for goofs and laughs :)
+# Turn this off in competition, so you don't accidentally press one of the buttons.
+FUNCOMMANDS = True
 
 FRONTLEFT = 0
 BACKLEFT = 1
@@ -60,25 +63,21 @@ ARMTOPP = 0.85
 ARMTOPD = 0
 ARMTOPF = 1.25029
 
-ARMGRABBERP = 0.29
+ARMGRABBERP = 0.6
 ARMGRABBERD = 0
-ARMGRABBERF = 0.3
-
-ARMWRISTP = 0
-ARMWRISTD = 0
-ARMWRISTF = 0
+ARMGRABBERF = 1.5
 
 # Cruising Velocities
 ARMBASECRUISEVEL = 9000
 ARMMIDCRUISEVEL = 4000
 ARMTOPCRUISEVEL = 2000
-ARMGRABBERCRUISEVEL = 200
+ARMGRABBERCRUISEVEL = 4000
 
 # Motion Acceleration
 ARMBASEACCEL = 9000
 ARMMIDACCEL = 4000
 ARMTOPACCEL = 2000
-ARMGRABBERACCEL = 180
+ARMGRABBERACCEL = 3600
 
 # Hold Percentages
 ARMBASEHOLDPERCENT = -0.135

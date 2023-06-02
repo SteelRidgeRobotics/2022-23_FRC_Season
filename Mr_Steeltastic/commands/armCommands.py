@@ -18,7 +18,7 @@ class SetPosition(commands2.CommandBase):
         self.done = False
 
         wpilib.SmartDashboard.putBoolean(
-            "Moving " + self.motor.name + "?", False)
+            "Moving " + self.motor.name, False)
 
     def initialize(self) -> None:
         self.done = False
@@ -26,9 +26,9 @@ class SetPosition(commands2.CommandBase):
 
         self.motor.moveToPos(self.pos)
 
-        wpilib.SmartDashboard.putBoolean(f"Moving {self.motor.name}?", True)
+        wpilib.SmartDashboard.putBoolean(f"Moving {self.motor.name}", True)
         wpilib.SmartDashboard.putString(
-            "Current Command", f"Position{self.motor.name}")
+            "Current Command", f"SetPosition {self.motor.name}")
 
     def execute(self):
         if not self.motor.isMotorPosInRange(self.pos):
@@ -39,7 +39,7 @@ class SetPosition(commands2.CommandBase):
             self.done = True
 
     def end(self, interrupted):
-        wpilib.SmartDashboard.putBoolean(f"Moving {self.motor.name}?", False)
+        wpilib.SmartDashboard.putBoolean(f"Moving {self.motor.name}", False)
         wpilib.SmartDashboard.putString("Current Command", "None")
         self.timer.stop()
         self.timer.reset()
@@ -188,4 +188,28 @@ class MoveCubePickup(commands2.SequentialCommandGroup):
             SetPosition(arm.topMotor, 8821),
             SetPosition(arm.midMotor, -
                         8750).alongWith(SetPosition(arm.baseMotor, 44500))
+        )
+
+class WaveArm(commands2.SequentialCommandGroup):
+    def __init__(self, arm: Arm):
+        super().__init__()
+        self.addCommands(
+            MoveBackToHome(arm),
+            SetPosition(arm.midMotor, -45000).alongWith(SetPosition(arm.topMotor, 3900)),
+            commands2.WaitCommand(0.75),
+            SetPosition(arm.grabberMotor, -3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, 3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, -3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, 3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, -3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, 3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, 0),
+            commands2.WaitCommand(1.25),
+            MoveBackToHome(arm)
         )

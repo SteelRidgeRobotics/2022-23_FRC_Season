@@ -45,10 +45,9 @@ class JoystickDrive(commands2.CommandBase):
         self.train.arcadeDrive(self.left, self.right, False)
 
         wpilib.SmartDashboard.putNumber(
-            "Gyro Angle", self.train.gyro.getAngle())
+            "Gyro", self.train.gyro.getAngle())
 
-        wpilib.SmartDashboard.putBoolean("PlaceMode?", self.placeMode)
-        wpilib.SmartDashboard.putNumber("Left Joy", float(self.left))
+        wpilib.SmartDashboard.putBoolean("Place Mode", self.placeMode)
 
     def end(self, interrupted):
 

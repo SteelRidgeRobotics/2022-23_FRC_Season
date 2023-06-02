@@ -64,6 +64,10 @@ class RobotContainer:
             if constants.TESTCOMMANDS:
                 JoystickButton(self.functionsController, Guitar.Button.kVol).whenPressed(
                     ToggleArmCoast(self.arm))
+            if constants.FUNCOMMANDS:
+                JoystickButton(self.functionsController, Guitar.Button.kGreen).whenPressed(
+                    WaveArm(self.arm)
+                )
         else:
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(
                 MoveCubePickup(self.arm))

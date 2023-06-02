@@ -136,5 +136,3 @@ class Drivetrain(commands2.SubsystemBase):
                 ctre.TalonFXControlMode.PercentOutput, deadband(leftMotors))
             self.FRMotor.set(
                 ctre.TalonFXControlMode.PercentOutput, deadband(rightMotors))
-
-        wpilib.SmartDashboard.putBoolean("Deadband?", not isAuto)
