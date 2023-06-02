@@ -189,3 +189,27 @@ class MoveCubePickup(commands2.SequentialCommandGroup):
             SetPosition(arm.midMotor, -
                         8750).alongWith(SetPosition(arm.baseMotor, 44500))
         )
+
+class WaveArm(commands2.SequentialCommandGroup):
+    def __init__(self, arm: Arm):
+        super().__init__()
+        self.addCommands(
+            MoveBackToHome(arm),
+            SetPosition(arm.midMotor, -45000).alongWith(SetPosition(arm.topMotor, 3900)),
+            commands2.WaitCommand(0.75),
+            SetPosition(arm.grabberMotor, -3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, 3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, -3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, 3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, -3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, 3215),
+            commands2.WaitCommand(0.25),
+            SetPosition(arm.grabberMotor, 0),
+            commands2.WaitCommand(1.25),
+            MoveBackToHome(arm)
+        )
