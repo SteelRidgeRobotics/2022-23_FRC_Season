@@ -42,10 +42,10 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightRearDirection.configFactoryDefault()
 
         # init CAN coders
-        self.flCANcoder = ctre.CANCoder(constants.kflCANcoderID, "")
-        self.rlCANcoder = ctre.CANCoder(constants.krlCANcoderID, "")
-        self.frCANcoder = ctre.CANCoder(constants.kfrCANcoderID, "")
-        self.rrCANcoder = ctre.CANCoder(constants.krrCANcoderID, "")
+        self.flCANcoder = ctre.CANCoder(constants.kflCANcoderID)
+        self.rlCANcoder = ctre.CANCoder(constants.krlCANcoderID)
+        self.frCANcoder = ctre.CANCoder(constants.kfrCANcoderID)
+        self.rrCANcoder = ctre.CANCoder(constants.krrCANcoderID)
 
         # ensure that CAN coders will boot to abs sensor instead of 0
         self.flCANcoder.configSensorInitializationStrategy(
