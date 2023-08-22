@@ -93,25 +93,30 @@ class SwerveDrive(commands2.SubsystemBase):
         # init swerve modules
         self.leftFrontSwerveModule = SwerveWheel(self.leftFrontDirection, 
                                                  self.leftFrontSpeed, 
-                                                 self.flCANcoder)
+                                                 self.flCANcoder,
+                                                 constants.kflCANoffset)
         
         self.leftRearSwerveModule = SwerveWheel(self.leftRearDirection, 
                                                 self.leftRearSpeed, 
-                                                self.rlCANcoder)
+                                                self.rlCANcoder,
+                                                constants.krlCANoffset)
 
         self.rightFrontSwerveModule = SwerveWheel(self.rightFrontDirection, 
                                                   self.rightFrontSpeed, 
-                                                  self.frCANcoder)
+                                                  self.frCANcoder,
+                                                  constants.kfrCANoffset)
         
         self.rightRearSwerveModule = SwerveWheel(self.rightRearDirection, 
                                                  self.rightRearSpeed, 
-                                                 self.rrCANcoder)
-
+                                                 self.rrCANcoder,
+                                                 constants.krrCANoffset)
+        """
         # getting offsets for movement while the robot was off
         self.lfOffset = 0
         self.lrOffset = 0
         self.rfOffset = 0
         self.rrOffset = 0
+        """
         """
         self.leftFrontDirection.configIntegratedSensorOffset(self.leftFrontSwerveModule.getAbsAngle())
         self.leftRearDirection.configIntegratedSensorOffset(self.leftRearSwerveModule.getAbsAngle())
@@ -137,9 +142,12 @@ class SwerveDrive(commands2.SubsystemBase):
             magnitude = -1.0
 
         # find current angle
+        currentAngle = module.getCurrentAngle()
+        """
         currentAngle = conversions.convertTalonFXUnitsToDegrees(
             (module.directionMotor.getSelectedSensorPosition()
              /constants.ksteeringGearRatio))
+        """
         # currentAngle = module.getAbsAngle()
         # currentAngle = conversions.flipCANangle(
         # (module.CANcoder.getAbsolutePosition()))
@@ -168,21 +176,21 @@ class SwerveDrive(commands2.SubsystemBase):
             else:
                 opposAngle = 180
                 negAngle = 0
-
+        wpilib.SmartDashboard.putNumber(" Magnitude -", magnitude)
         # print some stats for debugging
         wpilib.SmartDashboard.putNumber(" Abs Opposite Angle -", opposAngle)
         wpilib.SmartDashboard.putNumber(" Neg Angle -", negAngle)
         # check if the joystick is in use
         if magnitude != 0.0:
             ## turn the wheel
-            module.turn(constants.ksteeringGearRatio 
-                        * conversions.convertDegreesToTalonFXUnits(
-                            (conversions.getclosest(currentAngle, 
-                                                    direction, magnitude)[0])))
+            module.turn(
+                constants.ksteeringGearRatio * conversions.convertDegreesToTalonFXUnits(
+                conversions.getclosest(currentAngle, direction, magnitude)[0]))
+            #module.turn(direction)
             
             ## spin the wheel
-            module.move(conversions.getclosest(currentAngle, 
-                                               direction, magnitude)[1])
+            module.move(conversions.getclosest(currentAngle, direction, magnitude)[1])
+            #module.move(magnitude)
 
             ## put stats to smart dashboard
             wpilib.SmartDashboard.putNumber(" Wanted Angle -", direction)
@@ -206,10 +214,10 @@ class SwerveDrive(commands2.SubsystemBase):
         """
         move the robot without changing orientation
         """
-        self.turnWheel(self.leftFrontSwerveModule - self.lfOffset, direction, magnitude)
-        self.turnWheel(self.leftRearSwerveModule - self.lrOffset, direction, magnitude)
-        self.turnWheel(self.rightFrontSwerveModule - self.rfOffset, direction, magnitude)
-        self.turnWheel(self.rightRearSwerveModule - self.rrOffset, direction, magnitude)
+        self.turnWheel(self.leftFrontSwerveModule, direction, magnitude)
+        self.turnWheel(self.leftRearSwerveModule, direction, magnitude)
+        self.turnWheel(self.rightFrontSwerveModule, direction, magnitude)
+        self.turnWheel(self.rightRearSwerveModule, direction, magnitude)
 
     def turnInPlace(self, turnPower: float):
         """
@@ -244,31 +252,23 @@ class SwerveDrive(commands2.SubsystemBase):
         
         wpilib.SmartDashboard.putNumber(
             " RR Speed ", self.rightRearSwerveModule.getVelocity())
+
+        wpilib.SmartDashboard.putNumber(" LF Angle", 
+                                        self.leftFrontSwerveModule.getCurrentAngle())
         
-        wpilib.SmartDashboard.putNumber(
-            " LF CAN ", self.leftFrontSwerveModule.getAbsAngle())
+        wpilib.SmartDashboard.putNumber(" LR Angle", 
+                                        self.leftRearSwerveModule.getCurrentAngle())
         
-        wpilib.SmartDashboard.putNumber(
-            " LR CAN ", self.leftRearSwerveModule.getAbsAngle())
+        wpilib.SmartDashboard.putNumber(" RF Angle", 
+                                        self.rightFrontSwerveModule.getCurrentAngle())
         
-        wpilib.SmartDashboard.putNumber(
-            " RF CAN ", self.rightFrontSwerveModule.getAbsAngle())
-        
-        wpilib.SmartDashboard.putNumber(
-            " RR CAN ", self.rightRearSwerveModule.getAbsAngle())
-        
-        wpilib.SmartDashboard.putNumber(
-            " RF ERROR ", (self.leftFrontSwerveModule.getAbsAngle() 
-                           - self.rightFrontSwerveModule.getAbsAngle()))
-        
-        wpilib.SmartDashboard.putNumber(
-            " LR ERROR ", (self.leftFrontSwerveModule.getAbsAngle() 
-                           - self.leftRearSwerveModule.getAbsAngle()))
+        wpilib.SmartDashboard.putNumber(" RR Angle", 
+                                        self.rightRearSwerveModule.getCurrentAngle())
 
     def getGyroAngle(self) -> float:
 
         return self.gyro.getAngle()
-    
+    """
     def getWheelOffsets(self):
         # get initial wheel angles
         self.lfOffset = self.leftFrontSwerveModule.getAbsAngle()
@@ -289,7 +289,7 @@ class SwerveDrive(commands2.SubsystemBase):
         
         self.turnWheel(self.rightRearSwerveModule, 
                        self.rightRearSwerveModule.getAbsAngle(), 0.1)
-
+    """
     def moveWhileSpinning(self, leftx: float, lefty: float, turnPower: float):
 
         straff = (-lefty * math.sin(self.getGyroAngle()) 

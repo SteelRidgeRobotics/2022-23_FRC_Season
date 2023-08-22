@@ -21,10 +21,10 @@ kfrCANcoderID = 12
 krrCANcoderID = 13
 
 # offsets
-kflCANoffset = 167.78320312
-krlCANoffset = 143.26171875
-kfrCANoffset = 323.52539062
-krrCANoffset = 210.9375
+kflCANoffset = 167.34375
+krlCANoffset = 128.23242188
+kfrCANoffset = 318.07617188
+krrCANoffset = 210.84960938
 
 # Encoders
 ktimeoutMs = 10

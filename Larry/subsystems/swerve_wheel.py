@@ -10,13 +10,16 @@ class SwerveWheel():
 
     def __init__(self, directionMotor: ctre.TalonFX, 
                  speedMotor: ctre.TalonFX, 
-                 CANcoder: ctre.CANCoder) -> None:
+                 CANcoder: ctre.CANCoder,
+                 MagOffset: float) -> None:
         
 
         # super().__init__()
         self.directionMotor = directionMotor
         self.speedMotor = speedMotor
         self.CANcoder = CANcoder
+        
+        self.CANcoder.configMagnetOffset(MagOffset)
 
         self.directionMotor.configSelectedFeedbackSensor(
             ctre.FeedbackDevice.IntegratedSensor, 0, ktimeoutMs)
@@ -47,6 +50,10 @@ class SwerveWheel():
 
         self.directionMotor.setNeutralMode(ctre.NeutralMode.Brake)
 
+        timer = 0
+        while timer < 60: # This gives the program a little extra time to initialize everything
+            timer += 1
+
         self.directionMotor.setSelectedSensorPosition(0.0, kPIDLoopIdx, 
                                                       ktimeoutMs)
 
@@ -59,11 +66,24 @@ class SwerveWheel():
         self.notTurning = True
 
     # this is our testing turn method
-    def turn(self, set_point: float):
+    def turnTo(self, set_point: float):
         self.notTurning = False
-        current_pos = self.directionMotor.getSelectedSensorPosition()
         self.directionMotor.set(ctre.TalonFXControlMode.MotionMagic, 
                                 int(set_point))
+
+    def turn(self, angle: float):
+
+        if sign(self.getCurrentAngle() - angle) == 1:
+
+            self.turnTo(ksteeringGearRatio * convertDegreesToTalonFXUnits(
+                self.getCurrentAngle() + (360 - (
+                self.getCurrentAngle() - angle))))
+
+        elif sign(self.getCurrentAngle() - angle) == -1:
+
+            self.turnTo(ksteeringGearRatio * convertDegreesToTalonFXUnits(
+                self.getCurrentAngle() + (
+                math.fabs((self.getCurrentAngle() - angle)) - 360)))     
 
     def isNotinMotion(self) -> bool:
 
@@ -86,14 +106,16 @@ class SwerveWheel():
 
     def getCurrentAngle(self):
 
+        # return self.CANcoder.getPosition()
+        
         return convertTalonFXUnitsToDegrees(
-            (self.directionMotor.getSelectedSensorPosition()) 
-            + self.getAbsAngle())
+            (self.directionMotor.getSelectedSensorPosition()))
         # return self.CANcoder.getAbsolutePosition()
-
+    
+    
     def getAbsAngle(self):
             
-        return self.CANcoder.getAbsolutePosition()
+        return self.CANcoder.getPosition()
 
     def getVelocity(self):
 
@@ -105,7 +127,7 @@ class SwerveWheel():
         wpilib.SmartDashboard.putNumber(" I -", kI)
         wpilib.SmartDashboard.putNumber(" D -", kD)
         wpilib.SmartDashboard.putNumber(" F -", kF)
-        wpilib.SmartDashboard.putNumber(" CAN - ", self.getAbsAngle())
+        # wpilib.SmartDashboard.putNumber(" CAN - ", self.getAbsAngle())
 
         # wpilib.SmartDashboard.putNumber(" Sensor Position -", 
         # self.directionMotor.getSelectedSensorPosition())

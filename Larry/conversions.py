@@ -63,7 +63,6 @@ def giveRevCompensation(currentAngle, direction):
 
     return revCompensation
 
-
 def getclosest(currentAngle, direction, magnitude):
 
     rev = giveRevCompensation(currentAngle, direction)

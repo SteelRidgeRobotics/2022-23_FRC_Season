@@ -11,7 +11,7 @@ class Larry(commands2.TimedCommandRobot):
     def robotInit(self) -> None:
         # initialize robotcontainer
         self.container = RobotContainer()
-        self.container.swerveDrive.getWheelOffsets()
+        # self.container.swerveDrive.getWheelOffsets()
         # get initial wheel angles
         """
         self.lfOffset = self.container.swerveDrive.leftFrontSwerveModule.getAbsAngle()
