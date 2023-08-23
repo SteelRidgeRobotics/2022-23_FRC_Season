@@ -20,11 +20,14 @@ class Translate(commands2.CommandBase):
         self.drive.getPosFromOffState()
 
     def execute(self) -> None:
+
         self.angle = conversions.convertJoystickInputToDegrees(conversions.deadband(self.x(), constants.kdeadband),
                                                                conversions.deadband(self.y(), constants.kdeadband))
         self.magnitude = math.hypot(conversions.deadband(self.x(), constants.kdeadband),
                                     conversions.deadband(self.y(), constants.kdeadband))
         self.drive.translate(self.angle, self.magnitude)
+        
+        self.drive.showWheelStats()
 
     def end(self, interrupted: bool) -> None:
         self.drive.stopAllMotors()
