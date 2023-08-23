@@ -58,13 +58,14 @@ class SwerveWheel():
 
     # this is are testing turn method
     def turn(self, set_point: float):
+
         self.notTurning = False
         current_pos = self.directionMotor.getSelectedSensorPosition()
         self.directionMotor.set(ctre.TalonFXControlMode.MotionMagic, int(set_point))
 
-    def getAbsPos(self):
-        
-        self.CANCoder.getPosition()
+    def getAbsPos(self) -> float:
+
+        return self.CANCoder.getPosition()
 
     def CANtoTalon(self):
 
