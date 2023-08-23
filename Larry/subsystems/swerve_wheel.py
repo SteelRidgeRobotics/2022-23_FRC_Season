@@ -56,7 +56,9 @@ class SwerveWheel():
         # wpilib.SmartDashboard.putNumber(" Sensor Position -", self.directionMotor.getSelectedSensorPosition())
         self.notTurning = True
 
-    # this is are testing turn method
+        self.steeringOffset = 0.0
+
+    # this is our testing turn method
     def turn(self, set_point: float):
 
         self.notTurning = False
@@ -69,8 +71,10 @@ class SwerveWheel():
 
     def CANtoTalon(self):
 
-        self.directionMotor.configIntegratedSensorOffset(ksteeringGearRatio *
-            convertDegreesToTalonFXUnits(self.CANCoder.getPosition()), ktimeoutMs)
+        self.steeringOffset = (ksteeringGearRatio * 
+                               convertDegreesToTalonFXUnits(self.getAbsPos()))
+        
+        self.directionMotor.configIntegratedSensorOffset(self.steeringOffset, ktimeoutMs)
 
     def isNotinMotion(self) -> bool:
 
