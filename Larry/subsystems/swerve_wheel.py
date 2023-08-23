@@ -6,7 +6,8 @@ from constants import *
 
 
 class SwerveWheel():
-    def __init__(self, directionMotor: ctre.TalonFX, speedMotor: ctre.TalonFX) -> None:
+    def __init__(self, directionMotor: ctre.TalonFX, speedMotor: ctre.TalonFX, 
+                 CANCoder: ctre.CANCoder, MagOffset: float) -> None:
         # super().__init__()
         self.directionMotor = directionMotor
         self.speedMotor = speedMotor
@@ -41,6 +42,13 @@ class SwerveWheel():
 
         self.directionMotor.setSelectedSensorPosition(0.0, kPIDLoopIdx, ktimeoutMs)
 
+        # CAN Coder
+        self.CANCoder = CANCoder
+        
+        self.CANCoder.configSensorInitializationStrategy(ctre.SensorInitializationStrategy.BootToAbsolutePosition, ktimeoutMs)
+        self.CANCoder.configSensorDirection(True, ktimeoutMs)
+        self.CANCoder.configMagnetOffset(MagOffset)
+
         wpilib.SmartDashboard.putNumber(" P -", kP)
         wpilib.SmartDashboard.putNumber(" I -", kI)
         wpilib.SmartDashboard.putNumber(" D -", kD)
@@ -53,6 +61,15 @@ class SwerveWheel():
         self.notTurning = False
         current_pos = self.directionMotor.getSelectedSensorPosition()
         self.directionMotor.set(ctre.TalonFXControlMode.MotionMagic, int(set_point))
+
+    def getAbsPos(self):
+        
+        self.CANCoder.getPosition()
+
+    def CANtoTalon(self):
+
+        self.directionMotor.configIntegratedSensorOffset(ksteeringGearRatio *
+            convertDegreesToTalonFXUnits(self.CANCoder.getPosition()), ktimeoutMs)
 
     def isNotinMotion(self) -> bool:
 

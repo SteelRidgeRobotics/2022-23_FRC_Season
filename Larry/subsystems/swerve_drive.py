@@ -37,15 +37,22 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightFrontDirection.setInverted(False)
         self.rightRearDirection.setInverted(False)
 
-        # init swerve modules
-        self.leftFrontSwerveModule = SwerveWheel(self.leftFrontDirection, self.leftFrontSpeed)
-        self.leftRearSwerveModule = SwerveWheel(self.leftRearDirection, self.leftRearSpeed)
+        # init CAN coders
+        self.flCANcoder = ctre.CANCoder(constants.kflCANcoderID)
+        self.rlCANcoder = ctre.CANCoder(constants.krlCANcoderID)
+        self.frCANcoder = ctre.CANCoder(constants.kfrCANcoderID)
+        self.rrCANcoder = ctre.CANCoder(constants.krrCANcoderID)
 
-        self.rightFrontSwerveModule = SwerveWheel(self.rightFrontDirection, self.rightFrontSpeed)
-        self.rightRearSwerveModule = SwerveWheel(self.rightRearDirection, self.rightRearSpeed)
+        # init swerve modules
+        self.leftFrontSwerveModule = SwerveWheel(self.leftFrontDirection, self.leftFrontSpeed, self.flCANcoder, constants.kflCANoffset)
+        self.leftRearSwerveModule = SwerveWheel(self.leftRearDirection, self.leftRearSpeed, self.rlCANcoder, constants.krlCANoffset)
+
+        self.rightFrontSwerveModule = SwerveWheel(self.rightFrontDirection, self.rightFrontSpeed, self.frCANcoder, constants.kfrCANoffset)
+        self.rightRearSwerveModule = SwerveWheel(self.rightRearDirection, self.rightRearSpeed, self.rrCANcoder, constants.krrCANoffset)
 
         self.gyro = wpilib.ADIS16470_IMU()
         self.gyro.CalibrationTime(2)
+        
         if wpilib.RobotBase.isReal():
             self.gyro.setYawAxis(wpilib.ADIS16470_IMU.IMUAxis.kX)
         

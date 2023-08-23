@@ -27,6 +27,19 @@ kticksPerRev = 2048
 kSlotIdx = 0
 kPIDLoopIdx = 0
 
+# CANCoders
+# CAN coders
+kflCANcoderID = 10
+krlCANcoderID = 11
+kfrCANcoderID = 12
+krrCANcoderID = 13
+
+# offsets
+kflCANoffset = 167.34375
+krlCANoffset = 128.23242188
+kfrCANoffset = 318.07617188
+krrCANoffset = 210.84960938
+
 ksteeringGearRatio = 150 / 7
 
 klength = 29
