@@ -161,14 +161,18 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rightRearSwerveModule.stopAllMotors()
 
     def showWheelStats(self):
-        wpilib.SmartDashboard.putNumber(" LF Angle Error",
-                                        self.leftFrontSwerveModule.directionMotor.getClosedLoopError(0))
-        wpilib.SmartDashboard.putNumber(" LR Angle Error",
-                                        self.leftRearSwerveModule.directionMotor.getClosedLoopError(0))
-        wpilib.SmartDashboard.putNumber(" RF Angle Error",
-                                        self.rightFrontSwerveModule.directionMotor.getClosedLoopError(0))
-        wpilib.SmartDashboard.putNumber(" RR Angle Error",
-                                        self.rightRearSwerveModule.directionMotor.getClosedLoopError(0))
+
+        wpilib.SmartDashboard.putNumber(" LF Steering ", self.leftFrontSwerveModule.getCurrentAngle())
+        wpilib.SmartDashboard.putNumber(" LF CAN ", self.leftFrontSwerveModule.getAbsPos())
+
+        wpilib.SmartDashboard.putNumber(" LR Steering ", self.leftRearSwerveModule.getCurrentAngle())
+        wpilib.SmartDashboard.putNumber(" LR CAN ", self.leftRearSwerveModule.getAbsPos())
+
+        wpilib.SmartDashboard.putNumber(" RF Steering ", self.rightRearSwerveModule.getCurrentAngle())
+        wpilib.SmartDashboard.putNumber(" RF CAN ", self.rightRearSwerveModule.getAbsPos())
+
+        wpilib.SmartDashboard.putNumber(" RR Steering ", self.rightRearSwerveModule.getCurrentAngle())
+        wpilib.SmartDashboard.putNumber(" RR CAN ", self.rightRearSwerveModule.getAbsPos())
 
         wpilib.SmartDashboard.putNumber(" LF Speed ", self.leftFrontSwerveModule.getVelocity())
         wpilib.SmartDashboard.putNumber(" LR Speed ", self.leftRearSwerveModule.getVelocity())
