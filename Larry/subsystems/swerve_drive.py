@@ -52,7 +52,7 @@ class SwerveDrive(commands2.SubsystemBase):
 
         self.gyro = wpilib.ADIS16470_IMU()
         self.gyro.CalibrationTime(2)
-        
+
         if wpilib.RobotBase.isReal():
             self.gyro.setYawAxis(wpilib.ADIS16470_IMU.IMUAxis.kX)
         
@@ -186,6 +186,13 @@ class SwerveDrive(commands2.SubsystemBase):
         self.turnWheel(self.rightRearSwerveModule, 0.0, 0.01)
 
         self.stopAllMotors()
+
+    def getPosFromOffState(self):
+
+        self.leftFrontSwerveModule.CANtoTalon()
+        self.leftRearSwerveModule.CANtoTalon()
+        self.rightFrontSwerveModule.CANtoTalon()
+        self.rightRearSwerveModule.CANtoTalon()
 
     def moveWhileSpinning(self, leftx: float, lefty: float, turnPower: float):
         straff = -lefty * math.sin(self.getGyroAngle()) + leftx * math.cos(self.getGyroAngle())
