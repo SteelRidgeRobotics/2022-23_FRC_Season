@@ -35,10 +35,10 @@ kfrCANcoderID = 12
 krrCANcoderID = 13
 
 # offsets
-kflCANoffset = 168.662
-krlCANoffset = 105.380859375
-kfrCANoffset = 302.431640625
-krrCANoffset = 210.234
+kflCANoffset = 167.607421875
+krlCANoffset = 95.9765625
+kfrCANoffset = 303.3984375
+krrCANoffset = 209.00390625
 
 ksteeringGearRatio = 150 / 7
 

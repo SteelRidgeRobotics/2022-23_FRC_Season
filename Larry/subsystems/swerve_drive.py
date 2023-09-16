@@ -44,11 +44,11 @@ class SwerveDrive(commands2.SubsystemBase):
         self.rrCANcoder = ctre.CANCoder(constants.krrCANcoderID)
 
         # init swerve modules
-        self.leftFrontSwerveModule = SwerveWheel(self.leftFrontDirection, self.leftFrontSpeed, self.flCANcoder, constants.kflCANoffset)
-        self.leftRearSwerveModule = SwerveWheel(self.leftRearDirection, self.leftRearSpeed, self.rlCANcoder, constants.krlCANoffset)
+        self.leftFrontSwerveModule = SwerveWheel(self.leftFrontDirection, self.leftFrontSpeed, self.flCANcoder, constants.kflCANoffset, 0.0)
+        self.leftRearSwerveModule = SwerveWheel(self.leftRearDirection, self.leftRearSpeed, self.rlCANcoder, constants.krlCANoffset, 0.0)
 
-        self.rightFrontSwerveModule = SwerveWheel(self.rightFrontDirection, self.rightFrontSpeed, self.frCANcoder, constants.kfrCANoffset)
-        self.rightRearSwerveModule = SwerveWheel(self.rightRearDirection, self.rightRearSpeed, self.rrCANcoder, constants.krrCANoffset)
+        self.rightFrontSwerveModule = SwerveWheel(self.rightFrontDirection, self.rightFrontSpeed, self.frCANcoder, constants.kfrCANoffset, 0.0)
+        self.rightRearSwerveModule = SwerveWheel(self.rightRearDirection, self.rightRearSpeed, self.rrCANcoder, constants.krrCANoffset, 0.0)
 
         self.gyro = wpilib.ADIS16470_IMU()
         self.gyro.CalibrationTime(2)
@@ -181,6 +181,8 @@ class SwerveDrive(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber(" RR CAN ", self.rightRearSwerveModule.getAbsPos())
         wpilib.SmartDashboard.putNumber(" RR Offset ", self.rightRearSwerveModule.steeringOffset)
         wpilib.SmartDashboard.putNumber(" RR Speed ", self.rightRearSwerveModule.getVelocity())
+
+        wpilib.SmartDashboard.putNumberArray("Code Offsets ", [self.leftFrontSwerveModule.offset, self.rightFrontSwerveModule.offset, self.leftRearSwerveModule.offset, self.rightRearSwerveModule.offset])
 
 
     def getGyroAngle(self) -> float:

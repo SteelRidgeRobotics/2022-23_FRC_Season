@@ -4,10 +4,10 @@ import wpilib
 from conversions import *
 from constants import *
 
-
 class SwerveWheel():
     def __init__(self, directionMotor: ctre.TalonFX, speedMotor: ctre.TalonFX, 
-                 CANCoder: ctre.CANCoder, MagOffset: float) -> None:
+                 CANCoder: ctre.CANCoder, MagOffset: float, 
+                 manualOffset: float) -> None:
         # super().__init__()
         self.directionMotor = directionMotor
         self.speedMotor = speedMotor
@@ -58,12 +58,17 @@ class SwerveWheel():
 
         self.steeringOffset = 0.0
 
+        self.moffset = manualOffset
+
     # this is our testing turn method
     def turn(self, set_point: float):
 
         self.notTurning = False
         current_pos = self.directionMotor.getSelectedSensorPosition()
-        self.directionMotor.set(ctre.TalonFXControlMode.MotionMagic, int(set_point))
+        # convert manual offset angle into TalonFX Units
+        offset = convertDegreesToTalonFXUnits(self.moffset) * ksteeringGearRatio
+        self.directionMotor.set(ctre.TalonFXControlMode.MotionMagic, 
+                                int(set_point + offset))
 
     def getAbsPos(self) -> float:
 
@@ -119,3 +124,6 @@ class SwerveWheel():
 
         self.directionMotor.config_kD(0, kD, ktimeoutMs)
         """
+
+    def resetToOrigin(self):
+        self.turn(0 + self.offset)
