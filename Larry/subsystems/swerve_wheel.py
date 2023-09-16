@@ -67,15 +67,16 @@ class SwerveWheel():
 
     def getAbsPos(self) -> float:
 
-        return self.CANCoder.getPosition()
+        return self.CANCoder.getAbsolutePosition()
 
     def CANtoTalon(self):
 
         self.steeringOffset = (ksteeringGearRatio * 
                                convertDegreesToTalonFXUnits(self.getAbsPos()))
         
-        self.directionMotor.configIntegratedSensorOffset(self.steeringOffset, ktimeoutMs)
-
+        # self.directionMotor.configIntegratedSensorOffset(self.steeringOffset, ktimeoutMs)
+        self.directionMotor.setSelectedSensorPosition(self.steeringOffset, 0, ktimeoutMs)
+        
     def isNotinMotion(self) -> bool:
 
         if self.directionMotor.getActiveTrajectoryVelocity() == 0.0:

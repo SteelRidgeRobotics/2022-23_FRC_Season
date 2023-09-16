@@ -26,7 +26,7 @@ class SwerveDrive(commands2.SubsystemBase):
 
         # fix inverse
         self.leftFrontSpeed.setInverted(True)
-        self.leftRearSpeed.setInverted(False)
+        self.leftRearSpeed.setInverted(True)
 
         self.rightFrontSpeed.setInverted(True)
         self.rightRearSpeed.setInverted(True)
@@ -172,8 +172,8 @@ class SwerveDrive(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber(" LR Offset ", self.leftRearSwerveModule.steeringOffset)
         wpilib.SmartDashboard.putNumber(" LR Speed ", self.leftRearSwerveModule.getVelocity())
 
-        wpilib.SmartDashboard.putNumber(" RF Steering ", self.rightRearSwerveModule.getCurrentAngle())
-        wpilib.SmartDashboard.putNumber(" RF CAN ", self.rightRearSwerveModule.getAbsPos())
+        wpilib.SmartDashboard.putNumber(" RF Steering ", self.rightFrontSwerveModule.getCurrentAngle())
+        wpilib.SmartDashboard.putNumber(" RF CAN ", self.rightFrontSwerveModule.getAbsPos())
         wpilib.SmartDashboard.putNumber(" RF Offset ", self.rightFrontSwerveModule.steeringOffset)
         wpilib.SmartDashboard.putNumber(" RF Speed ", self.rightFrontSwerveModule.getVelocity())
 
