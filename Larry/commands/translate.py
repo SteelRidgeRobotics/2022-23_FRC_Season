@@ -21,8 +21,8 @@ class Translate(commands2.CommandBase):
 
     def execute(self) -> None:
 
-        self.angle = conversions.convertJoystickInputToDegrees(conversions.deadband(self.x(), constants.kdeadband),
-                                                               conversions.deadband(self.y(), constants.kdeadband))
+        self.angle = (conversions.convertJoystickInputToDegrees(conversions.deadband(self.x(), constants.kdeadband),
+                                                               conversions.deadband(self.y(), constants.kdeadband)) + self.drive.getGyroAngle()) % 360
         self.magnitude = math.hypot(conversions.deadband(self.x(), constants.kdeadband),
                                     conversions.deadband(self.y(), constants.kdeadband))
         self.drive.translate(self.angle, self.magnitude)
