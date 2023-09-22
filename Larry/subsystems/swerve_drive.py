@@ -182,7 +182,7 @@ class SwerveDrive(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber(" RR Offset ", self.rightRearSwerveModule.steeringOffset)
         wpilib.SmartDashboard.putNumber(" RR Speed ", self.rightRearSwerveModule.getVelocity())
 
-        wpilib.SmartDashboard.putNumberArray("Code Offsets ", [self.leftFrontSwerveModule.offset, self.rightFrontSwerveModule.offset, self.leftRearSwerveModule.offset, self.rightRearSwerveModule.offset])
+    #    wpilib.SmartDashboard.putNumberArray("Code Offsets ", [self.leftFrontSwerveModule.offset, self.rightFrontSwerveModule.offset, self.leftRearSwerveModule.offset, self.rightRearSwerveModule.offset])
 
 
     def getGyroAngle(self) -> float:
