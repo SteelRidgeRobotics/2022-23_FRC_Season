@@ -21,11 +21,13 @@ class DriveWithController(commands2.CommandBase):
         self.drive.getPosFromOffState()
 
     def initialize(self) -> None:
-        pass
+        self.drive.gyro.calibrate()
 
     def execute(self) -> None:
-        self.angle = conversions.convertJoystickInputToDegrees(conversions.deadband(self.x(), constants.kdeadband),
-                                                               conversions.deadband(self.y(), constants.kdeadband))
+
+        self.gyroAngle = self.drive.getGyroAngle() 
+        self.angle = (conversions.convertJoystickInputToDegrees(conversions.deadband(self.x(), constants.kdeadband),
+                                                               conversions.deadband(self.y(), constants.kdeadband)) + self.gyroAngle)
         self.magnitude = math.hypot(conversions.deadband(self.x(), constants.kdeadband),
                                     conversions.deadband(self.y(), constants.kdeadband))
         
@@ -35,7 +37,8 @@ class DriveWithController(commands2.CommandBase):
         wpilib.SmartDashboard.putNumber(" Magnitude -", self.magnitude)
         wpilib.SmartDashboard.putNumber(" X -", conversions.deadband(self.x(), constants.kdeadband))
         wpilib.SmartDashboard.putNumber(" Y -", conversions.deadband(self.y(), constants.kdeadband))
-        wpilib.SmartDashboard.putNumber(" Gyro -", self.drive.getGyroAngle())
+        wpilib.SmartDashboard.putNumber(" Gyro (Rads) -", math.radians(self.drive.getGyroAngle()))
+        wpilib.SmartDashboard.putNumber(" Gyro (Deg) -", self.gyroAngle)
 
         # self.magnitude *= 0.5
         # self.angle -= self.drive.getGyroAngle()

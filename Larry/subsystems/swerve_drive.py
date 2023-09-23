@@ -186,7 +186,7 @@ class SwerveDrive(commands2.SubsystemBase):
 
 
     def getGyroAngle(self) -> float:
-        return math.degrees(self.gyro.getAngle())
+        return math.degrees(self.gyro.getAngle()) % 360
 
     def flushWheels(self):
         self.turnWheel(self.leftFrontSwerveModule, 0.0, 0.01)
