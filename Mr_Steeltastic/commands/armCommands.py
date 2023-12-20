@@ -101,8 +101,7 @@ class SetPositionAll(commands2.ParallelCommandGroup):
         self.addCommands(
             SetPosition(arm.baseMotor, basePos),
             SetPosition(arm.midMotor, midPos),
-            SetPosition(arm.topMotor, topPos),
-            SetPosition(arm.grabberMotor, 0)
+            SetPosition(arm.topMotor, topPos)
         )
 
 
@@ -128,14 +127,12 @@ class ToggleArmCoast(commands2.CommandBase):
             self.arm.baseMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
             self.arm.midMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
             self.arm.topMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
-            self.arm.grabberMotor.motor.setNeutralMode(ctre.NeutralMode.Brake)
             wpilib.SmartDashboard.putBoolean("In Coast", False)
 
         else:
             self.arm.baseMotor.motor.setNeutralMode(ctre.NeutralMode.Coast)
             self.arm.midMotor.motor.setNeutralMode(ctre.NeutralMode.Coast)
             self.arm.topMotor.motor.setNeutralMode(ctre.NeutralMode.Coast)
-            self.arm.grabberMotor.motor.setNeutralMode(ctre.NeutralMode.Coast)
             wpilib.SmartDashboard.putBoolean("In Coast", True)
 
         self.isInCoast = not self.isInCoast
@@ -188,28 +185,4 @@ class MoveCubePickup(commands2.SequentialCommandGroup):
             SetPosition(arm.topMotor, 8821),
             SetPosition(arm.midMotor, -
                         8750).alongWith(SetPosition(arm.baseMotor, 44500))
-        )
-
-class WaveArm(commands2.SequentialCommandGroup):
-    def __init__(self, arm: Arm):
-        super().__init__()
-        self.addCommands(
-            MoveBackToHome(arm),
-            SetPosition(arm.midMotor, -45000).alongWith(SetPosition(arm.topMotor, 3900)),
-            commands2.WaitCommand(0.75),
-            SetPosition(arm.grabberMotor, -3215),
-            commands2.WaitCommand(0.25),
-            SetPosition(arm.grabberMotor, 3215),
-            commands2.WaitCommand(0.25),
-            SetPosition(arm.grabberMotor, -3215),
-            commands2.WaitCommand(0.25),
-            SetPosition(arm.grabberMotor, 3215),
-            commands2.WaitCommand(0.25),
-            SetPosition(arm.grabberMotor, -3215),
-            commands2.WaitCommand(0.25),
-            SetPosition(arm.grabberMotor, 3215),
-            commands2.WaitCommand(0.25),
-            SetPosition(arm.grabberMotor, 0),
-            commands2.WaitCommand(1.25),
-            MoveBackToHome(arm)
         )

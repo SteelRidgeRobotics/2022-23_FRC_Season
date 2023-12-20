@@ -84,11 +84,6 @@ class Arm(commands2.SubsystemBase):
                                  constants.ARMTOPCRUISEVEL, constants.ARMTOPACCEL,
                                  constants.TOPRATIO, 4362, "Top", 4138)
 
-        self.grabberMotor = ArmMotor(constants.ARMGRABBERPORT, constants.ARMGRABBERHOLDPERCENT, constants.ARMGRABBERF,
-                                     constants.ARMGRABBERP, constants.ARMGRABBERD,
-                                     constants.ARMGRABBERCRUISEVEL, constants.ARMGRABBERACCEL,
-                                     constants.GRABBERRATIO, 0, "Grabber", 0)
-
         self.grabberSolenoid = wpilib.DoubleSolenoid(
             constants.SOLENOIDMODULE, constants.SOLENOIDMODULETYPE, constants.GRABBERSOLENOIDIN, constants.GRABBERSOLENOIDOUT)
 
@@ -96,18 +91,16 @@ class Arm(commands2.SubsystemBase):
         self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
 
         self.motorList = [self.baseMotor, self.midMotor,
-                          self.topMotor, self.grabberMotor]
+                          self.topMotor]
 
     def keepArmsAtZero(self):
         self.baseMotor.keepAtZero()
         self.midMotor.keepAtZero()
         self.topMotor.keepAtZero()
-        self.grabberMotor.keepAtZero()
 
     def toggleGrabber(self) -> None:
         if self.grabberOpen:
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
-
         else:
             self.grabberSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
 

@@ -8,6 +8,7 @@ from commands.autoDock import StationCorrectionMobility
 from commands.timedDrive import TimedDrive
 from subsystems.arm import Arm, TickArm
 from subsystems.drivetrain import Drivetrain
+from subsystems.grabber import Grabber
 from commands.autoDock import StationCorrection
 from commands.setGrabber import SetGrabber
 from commands.armCommands import *
@@ -28,8 +29,8 @@ class RobotContainer:
                 constants.FUNCTIONSCONTROLLERPORT)
 
         self.train = Drivetrain()
-
         self.arm = Arm()
+        self.grabber = Grabber()
 
         self.chooser = wpilib.SendableChooser()
 
@@ -53,21 +54,22 @@ class RobotContainer:
         if constants.USINGGUITARCONTROLLER:
             JoystickButton(self.functionsController, Guitar.Button.kRed).whenPressed(
                 MoveCubePickup(self.arm))
-            JoystickButton(self.functionsController, Guitar.Button.kBlue).whenPressed(
-                SetGrabber(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kYellow).whenPressed(
                 MoveBackToHome(self.arm))
             JoystickButton(self.functionsController, Guitar.Button.kStar).whenPressed(
                 MoveToOrigin(self.arm))
-            JoystickButton(self.functionsController, Guitar.Button.kOrange).whenPressed(
+            JoystickButton(self.functionsController, Guitar.Button.kBlue).whenPressed(
                 PlaceCubeMid(self.arm))
+            JoystickButton(self.functionsController, Guitar.Button.kOrange).whenPressed(
+                commands2.InstantCommand(lambda: self.grabber.stop()))
+            JoystickButton(self.functionsController, Guitar.Button.kStrumUp).whenPressed(
+                commands2.InstantCommand(lambda: self.grabber.pullTowards()))
+            JoystickButton(self.functionsController, Guitar.Button.kStrumDown).whenPressed(
+                commands2.InstantCommand(lambda: self.grabber.pushAway())
+            )
             if constants.TESTCOMMANDS:
                 JoystickButton(self.functionsController, Guitar.Button.kVol).whenPressed(
                     ToggleArmCoast(self.arm))
-            if constants.FUNCOMMANDS:
-                JoystickButton(self.functionsController, Guitar.Button.kGreen).whenPressed(
-                    WaveArm(self.arm)
-                )
         else:
             JoystickButton(self.functionsController, wpilib.XboxController.Button.kB).whenPressed(
                 MoveCubePickup(self.arm))

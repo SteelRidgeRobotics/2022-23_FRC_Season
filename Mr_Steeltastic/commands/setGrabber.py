@@ -11,8 +11,6 @@ class SetGrabber(commands2.CommandBase):
         self.arm = arm
         self.isDone = False
 
-        self.addRequirements([self.arm.grabberMotor])
-
     def execute(self) -> None:
         self.arm.toggleGrabber()
         self.isDone = True
